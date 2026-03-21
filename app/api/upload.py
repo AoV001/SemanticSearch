@@ -2,6 +2,7 @@ from fastapi import APIRouter, File, UploadFile
 import os
 
 from app.services.file_service import read_txt_file
+from app.nlp.text_processing import split_sentences
 
 # api to upload the txt. files
 
@@ -21,4 +22,6 @@ async def upload_file(file: UploadFile = File(...)):
 
     text = read_txt_file(file_location)
 
-    return {"filename": file.filename, "length": len(text)}
+    sentences = split_sentences(text)
+
+    return {"filename": file.filename, "length": len(text), "sentences": sentences[:5]}
