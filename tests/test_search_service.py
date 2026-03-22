@@ -1,4 +1,5 @@
 from app.services.search_service import search
+from app.nlp.coreference import simple_coreference
 
 
 text = """
@@ -11,7 +12,10 @@ She gave him the ball.
 
 question = "Who kicked the ball?"
 
-results = search(question, text)
+results = search(question, text, top_k=5)
 
-for sentence, score in results:
-    print(score, sentence)
+for score, (sentence, sim) in enumerate(results):
+    print(f"{sim:.2f} - {sentence}")
+
+resolved = simple_coreference(text)
+print(resolved)
