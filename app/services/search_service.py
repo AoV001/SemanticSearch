@@ -14,21 +14,20 @@ def split_blocks(sentences, window_size=WINDOW_SIZE):
     return blocks
 
 def search(question: str, text: str, top_k: int=3, threshold: float = 0.2):
-
-    resolved_text = simple_coreference(text)
-
     nlp_sent = English()
     nlp_sent.add_pipe("sentencizer")
-    cleaned_text = resolved_text.replace("\n", " ")
+    cleaned_text = text.replace("\n", " ")
     doc = nlp_sent(cleaned_text)
 
     sentences = [sent.text.strip() for sent in doc.sents]
     blocks = split_blocks(sentences, window_size=WINDOW_SIZE)
-    question_graph = build_dependency_graph(question)
 
+    resolved_blocks = [simple_coreference(block) for block in blocks]
+
+    question_graph = build_dependency_graph(question)
     results = []
 
-    for block in blocks:
+    for block in resolved_blocks:
         block_graph = build_dependency_graph(block)
         score = graph_similarity(question_graph, block_graph)
         if score >= threshold:
