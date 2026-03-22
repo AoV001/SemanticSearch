@@ -2,8 +2,8 @@ import networkx as nx
 
 def node_similarity(g1: nx.DiGraph, g2: nx.DiGraph):
 
-    nodes1 = {data["lemma"] for data in g1.nodes(data=True)}
-    nodes2 = {data["lemma"] for data in g2.nodes(data=True)}
+    nodes1 = {data.get("lemma") for _, data in g1.nodes(data=True) if "lemma" in data}
+    nodes2 = {data.get("lemma") for _, data in g2.nodes(data=True) if "lemma" in data}
 
     intersection = nodes1.intersection(nodes2)
 
@@ -13,8 +13,18 @@ def node_similarity(g1: nx.DiGraph, g2: nx.DiGraph):
 
 def edge_similarity(g1: nx.DiGraph, g2: nx.DiGraph):
 
-    edges1 = {(u, v) for u, v in g1.edges()}
-    edges2 = {(u, v) for u, v in g2.edges()}
+    edges1 = {
+        (g1.nodes[u].get("lemma"), g1.nodes[v].get("lemma"))
+        for u, v in g1.edges()
+        if "lemma" in g1.nodes[u] and "lemma" in g1.nodes[v]
+    }
+
+    edges2 = {
+        (g2.nodes[u].get("lemma"), g2.nodes[v].get("lemma"))
+        for u, v in g2.edges()
+        if "lemma" in g2.nodes[u] and "lemma" in g2.nodes[v]
+    }
+
 
     intersection = edges1.intersection(edges2)
 
