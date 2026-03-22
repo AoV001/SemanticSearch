@@ -9,7 +9,7 @@ def build_dependency_graph(sentence: str):
     G = nx.Graph()
 
     for token in doc:
-        G.add_node(token.text, label=token.lemma_, pos=token.pos_)
+        G.add_node(token.text, lemma=token.lemma_.lower(), pos=token.pos_)
 
         if token.head != token:
             G.add_edge(token.text, token.head.text, relation=token.dep_)
