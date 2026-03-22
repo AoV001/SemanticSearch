@@ -11,8 +11,8 @@ score = graph_similarity(g1, g2)
 
 print("Similarity:", score)
 
-print("Graph 1 nodes:")
+print("Graph 1, nodes:")
 print(g1.nodes(data=True))
 
-print("\nGraph 2 nodes:")
+print("\nGraph 2, nodes:")
 print(g2.nodes(data=True))
