@@ -1,36 +1,32 @@
 import networkx as nx
 
-def node_similarity(g1: nx.DiGraph, g2: nx.DiGraph):
 
+def node_similarity(g1, g2):
+    # g1 = вопрос, g2 = блок
     nodes1 = {data.get("lemma") for _, data in g1.nodes(data=True) if "lemma" in data}
     nodes2 = {data.get("lemma") for _, data in g2.nodes(data=True) if "lemma" in data}
 
-    intersection = nodes1.intersection(nodes2)
-
-    if len(nodes1) == 0:
+    intersection = nodes1 & nodes2
+    if not nodes1:
         return 0
+    # Recall: сколько узлов вопроса нашлось в блоке
     return len(intersection) / len(nodes1)
 
-def edge_similarity(g1: nx.DiGraph, g2: nx.DiGraph):
 
-    edges1 = {
-        (g1.nodes[u].get("lemma"), g1.nodes[v].get("lemma"))
-        for u, v in g1.edges()
-        if "lemma" in g1.nodes[u] and "lemma" in g1.nodes[v]
-    }
+def edge_similarity(g1, g2):
+    def edge_set(g):
+        lemmas = {n: d.get("lemma") for n, d in g.nodes(data=True)}
+        return {
+            tuple(sorted([lemmas[u], lemmas[v]]))
+            for u, v in g.edges()
+            if lemmas.get(u) and lemmas.get(v)
+        }
 
-    edges2 = {
-        (g2.nodes[u].get("lemma"), g2.nodes[v].get("lemma"))
-        for u, v in g2.edges()
-        if "lemma" in g2.nodes[u] and "lemma" in g2.nodes[v]
-    }
-
-
-    intersection = edges1.intersection(edges2)
-
-    if len(edges1) == 0:
+    edges1, edges2 = edge_set(g1), edge_set(g2)
+    if not edges1:
         return 0
-    return len(intersection) / len(edges1)
+    # Тоже recall по рёбрам вопроса
+    return len(edges1 & edges2) / len(edges1)
 
 def graph_similarity(g1: nx.DiGraph, g2: nx.DiGraph):
 
@@ -38,3 +34,42 @@ def graph_similarity(g1: nx.DiGraph, g2: nx.DiGraph):
     edges_score = edge_similarity(g1, g2)
 
     return 0.7 * nodes_score + 0.3 * edges_score
+
+
+def extract_relevant_subgraph(question_graph, block_graph, hop=1):
+    question_lemmas = {
+        data["lemma"]
+        for _, data in question_graph.nodes(data=True)
+        if "lemma" in data
+    }
+
+    # Узлы блока совпавшие с вопросом
+    seed_nodes = {
+        node for node, data in block_graph.nodes(data=True)
+        if data.get("lemma") in question_lemmas
+    }
+
+    # Расширяем только через рёбра где хотя бы один конец — seed
+    relevant_nodes = set(seed_nodes)
+    for _ in range(hop):
+        neighbors = set()
+        for u, v in block_graph.edges():
+            if u in relevant_nodes and v not in relevant_nodes:
+                # сосед релевантен только если его лемма есть в вопросе
+                # или он соединяет два seed-узла
+                v_lemma = block_graph.nodes[v].get("lemma")
+                if v_lemma in question_lemmas:
+                    neighbors.add(v)
+            elif v in relevant_nodes and u not in relevant_nodes:
+                u_lemma = block_graph.nodes[u].get("lemma")
+                if u_lemma in question_lemmas:
+                    neighbors.add(u)
+        relevant_nodes.update(neighbors)
+
+    # Только рёбра где ОБА узла релевантны
+    triplets = []
+    for u, v, data in block_graph.edges(data=True):
+        if u in relevant_nodes and v in relevant_nodes:
+            triplets.append((u, data.get("relation", "?"), v))
+
+    return triplets
