@@ -43,33 +43,25 @@ def extract_relevant_subgraph(question_graph, block_graph, hop=1):
         if "lemma" in data
     }
 
-    # Узлы блока совпавшие с вопросом
     seed_nodes = {
         node for node, data in block_graph.nodes(data=True)
         if data.get("lemma") in question_lemmas
     }
 
-    # Расширяем только через рёбра где хотя бы один конец — seed
+    # Расширяем БЕЗ фильтра по вопросу — берём всех соседей seed
     relevant_nodes = set(seed_nodes)
     for _ in range(hop):
         neighbors = set()
-        for u, v in block_graph.edges():
-            if u in relevant_nodes and v not in relevant_nodes:
-                # сосед релевантен только если его лемма есть в вопросе
-                # или он соединяет два seed-узла
-                v_lemma = block_graph.nodes[v].get("lemma")
-                if v_lemma in question_lemmas:
-                    neighbors.add(v)
-            elif v in relevant_nodes and u not in relevant_nodes:
-                u_lemma = block_graph.nodes[u].get("lemma")
-                if u_lemma in question_lemmas:
-                    neighbors.add(u)
+        for node in list(relevant_nodes):
+            if node in block_graph:
+                neighbors.update(block_graph.neighbors(node))
         relevant_nodes.update(neighbors)
 
-    # Только рёбра где ОБА узла релевантны
     triplets = []
     for u, v, data in block_graph.edges(data=True):
         if u in relevant_nodes and v in relevant_nodes:
             triplets.append((u, data.get("relation", "?"), v))
 
     return triplets
+
+
