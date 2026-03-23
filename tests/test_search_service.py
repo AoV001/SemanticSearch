@@ -12,6 +12,8 @@ question = "Who kicked the ball?"
 
 results = search(question, text, top_k=5)
 
-for score, (sentence, sim) in enumerate(results):
-    print(f"{sim:.2f} - {sentence}")
-
+for i, (block, score, triplets) in enumerate(results):
+    print(f"\n{score:.2f} - {block}")
+    print("  Relevant connections:")
+    for u, rel, v in triplets:
+        print(f"    {u} --[{rel}]--> {v}")
