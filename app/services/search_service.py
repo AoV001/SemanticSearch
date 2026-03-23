@@ -3,6 +3,8 @@ from app.graph.graph_similarity import graph_similarity
 from app.nlp.text_processing import split_sentences
 from app.nlp.coreference import simple_coreference
 from spacy.lang.en import English
+from app.graph.graph_similarity import graph_similarity, extract_relevant_subgraph
+
 
 WINDOW_SIZE = 3
 
@@ -31,7 +33,8 @@ def search(question: str, text: str, top_k: int=3, threshold: float = 0.2):
         block_graph = build_dependency_graph(block)
         score = graph_similarity(question_graph, block_graph)
         if score >= threshold:
-            results.append((block, score))
+            triplets = extract_relevant_subgraph(question_graph, block_graph, hop=1)
+            results.append((block, score, triplets))
 
     results.sort(key=lambda x: x[1], reverse=True)
     return results[:top_k]
