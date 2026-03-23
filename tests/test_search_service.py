@@ -1,4 +1,5 @@
 from app.services.search_service import search
+from app.nlp.answer_extraction import format_triplets
 
 text = """
 The boy kicked the ball because he was playing football.
@@ -13,9 +14,13 @@ question = "Why did the boy kick the ball?"
 results = search(question, text, top_k=5)
 
 for i, (block, score, triplets, answer) in enumerate(results):
-    print(f"\n{score:.2f} - {block}")
+    print(f"\n{'='*50}")
+    print(f"Relevance: {score:.0%}")
+    print(f"Context:   {block}")
     if answer:
-        print(f"  Answer: {answer}")
-    print("  Relevant connections:")
-    for u, rel, v in triplets:
-        print(f"    {u} --[{rel}]--> {v}")
+        print(f"Answer:    {answer}")
+    readable = format_triplets(triplets)
+    if readable:
+        print(f"Key relationships:")
+        for line in readable:
+            print(f"  • {line}")

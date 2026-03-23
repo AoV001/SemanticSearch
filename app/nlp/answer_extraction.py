@@ -84,3 +84,39 @@ def extract_answer(triplets: list, question_graph, original_block: str, original
                 return ent.text
 
     return None
+
+
+DEP_LABELS = {
+    "nsubj":    lambda u, v: f"{u} performs '{v}'",
+    "nsubjpass":lambda u, v: f"{u} is subject of '{v}'",
+    "dobj":     lambda u, v: f"'{u}' acts on {v}",
+    "advcl":    lambda u, v: f"'{u}' happens because/when '{v}'",
+    "prep":     lambda u, v: f"'{u}' is related to '{v}'",
+    "attr":     lambda u, v: f"'{u}' is described as '{v}'",
+    "advmod":   lambda u, v: f"'{v}' describes how '{u}' happens",
+    "npadvmod": lambda u, v: f"'{v}' tells when/how '{u}'",
+    "tmod":     lambda u, v: f"'{u}' happens at '{v}'",
+    "amod":     lambda u, v: f"'{v}' describes '{u}'",
+    "pobj":     lambda u, v: f"object of preposition: '{v}'",
+    "iobj":     lambda u, v: f"'{u}' is given/shown to '{v}'",
+    "conj":     lambda u, v: f"'{u}' and '{v}' are connected",
+    "relcl":    lambda u, v: f"'{v}' describes '{u}'",
+    "acl":      lambda u, v: f"'{v}' describes '{u}'",
+    "ccomp":    lambda u, v: f"'{u}' implies that '{v}'",
+    "xcomp":    lambda u, v: f"'{u}' leads to '{v}'",
+    "aux":      lambda u, v: f"helper verb '{v}' for '{u}'",
+    "neg":      lambda u, v: f"'{u}' is negated",
+    "compound": lambda u, v: f"'{u} {v}' is a compound",
+    "poss":     lambda u, v: f"'{v}' belongs to '{u}'",
+}
+
+def format_triplets(triplets: list[tuple]) -> list[str]:
+    """Переводим технические triplets в читаемые фразы."""
+    result = []
+    for u, rel, v in triplets:
+        formatter = DEP_LABELS.get(rel)
+        if formatter:
+            result.append(formatter(u, v))
+        else:
+            result.append(f"'{u}' → '{v}' ({rel})")
+    return result
