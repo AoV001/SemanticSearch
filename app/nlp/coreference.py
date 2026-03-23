@@ -3,66 +3,90 @@ import spacy
 nlp = spacy.load("en_core_web_sm")
 
 FIRST_PERSON = {"i", "me", "my", "mine", "we", "us", "our", "ours"}
-
 SECOND_PERSON = {"you", "your", "yours"}
-
 MALE = {"he", "him", "his"}
-
 FEMALE = {"she", "her", "hers"}
+NEUTRAL = {"it", "its"}
+PLURAL = {"they", "them", "their", "theirs"}
+PRONOUNS = FIRST_PERSON | SECOND_PERSON | MALE | FEMALE | NEUTRAL | PLURAL
 
-NEUTRAL = {"it", "they", "them", "its", "theirs"}
+# semantic sets for gender
+MALE_NOUNS = {
+    "boy", "man", "father", "son", "brother", "uncle", "king", "prince",
+    "husband", "grandfather", "guy", "male", "sir", "mr", "lord"
+}
+FEMALE_NOUNS = {
+    "girl", "woman", "mother", "daughter", "sister", "aunt", "queen",
+    "princess", "wife", "grandmother", "lady", "female", "mrs", "ms", "madam"
+}
 
-PRONOUNS = FIRST_PERSON | SECOND_PERSON | MALE | FEMALE | NEUTRAL
+def get_gender(token) -> str | None:
 
-def simple_coreference(text: str):
+    lower = token.lemma_.lower()
+    if lower in MALE_NOUNS:
+        return "Masc"
+    if lower in FEMALE_NOUNS:
+        return "Fem"
+    # for inanimate always neutral
+    if token.ent_type_ in {"PERSON", "ORG"}:
+        return "Neut"
+    return None
 
+def simple_coreference(text: str) -> str:
     doc = nlp(text)
 
     last = {
         "Masc": None,
         "Fem": None,
-        "Neut": None
+        "Neut": None,
+        "Plur": None,
     }
 
     resolved_tokens = []
 
     for token in doc:
-
         lower = token.text.lower()
-        gender = token.morph.get("Gender")
-        if gender:
-            gender = gender[0]  # spaCy возвращает список
 
-        # Существительные, не местоимения
-        if token.pos_ in {"NOUN"} and lower not in PRONOUNS:
+
+        if token.pos_ in {"NOUN", "PROPN"} and lower not in PRONOUNS:
+            gender = get_gender(token)
             if gender == "Masc":
                 last["Masc"] = token.text
             elif gender == "Fem":
                 last["Fem"] = token.text
+            elif gender == "Neut":
+                last["Neut"] = token.text
             else:
+
                 last["Neut"] = token.text
             resolved_tokens.append(token.text)
             continue
 
+        # Резолвим местоимения
         if lower in MALE and last["Masc"]:
             resolved_tokens.append(last["Masc"])
         elif lower in FEMALE and last["Fem"]:
             resolved_tokens.append(last["Fem"])
         elif lower in NEUTRAL and last["Neut"]:
             resolved_tokens.append(last["Neut"])
+        elif lower in PLURAL:
+            # they/them — берём последнее существительное любого рода
+            candidate = last["Plur"] or last["Masc"] or last["Fem"] or last["Neut"]
+            resolved_tokens.append(candidate if candidate else token.text)
         else:
             resolved_tokens.append(token.text)
 
+    return _rebuild_text(resolved_tokens)
 
-    resolved_text = ""
-    for tok in resolved_tokens:
-        if tok in {".", ",", "?", "!"}:
-            resolved_text += tok
-            if tok == ".":
-                resolved_text += " "
+
+def _rebuild_text(tokens: list[str]) -> str:
+    """Собираем токены обратно в строку с пробелами."""
+    result = ""
+    for tok in tokens:
+        if tok in {".", ",", "?", "!", ":", ";", "'s"}:
+            result += tok
         else:
-            if resolved_text and resolved_text[-1] not in {" ", "\n", "."}:
-                resolved_text += " "
-            resolved_text += tok
-
-    return resolved_text
+            if result and result[-1] not in {" ", "\n"}:
+                result += " "
+            result += tok
+    return result.strip()
