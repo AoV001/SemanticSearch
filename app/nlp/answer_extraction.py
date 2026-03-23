@@ -66,7 +66,6 @@ def extract_answer(triplets: list, question_graph, original_block: str, original
 
     if qtype == "why":
         result = extract_why_answer(triplets, original_block)
-        print(f"  DEBUG why result: '{result}'")  # <-
         return result
 
     target_deps = strategy["deps"]
