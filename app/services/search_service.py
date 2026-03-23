@@ -33,7 +33,7 @@ def search(question, text, top_k=3, threshold=0.5):
         score = graph_similarity(question_graph, block_graph)
         if score >= threshold:
             triplets = extract_relevant_subgraph(question_graph, block_graph, hop=1)
-            answer = extract_answer(triplets, question_graph, block)  # <- передаём block
+            answer = extract_answer(triplets, question_graph, block, original_question=question)
             results.append((block, score, triplets, answer))
 
     results.sort(key=lambda x: x[1], reverse=True)
