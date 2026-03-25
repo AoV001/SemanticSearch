@@ -14,7 +14,7 @@ QUESTION_TYPES = {
 }
 
 def classify_question(question: str) -> str:
-    """Определяем тип вопроса по первому слову."""
+
     first = question.strip().lower().split()[0]
     for qtype in QUESTION_TYPES:
         if first.startswith(qtype):
@@ -23,9 +23,7 @@ def classify_question(question: str) -> str:
 
 
 def extract_why_answer(triplets: list, original_block: str) -> str | None:
-    """Для why — ищем advcl связь и извлекаем всю причинную клаузу."""
 
-    # Шаг 1: находим глагол причинной клаузы через advcl
     cause_verb = None
     for u, rel, v in triplets:
         if rel == "advcl":
@@ -35,14 +33,14 @@ def extract_why_answer(triplets: list, original_block: str) -> str | None:
     if not cause_verb:
         return None
 
-    # Шаг 2: в оригинальном блоке ищем клаузу с because/since/so
+
     doc = nlp(original_block)
 
     CAUSE_MARKERS = {"because", "since", "as", "so", "therefore", "thus"}
 
     for token in doc:
         if token.text.lower() in CAUSE_MARKERS:
-            # Берём всё предложение от маркера до точки
+
             clause_tokens = []
             for t in doc[token.i:]:
                 if t.text in {".", "!", "?"}:
@@ -51,7 +49,7 @@ def extract_why_answer(triplets: list, original_block: str) -> str | None:
             if clause_tokens:
                 return " ".join(clause_tokens)
 
-    # Fallback: собираем клаузу из triplets вокруг cause_verb
+
     related = []
     for u, rel, v in triplets:
         if u == cause_verb or v == cause_verb:
@@ -60,7 +58,7 @@ def extract_why_answer(triplets: list, original_block: str) -> str | None:
     return " ".join(related) if related else cause_verb
 
 def extract_answer(triplets: list, question_graph, original_block: str, original_question: str = "") -> str | None:
-    # Классифицируем по оригинальному вопросу, не по леммам графа
+
     qtype = classify_question(original_question if original_question else "what")
     strategy = QUESTION_TYPES[qtype]
 
@@ -111,7 +109,7 @@ DEP_LABELS = {
 }
 
 def format_triplets(triplets: list[tuple]) -> list[str]:
-    """Переводим технические triplets в читаемые фразы."""
+
     result = []
     for u, rel, v in triplets:
         formatter = DEP_LABELS.get(rel)
@@ -120,3 +118,43 @@ def format_triplets(triplets: list[tuple]) -> list[str]:
         else:
             result.append(f"'{u}' → '{v}' ({rel})")
     return result
+
+TEMPORAL_MARKERS = {"before", "after", "when", "while"}
+
+def extract_temporal_answer(original_block: str, original_question: str) -> str | None:
+    words = original_question.lower().split()
+    marker = next((w for w in words if w in TEMPORAL_MARKERS), None)
+    if not marker:
+        return None
+
+    doc = nlp(original_block)
+
+    for sent in doc.sents:
+        for token in sent:
+            t = token.text.lower()
+
+            if marker == "before" and t == "after":
+                clause = [x.text for x in sent
+                         if x.i > token.i and not x.is_punct]
+                if clause:
+                    return " ".join(clause)
+
+            elif marker == "before" and t == "before":
+                clause = [x.text for x in sent
+                         if x.i < token.i and not x.is_punct]
+                if clause:
+                    return " ".join(clause)
+
+            elif marker == "after" and t == "before":
+                clause = [x.text for x in sent
+                         if x.i > token.i and not x.is_punct]
+                if clause:
+                    return " ".join(clause)
+
+            elif marker == "after" and t == "after":
+                clause = [x.text for x in sent
+                         if x.i < token.i and not x.is_punct]
+                if clause:
+                    return " ".join(clause)
+
+    return None
