@@ -127,34 +127,36 @@ def extract_temporal_answer(original_block: str, original_question: str) -> str 
     if not marker:
         return None
 
+    marker_idx = words.index(marker)
+    anchor_words = set(words[marker_idx + 1:])
+    anchor_words -= {"the", "a", "an", "to", "?", "did", "was", "is"}
+
     doc = nlp(original_block)
 
     for sent in doc.sents:
+        sent_words = {t.lemma_.lower() for t in sent}
+
+        if not sent_words & anchor_words:
+            continue
+
+
         for token in sent:
             t = token.text.lower()
 
             if marker == "before" and t == "after":
-                clause = [x.text for x in sent
-                         if x.i > token.i and not x.is_punct]
-                if clause:
-                    return " ".join(clause)
+                clause = [x.text for x in sent if x.i > token.i and not x.is_punct]
+                return " ".join(clause) if clause else None
 
             elif marker == "before" and t == "before":
-                clause = [x.text for x in sent
-                         if x.i < token.i and not x.is_punct]
-                if clause:
-                    return " ".join(clause)
+                clause = [x.text for x in sent if x.i < token.i and not x.is_punct]
+                return " ".join(clause) if clause else None
 
             elif marker == "after" and t == "before":
-                clause = [x.text for x in sent
-                         if x.i > token.i and not x.is_punct]
-                if clause:
-                    return " ".join(clause)
+                clause = [x.text for x in sent if x.i > token.i and not x.is_punct]
+                return " ".join(clause) if clause else None
 
             elif marker == "after" and t == "after":
-                clause = [x.text for x in sent
-                         if x.i < token.i and not x.is_punct]
-                if clause:
-                    return " ".join(clause)
+                clause = [x.text for x in sent if x.i < token.i and not x.is_punct]
+                return " ".join(clause) if clause else None
 
     return None
