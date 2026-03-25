@@ -2,7 +2,7 @@ from app.services.search_service import search
 from app.nlp.answer_extraction import format_triplets
 
 text = """
-The boy kicked the ball because he was playing football.
+The boy kicked the ball because he was playing football for 2 hours.
 The girl ran home after she saw him.
 The dog barked loudly before it got to sleep.
 The sun was Shining and the boy saw the girl with his ball. 
@@ -16,7 +16,8 @@ results = search(
                "What happened before the girl ran home? ",
                "What happened after the girl saw the boy? ",
                "What happened before the dog got to sleep?",
-               "What happened after the dog barked loudly? ",],
+               "What happened after the dog barked loudly? ",
+               "How long did the boy play football?"],
     text=text,
     top_k=1
 )

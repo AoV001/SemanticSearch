@@ -119,44 +119,136 @@ def format_triplets(triplets: list[tuple]) -> list[str]:
             result.append(f"'{u}' → '{v}' ({rel})")
     return result
 
-TEMPORAL_MARKERS = {"before", "after", "when", "while"}
+# answer_extraction.py — заменяем всю temporal часть
+
+TEMPORAL_MARKERS = {"before", "after", "when", "while", "then"}
+SEQUENTIAL_MARKERS = {"as soon as"}  # двусловные — обрабатываем отдельно
+QUANTITATIVE_MARKERS = {"how long", "how often", "how much", "how many"}
+
+# Какую клаузу брать для каждого маркера
+# "same" = всё предложение, "before" = до маркера, "after" = после маркера
+MARKER_STRATEGY = {
+    # маркер в тексте → что брать если вопрос спрашивает before/after/while
+    "after":      {"before": "after",  "after": "before", "while": "same"},
+    "before":     {"before": "before", "after": "after",  "while": "same"},
+    "while":      {"while": "after",   "before": "before","after": "after"},
+    "then":       {"after": "after",   "before": "before","then": "after"},
+    "as soon as": {"after": "after",   "before": "before","as soon as": "after"},
+    "when":       {"when": "after",    "before": "before","after": "after"},
+}
+
+def _get_clause(sent, token_i: int, side: str) -> str | None:
+    """Извлекаем клаузу до или после позиции token_i в предложении."""
+    if side == "before":
+        tokens = [t.text for t in sent if t.i < token_i and not t.is_punct]
+    elif side == "after":
+        tokens = [t.text for t in sent if t.i > token_i and not t.is_punct]
+    else:  # same — всё предложение
+        tokens = [t.text for t in sent if not t.is_punct]
+    return " ".join(tokens) if tokens else None
+
+def _get_anchor_words(question: str, marker: str) -> set:
+    """Слова после маркера в вопросе — используем как якорь для поиска предложения."""
+    words = question.lower().split()
+    marker_words = marker.split()
+    # ищем позицию маркера в вопросе
+    for i in range(len(words)):
+        if words[i:i+len(marker_words)] == marker_words:
+            anchor = set(words[i + len(marker_words):])
+            anchor -= {"the", "a", "an", "to", "?", "did", "was", "is", "do", "does"}
+            return anchor
+    return set()
 
 def extract_temporal_answer(original_block: str, original_question: str) -> str | None:
-    words = original_question.lower().split()
-    marker = next((w for w in words if w in TEMPORAL_MARKERS), None)
-    if not marker:
+    q_lower = original_question.lower()
+    words = q_lower.split()
+
+    # Определяем маркер вопроса (сначала двусловные)
+    q_marker = None
+    for m in SEQUENTIAL_MARKERS:
+        if m in q_lower:
+            q_marker = m
+            break
+    if not q_marker:
+        for m in TEMPORAL_MARKERS:
+            if m in words:
+                q_marker = m
+                break
+
+    # Проверяем quantitative
+    for qm in QUANTITATIVE_MARKERS:
+        if q_lower.startswith(qm):
+            return extract_quantitative_answer(original_block, original_question)
+
+    if not q_marker:
         return None
 
-    marker_idx = words.index(marker)
-    anchor_words = set(words[marker_idx + 1:])
-    anchor_words -= {"the", "a", "an", "to", "?", "did", "was", "is"}
-
+    anchor_words = _get_anchor_words(original_question, q_marker)
     doc = nlp(original_block)
 
     for sent in doc.sents:
-        sent_words = {t.lemma_.lower() for t in sent}
+        sent_lemmas = {t.lemma_.lower() for t in sent}
 
-        if not sent_words & anchor_words:
+        # Предложение должно содержать хотя бы одно слово из якоря
+        if anchor_words and not sent_lemmas & anchor_words:
             continue
 
+        sent_text = sent.text.lower()
 
+        # Ищем маркер в предложении (сначала двусловные)
+        for text_marker, strategies in MARKER_STRATEGY.items():
+            if text_marker not in sent_text:
+                continue
+            side = strategies.get(q_marker)
+            if not side:
+                continue
+
+            # Находим позицию маркера в предложении
+            marker_words = text_marker.split()
+            for token in sent:
+                if token.text.lower() == marker_words[0]:
+                    # Для двусловных проверяем следующий токен
+                    if len(marker_words) > 1:
+                        next_tok = sent[token.i + 1] if token.i + 1 < len(sent) else None
+                        if not next_tok or next_tok.text.lower() != marker_words[1]:
+                            continue
+                    result = _get_clause(sent, token.i, side)
+                    if result:
+                        return result
+
+    return None
+
+
+def extract_quantitative_answer(original_block: str, original_question: str) -> str | None:
+    """Для how long/often/much/many — ищем NUMBER/DATE/QUANTITY entity."""
+    q_lower = original_question.lower()
+    anchor_words = set(q_lower.split()) - {
+        "how", "long", "often", "much", "many", "did",
+        "does", "was", "the", "a", "an", "?"
+    }
+
+    doc = nlp(original_block)
+    TARGET_ENTS = {"DATE", "TIME", "QUANTITY", "CARDINAL", "PERCENT", "MONEY"}
+
+    for sent in doc.sents:
+        sent_lemmas = {t.lemma_.lower() for t in sent}
+        if not sent_lemmas & anchor_words:
+            continue
+        for ent in sent.ents:
+            if ent.label_ in TARGET_ENTS:
+                return ent.text
+
+    # Fallback — ищем числа через POS
+    for sent in doc.sents:
+        sent_lemmas = {t.lemma_.lower() for t in sent}
+        if not sent_lemmas & anchor_words:
+            continue
         for token in sent:
-            t = token.text.lower()
-
-            if marker == "before" and t == "after":
-                clause = [x.text for x in sent if x.i > token.i and not x.is_punct]
-                return " ".join(clause) if clause else None
-
-            elif marker == "before" and t == "before":
-                clause = [x.text for x in sent if x.i < token.i and not x.is_punct]
-                return " ".join(clause) if clause else None
-
-            elif marker == "after" and t == "before":
-                clause = [x.text for x in sent if x.i > token.i and not x.is_punct]
-                return " ".join(clause) if clause else None
-
-            elif marker == "after" and t == "after":
-                clause = [x.text for x in sent if x.i < token.i and not x.is_punct]
-                return " ".join(clause) if clause else None
+            if token.pos_ == "NUM":
+                # берём число + следующее слово для контекста ("2 hours", "every day")
+                next_tok = sent[token.i + 1] if token.i + 1 < len(sent) else None
+                if next_tok and next_tok.pos_ in {"NOUN", "ADV"}:
+                    return f"{token.text} {next_tok.text}"
+                return token.text
 
     return None
