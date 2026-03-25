@@ -4,6 +4,7 @@ from app.nlp.coreference import simple_coreference
 from spacy.lang.en import English
 from app.graph.graph_similarity import graph_similarity, extract_relevant_subgraph
 from app.nlp.answer_extraction import extract_answer
+from typing import List
 
 
 WINDOW_SIZE = 3
@@ -15,7 +16,7 @@ def split_blocks(sentences, window_size=WINDOW_SIZE):
         blocks.append(block)
     return blocks
 
-def search(question, text, top_k=3, threshold=0.5):
+def search(questions: List[str], text: str, top_k: int = 3, threshold=0.5):
     nlp_sent = English()
     nlp_sent.add_pipe("sentencizer")
     cleaned_text = text.replace("\n", " ")
@@ -25,16 +26,21 @@ def search(question, text, top_k=3, threshold=0.5):
     blocks = split_blocks(sentences, window_size=WINDOW_SIZE)
     resolved_blocks = [simple_coreference(block) for block in blocks]
 
-    question_graph = build_dependency_graph(question)
-    results = []
+    all_results = {}
 
-    for block in resolved_blocks:
-        block_graph = build_dependency_graph(block)
-        score = graph_similarity(question_graph, block_graph)
-        if score >= threshold:
-            triplets = extract_relevant_subgraph(question_graph, block_graph, hop=1)
-            answer = extract_answer(triplets, question_graph, block, original_question=question)
-            results.append((block, score, triplets, answer))
+    for question in questions:
+        question_graph = build_dependency_graph(question)
+        results = []
 
-    results.sort(key=lambda x: x[1], reverse=True)
-    return results[:top_k]
+        for block in resolved_blocks:
+            block_graph = build_dependency_graph(block)
+            score = graph_similarity(question_graph, block_graph)
+            if score >= threshold:
+                triplets = extract_relevant_subgraph(question_graph, block_graph, hop=1)
+                answer = extract_answer(triplets, question_graph, block, original_question=question)
+                results.append((block, score, triplets, answer))
+
+        results.sort(key=lambda x: x[1], reverse=True)
+        all_results[question] = results[:top_k]
+
+    return all_results

@@ -9,18 +9,16 @@ The sun was Shining and the boy saw the girl with his ball.
 She gave him the ball.
 """
 
-question = "Why did the boy kick the ball?"
+results = search(
+    questions=["Who kicked the ball?", "Who gave the ball?", "Why did boy kicked the ball?"],
+    text=text,
+    top_k=1
+)
 
-results = search(question, text, top_k=5)
-
-for i, (block, score, triplets, answer) in enumerate(results):
-    print(f"\n{'='*50}")
-    print(f"Relevance: {score:.0%}")
-    print(f"Context:   {block}")
-    if answer:
-        print(f"Answer:    {answer}")
-    readable = format_triplets(triplets)
-    if readable:
-        print(f"Key relationships:")
-        for line in readable:
-            print(f"  • {line}")
+for question, hits in results.items():
+    print(f"\nQ: {question}")
+    if not hits:
+        print("  A: No answer found.")
+        continue
+    block, score, triplets, answer = hits[0]
+    print(f"  A: {answer or '—'} ({score:.0%})")
