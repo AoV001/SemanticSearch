@@ -46,6 +46,13 @@ def get_files():
     files = list_files()
     return {"files": files, "total": len(files)}
 
+@router.get("/files/{filename}/text")
+def get_file_text(filename: str):
+    if not file_exists(filename):
+        raise HTTPException(status_code=404, detail="File not found")
+    text = read_file(os.path.join(UPLOAD_FOLDER, filename))
+    return {"text": text}
+
 @router.delete("/files/{filename}")
 def delete_file_endpoint(filename: str):
     ext = os.path.splitext(filename)[1].lower()

@@ -46,3 +46,9 @@ export const getFileHistory = async (filename) => {
   if (!res.ok) throw new Error(await res.text())
   return res.json()
 }
+
+export const getFileText = async (filename) => {
+  const res = await fetch(`${API_URL}/api/files/${encodeURIComponent(filename)}/text`)
+  if (!res.ok) throw new Error(await res.text())
+  return res.json()
+}
