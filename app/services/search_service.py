@@ -54,6 +54,7 @@ def search(questions: List[str], text: str, top_k: int = 3, threshold=0.4):
                 results.append((block, score, triplets, answer))
 
         results.sort(key=lambda x: x[1], reverse=True)
+        all_results[question] = results[:top_k]
 
         best = all_results[question][0] if all_results[question] else None
         if best:
@@ -65,6 +66,6 @@ def search(questions: List[str], text: str, top_k: int = 3, threshold=0.4):
                 confidence=score
             )
 
-        all_results[question] = results[:top_k]
+
 
     return all_results
