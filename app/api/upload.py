@@ -2,38 +2,40 @@ from fastapi import APIRouter, File, UploadFile, HTTPException
 import os
 
 from app.services.file_service import (
-    read_txt_file, ensure_upload_folder,
+    read_file, ensure_upload_folder,
     list_files, delete_file, file_exists
 )
 from app.nlp.text_processing import split_sentences
 
 router = APIRouter()
 UPLOAD_FOLDER = "data/"
+ALLOWED_EXTENSIONS = {".txt", ".pdf"}
 
 @router.post("/upload")
 async def upload_file(file: UploadFile = File(...)):
-    if not file.filename.endswith(".txt"):
-        raise HTTPException(status_code=400, detail="Only .txt files are allowed")
+    ext = os.path.splitext(file.filename)[1].lower()
+    if ext not in ALLOWED_EXTENSIONS:
+        raise HTTPException(status_code=400, detail="Only .txt and .pdf files are allowed")
 
     ensure_upload_folder()
 
     if file_exists(file.filename):
         raise HTTPException(status_code=409, detail=f"File '{file.filename}' already exists")
 
-    file_location = os.path.join(UPLOAD_FOLDER, file.filename)
-
     content = await file.read()
     if not content.strip():
         raise HTTPException(status_code=400, detail="File is empty")
 
+    file_location = os.path.join(UPLOAD_FOLDER, file.filename)
     with open(file_location, "wb") as f:
         f.write(content)
 
-    text = read_txt_file(file_location)
+    text = read_file(file_location)  # универсальное чтение
     sentences = split_sentences(text)
 
     return {
         "filename": file.filename,
+        "format": ext.lstrip("."),
         "length": len(text),
         "sentences_total": len(sentences),
         "preview": sentences[:5]
@@ -46,8 +48,9 @@ def get_files():
 
 @router.delete("/files/{filename}")
 def delete_file_endpoint(filename: str):
-    if not filename.endswith(".txt"):
-        raise HTTPException(status_code=400, detail="Only .txt files are allowed")
+    ext = os.path.splitext(filename)[1].lower()
+    if ext not in ALLOWED_EXTENSIONS:
+        raise HTTPException(status_code=400, detail="Only .txt and .pdf files are allowed")
 
     if not file_exists(filename):
         raise HTTPException(status_code=404, detail=f"File '{filename}' not found")
