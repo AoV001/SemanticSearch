@@ -10,10 +10,16 @@ router = APIRouter()
 @router.post("/search")
 def search_endpoint(request: SearchRequest):
     if not file_exists(request.filename):
-        raise HTTPException(status_code=404, detail=f"File '{request.filename}' not found")
+        raise HTTPException(
+            status_code=404,
+            detail=f"File '{request.filename}' not found")
 
     text = read_file(os.path.join("data/", request.filename))
-    all_results = search(questions=request.questions, text=text, top_k=request.top_k)
+    all_results = search(
+        questions=request.questions,
+        text=text,
+        top_k=request.top_k,
+        filename=request.filename)
 
     response = []
 

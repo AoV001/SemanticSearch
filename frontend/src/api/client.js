@@ -40,3 +40,9 @@ export const getHistory = async () => {
   if (!res.ok) throw new Error(await res.text())
   return res.json()
 }
+
+export const getFileHistory = async (filename) => {
+  const res = await fetch(`${API_URL}/api/history/${encodeURIComponent(filename)}`)
+  if (!res.ok) throw new Error(await res.text())
+  return res.json()
+}

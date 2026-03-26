@@ -23,3 +23,12 @@ def clear_history():
     conn.execute("DELETE FROM search_history")
     conn.commit()
     conn.close()
+
+def get_history_by_file(filename: str, limit: int = 50) -> list[dict]:
+    conn = get_connection()
+    rows = conn.execute(
+        "SELECT * FROM search_history WHERE filename = ? ORDER BY created_at DESC LIMIT ?",
+        (filename, limit)
+    ).fetchall()
+    conn.close()
+    return [dict(row) for row in rows]

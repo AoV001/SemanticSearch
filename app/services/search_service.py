@@ -1,3 +1,5 @@
+from fileinput import filename
+
 from app.graph.graph_builder import build_dependency_graph
 from app.nlp.text_processing import split_sentences
 from app.nlp.coreference import simple_coreference
@@ -24,7 +26,7 @@ def split_blocks(sentences, window_size=WINDOW_SIZE):
         blocks.append(block)
     return blocks
 
-def search(questions: List[str], text: str, top_k: int = 3, threshold=0.4):
+def search(questions: List[str], text: str, top_k: int = 3, threshold=0.4, filename: str = ""):
     nlp_sent = English()
     nlp_sent.add_pipe("sentencizer")
     cleaned_text = text.replace("\n", " ")
@@ -60,7 +62,7 @@ def search(questions: List[str], text: str, top_k: int = 3, threshold=0.4):
         if best:
             block, score, triplets, answer = best
             save_search(
-                filename="",
+                filename=filename,
                 question=question,
                 answer=answer,
                 confidence=score
