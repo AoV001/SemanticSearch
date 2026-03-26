@@ -10,7 +10,7 @@ from app.nlp.answer_extraction import (
 from app.cache.graph_cache import get_graph
 
 from typing import List
-
+from app.db.history import save_search
 
 WINDOW_SIZE = 3
 ALL_TEMPORAL = TEMPORAL_MARKERS | {"as soon as", "how long", "how often", "how much", "how many"}
@@ -54,6 +54,17 @@ def search(questions: List[str], text: str, top_k: int = 3, threshold=0.4):
                 results.append((block, score, triplets, answer))
 
         results.sort(key=lambda x: x[1], reverse=True)
+
+        best = all_results[question][0] if all_results[question] else None
+        if best:
+            block, score, triplets, answer = best
+            save_search(
+                filename="",
+                question=question,
+                answer=answer,
+                confidence=score
+            )
+
         all_results[question] = results[:top_k]
 
     return all_results
