@@ -7,6 +7,7 @@ from app.nlp.answer_extraction import (
     extract_answer, extract_temporal_answer,
     TEMPORAL_MARKERS, SEQUENTIAL_MARKERS, QUANTITATIVE_MARKERS
 )
+from app.cache.graph_cache import get_graph
 
 from typing import List
 
@@ -36,11 +37,11 @@ def search(questions: List[str], text: str, top_k: int = 3, threshold=0.4):
     all_results = {}
 
     for question in questions:
-        question_graph = build_dependency_graph(question)
+        question_graph = get_graph(question)
         results = []
 
         for block in resolved_blocks:
-            block_graph = build_dependency_graph(block)
+            block_graph = get_graph(block)
             score = graph_similarity(question_graph, block_graph)
             if score >= threshold:
                 triplets = extract_relevant_subgraph(question_graph, block_graph, hop=1)
