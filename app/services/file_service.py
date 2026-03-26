@@ -1,5 +1,6 @@
 import os
 import pdfplumber
+from app.db.history import delete_history_by_file
 
 UPLOAD_FOLDER = "data/"
 
@@ -33,6 +34,7 @@ def delete_file(filename: str) -> bool:
     if not os.path.exists(path):
         return False
     os.remove(path)
+    delete_history_by_file(filename)
     return True
 
 def file_exists(filename: str) -> bool:

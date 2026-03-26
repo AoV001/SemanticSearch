@@ -32,3 +32,9 @@ def get_history_by_file(filename: str, limit: int = 50) -> list[dict]:
     ).fetchall()
     conn.close()
     return [dict(row) for row in rows]
+
+def delete_history_by_file(filename: str):
+    conn = get_connection()
+    conn.execute("DELETE FROM search_history WHERE filename = ?", (filename,))
+    conn.commit()
+    conn.close()
