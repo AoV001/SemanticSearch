@@ -52,3 +52,13 @@ export const getFileText = async (filename) => {
   if (!res.ok) throw new Error(await res.text())
   return res.json()
 }
+
+export const uploadText = async (filename, text) => {
+  const res = await fetch(`${API_URL}/api/upload-text`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ filename, text })
+  })
+  if (!res.ok) throw new Error(await res.text())
+  return res.json()
+}

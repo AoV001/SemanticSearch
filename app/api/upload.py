@@ -1,6 +1,6 @@
 from fastapi import APIRouter, File, UploadFile, HTTPException
 import os
-
+from pydantic import BaseModel
 from app.services.file_service import (
     read_file, ensure_upload_folder,
     list_files, delete_file, file_exists
@@ -64,3 +64,38 @@ def delete_file_endpoint(filename: str):
 
     delete_file(filename)
     return {"message": f"File '{filename}' deleted successfully"}
+
+
+class TextInput(BaseModel):
+    text: str
+    filename: str
+
+
+@router.post("/upload-text")
+def upload_text(data: TextInput):
+    if not data.filename.strip():
+        raise HTTPException(status_code=400, detail="Filename cannot be empty")
+
+    filename = data.filename if data.filename.endswith(".txt") else data.filename + ".txt"
+
+    if file_exists(filename):
+        raise HTTPException(status_code=409, detail=f"File '{filename}' already exists")
+
+    if not data.text.strip():
+        raise HTTPException(status_code=400, detail="Text cannot be empty")
+
+    ensure_upload_folder()
+    file_location = os.path.join(UPLOAD_FOLDER, filename)
+
+    with open(file_location, "w", encoding="utf-8") as f:
+        f.write(data.text)
+
+    sentences = split_sentences(data.text)
+
+    return {
+        "filename": filename,
+        "format": "txt",
+        "length": len(data.text),
+        "sentences_total": len(sentences),
+        "preview": sentences[:5]
+    }
