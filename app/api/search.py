@@ -21,7 +21,7 @@ def search_endpoint(request: SearchRequest):
         top_k=request.top_k,
         filename=request.filename)
 
-    results_data, resolved_text = all_results
+    results_data, resolved_text, coref_map = all_results
     response = []
 
     for question, hits in results_data.items():
@@ -40,4 +40,4 @@ def search_endpoint(request: SearchRequest):
 
         response.append(question_data)
 
-    return {"results": response, "resolved_text": resolved_text}
+    return {"results": response, "resolved_text": resolved_text, "coref_map": coref_map}

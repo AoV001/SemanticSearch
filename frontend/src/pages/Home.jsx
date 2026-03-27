@@ -14,6 +14,7 @@ export default function Home() {
   const [results, setResults] = useState([])
   const [loading, setLoading] = useState(false)
   const [highlightData, setHighlightData] = useState(null)
+  const [corefMap, setCorefMap] = useState({})
 
   useEffect(() => {
     getFiles().then(data => setFiles(data.files))
@@ -53,6 +54,7 @@ export default function Home() {
       const data = await searchFile(selectedFile, questions)
       setResults(data.results)
       setResolvedText(data.resolved_text)
+      setCorefMap(data.coref_map || {})
     } catch (e) {
       console.error(e)
     } finally {
@@ -114,6 +116,7 @@ export default function Home() {
                   text={fileText}
                   resolvedText={resolvedText}
                   highlightData={highlightData}
+                  corefMap={corefMap}
                 />
               </div>
             </>

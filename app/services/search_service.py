@@ -1,6 +1,4 @@
 from app.graph.graph_builder import build_dependency_graph
-from app.nlp.text_processing import split_sentences
-from app.nlp.coreference import simple_coreference
 from spacy.lang.en import English
 from app.graph.graph_similarity import graph_similarity, extract_relevant_subgraph
 from app.nlp.answer_extraction import (
@@ -8,7 +6,7 @@ from app.nlp.answer_extraction import (
     TEMPORAL_MARKERS, SEQUENTIAL_MARKERS, QUANTITATIVE_MARKERS
 )
 from app.cache.graph_cache import get_graph
-
+from app.nlp.coreference import simple_coreference, get_coreference_map
 from typing import List
 from app.db.history import save_search
 
@@ -33,6 +31,7 @@ def search(questions: List[str], text: str, top_k: int = 3, threshold=0.4, filen
     sentences = [sent.text.strip() for sent in doc.sents]
     blocks = split_blocks(sentences, window_size=WINDOW_SIZE)
     resolved_blocks = [simple_coreference(block) for block in blocks]
+    coref_map = get_coreference_map(" ".join(sentences))
 
     resolved_sentences = []
     for i, sent in enumerate(sentences):
@@ -80,4 +79,4 @@ def search(questions: List[str], text: str, top_k: int = 3, threshold=0.4, filen
 
 
 
-    return all_results, resolved_text
+    return all_results, resolved_text, coref_map

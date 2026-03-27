@@ -90,3 +90,39 @@ def _rebuild_text(tokens: list[str]) -> str:
                 result += " "
             result += tok
     return result.strip()
+
+
+def get_coreference_map(text: str) -> dict:
+    doc = nlp(text)
+
+    last = {"Masc": None, "Fem": None, "Neut": None, "Plur": None}
+    coref_map = {}  # noun -> set of pronouns
+
+    for token in doc:
+        lower = token.text.lower()
+
+        if token.pos_ in {"NOUN", "PROPN"} and lower not in PRONOUNS:
+            gender = get_gender(token)
+            noun = token.text
+            if noun not in coref_map:
+                coref_map[noun] = set()
+            if gender == "Masc":
+                last["Masc"] = noun
+            elif gender == "Fem":
+                last["Fem"] = noun
+            else:
+                last["Neut"] = noun
+            continue
+
+        if lower in MALE and last["Masc"]:
+            coref_map.setdefault(last["Masc"], set()).add(lower)
+        elif lower in FEMALE and last["Fem"]:
+            coref_map.setdefault(last["Fem"], set()).add(lower)
+        elif lower in NEUTRAL and last["Neut"]:
+            coref_map.setdefault(last["Neut"], set()).add(lower)
+        elif lower in PLURAL:
+            candidate = last["Plur"] or last["Masc"] or last["Fem"] or last["Neut"]
+            if candidate:
+                coref_map.setdefault(candidate, set()).add(lower)
+
+    return {k: list(v) for k, v in coref_map.items()}
