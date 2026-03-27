@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="e94f34bc-5a55-4421-9054-ef0a949d0e9b" name="Changes" comment="adjust upload.py : return length of the text">
-      <change afterPath="$PROJECT_DIR$/app/nlp/text_processing.py" afterDir="false" />
+    <list default="true" id="e94f34bc-5a55-4421-9054-ef0a949d0e9b" name="Changes" comment="add header and footer">
+      <change afterPath="$PROJECT_DIR$/frontend/src/components/ResultModal.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/search.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/search.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -14,12 +15,29 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Python Script" />
+        <option value="Dockerfile" />
       </list>
     </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitLabMergeRequestFiltersHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPENED&quot;,
+    &quot;assignee&quot;: {
+      &quot;type&quot;: &quot;org.jetbrains.plugins.gitlab.mergerequest.ui.filters.GitLabMergeRequestsFiltersValue.MergeRequestsMemberFilterValue.MergeRequestsAssigneeFilterValue&quot;,
+      &quot;username&quot;: &quot;vlasova&quot;,
+      &quot;fullname&quot;: &quot;Antonina Vlasova&quot;
+    }
+  }
+}</component>
+  <component name="GitLabMergeRequestsSettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;first&quot;: &quot;https://gitlab.informatik.uni-bremen.de/vlasova/semanticsearch.git&quot;,
+    &quot;second&quot;: &quot;7591ba45-034c-4acf-8d8f-34be3bb78bff&quot;
+  }
+}</component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 8
 }</component>
@@ -28,20 +46,55 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "main",
-    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;Python.test_search_service.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/vlaso/PycharmProjects/SemanticSearch/frontend/public&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\vlaso\PycharmProjects\SemanticSearch\frontend\public" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\vlaso\PycharmProjects\SemanticSearch\app" />
     </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="test_search_service" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="SemanticSearch" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/tests" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="RUN_TOOL" value="" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/tests/test_search_service.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.test_search_service" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
@@ -106,7 +159,223 @@
       <option name="project" value="LOCAL" />
       <updated>1774103911081</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="adjust logik: add extract_temporal_answer (before, after)">
+      <option name="closed" value="true" />
+      <created>1774448441114</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1774448441114</updated>
+    </task>
+    <task id="LOCAL-00008" summary="adjust extract temporal answer: add anker to mark the events linear">
+      <option name="closed" value="true" />
+      <created>1774448647810</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1774448647810</updated>
+    </task>
+    <task id="LOCAL-00009" summary="adjust answer extraction and search service: add more temporal markers">
+      <option name="closed" value="true" />
+      <created>1774449024424</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1774449024424</updated>
+    </task>
+    <task id="LOCAL-00010" summary="add docker">
+      <option name="closed" value="true" />
+      <created>1774521541932</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1774521541932</updated>
+    </task>
+    <task id="LOCAL-00011" summary="add new endpoints: get and delete">
+      <option name="closed" value="true" />
+      <created>1774522337322</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1774522337322</updated>
+    </task>
+    <task id="LOCAL-00012" summary="add cache for graphs">
+      <option name="closed" value="true" />
+      <created>1774522630436</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1774522630436</updated>
+    </task>
+    <task id="LOCAL-00013" summary="add ability to upload pdf files">
+      <option name="closed" value="true" />
+      <created>1774524140248</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1774524140248</updated>
+    </task>
+    <task id="LOCAL-00014" summary="add ability to save search history">
+      <option name="closed" value="true" />
+      <created>1774524607957</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1774524607957</updated>
+    </task>
+    <task id="LOCAL-00015" summary="add ability to save search history">
+      <option name="closed" value="true" />
+      <created>1774525603378</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1774525603378</updated>
+    </task>
+    <task id="LOCAL-00016" summary="add docker for front">
+      <option name="closed" value="true" />
+      <created>1774526451452</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1774526451452</updated>
+    </task>
+    <task id="LOCAL-00017" summary="add frontend">
+      <option name="closed" value="true" />
+      <created>1774527804691</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1774527804691</updated>
+    </task>
+    <task id="LOCAL-00018" summary="adjust docker for frontend">
+      <option name="closed" value="true" />
+      <created>1774529248855</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1774529248855</updated>
+    </task>
+    <task id="LOCAL-00019" summary="adjust main for frontend">
+      <option name="closed" value="true" />
+      <created>1774530619077</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1774530619077</updated>
+    </task>
+    <task id="LOCAL-00020" summary="adjust ability: show the history of uploaded files + delete them or set new questions for them">
+      <option name="closed" value="true" />
+      <created>1774531158526</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1774531158526</updated>
+    </task>
+    <task id="LOCAL-00021" summary="adjust the interface and some tools">
+      <option name="closed" value="true" />
+      <created>1774531639289</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1774531639289</updated>
+    </task>
+    <task id="LOCAL-00022" summary="adjust new interface">
+      <option name="closed" value="true" />
+      <created>1774543328646</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1774543328646</updated>
+    </task>
+    <task id="LOCAL-00023" summary="add highlight and debugging">
+      <option name="closed" value="true" />
+      <created>1774607652758</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1774607652758</updated>
+    </task>
+    <task id="LOCAL-00024" summary="debugging highlight">
+      <option name="closed" value="true" />
+      <created>1774608548056</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1774608548056</updated>
+    </task>
+    <task id="LOCAL-00025" summary="debugging highlight">
+      <option name="closed" value="true" />
+      <created>1774609237141</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1774609237141</updated>
+    </task>
+    <task id="LOCAL-00026" summary="debugging highlight">
+      <option name="closed" value="true" />
+      <created>1774609977377</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1774609977377</updated>
+    </task>
+    <task id="LOCAL-00027" summary="adjust highlighting function: add highlight of answer words">
+      <option name="closed" value="true" />
+      <created>1774610805260</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1774610805260</updated>
+    </task>
+    <task id="LOCAL-00028" summary="adjust the upload: save text as a new txt. file">
+      <option name="closed" value="true" />
+      <created>1774611614708</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1774611614708</updated>
+    </task>
+    <task id="LOCAL-00029" summary="adjust the text view: bigger or smaller">
+      <option name="closed" value="true" />
+      <created>1774611635800</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1774611635800</updated>
+    </task>
+    <task id="LOCAL-00030" summary="add new bottoms to delete all questions and all files">
+      <option name="closed" value="true" />
+      <created>1774622578252</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1774622578252</updated>
+    </task>
+    <task id="LOCAL-00031" summary="debugging by delete all files">
+      <option name="closed" value="true" />
+      <created>1774640725082</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1774640725082</updated>
+    </task>
+    <task id="LOCAL-00032" summary="change the interface colors">
+      <option name="closed" value="true" />
+      <created>1774641913156</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1774641913156</updated>
+    </task>
+    <task id="LOCAL-00033" summary="add header and footer">
+      <option name="closed" value="true" />
+      <created>1774642961720</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1774642961720</updated>
+    </task>
+    <option name="localTasksCounter" value="34" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -121,23 +390,31 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="adjust main.py first file" />
-    <MESSAGE value="project structure" />
-    <MESSAGE value="add endpoint for txt.-files loading" />
-    <MESSAGE value="adjust main: add router" />
-    <MESSAGE value="add file service" />
     <MESSAGE value="adjust upload.py : return length of the text" />
-    <option name="LAST_COMMIT_MESSAGE" value="adjust upload.py : return length of the text" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/app/main.py</url>
-          <line>8</line>
-          <option name="timeStamp" value="2" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
+    <MESSAGE value="adjust logik: add extract_temporal_answer (before, after)" />
+    <MESSAGE value="adjust extract temporal answer: add anker to mark the events linear" />
+    <MESSAGE value="adjust answer extraction and search service: add more temporal markers" />
+    <MESSAGE value="add docker" />
+    <MESSAGE value="add new endpoints: get and delete" />
+    <MESSAGE value="add cache for graphs" />
+    <MESSAGE value="add ability to upload pdf files" />
+    <MESSAGE value="add ability to save search history" />
+    <MESSAGE value="add docker for front" />
+    <MESSAGE value="add frontend" />
+    <MESSAGE value="adjust docker for frontend" />
+    <MESSAGE value="adjust main for frontend" />
+    <MESSAGE value="adjust ability: show the history of uploaded files + delete them or set new questions for them" />
+    <MESSAGE value="adjust the interface and some tools" />
+    <MESSAGE value="adjust new interface" />
+    <MESSAGE value="add highlight and debugging" />
+    <MESSAGE value="debugging highlight" />
+    <MESSAGE value="adjust highlighting function: add highlight of answer words" />
+    <MESSAGE value="adjust the upload: save text as a new txt. file" />
+    <MESSAGE value="adjust the text view: bigger or smaller" />
+    <MESSAGE value="add new bottoms to delete all questions and all files" />
+    <MESSAGE value="debugging by delete all files" />
+    <MESSAGE value="change the interface colors" />
+    <MESSAGE value="add header and footer" />
+    <option name="LAST_COMMIT_MESSAGE" value="add header and footer" />
   </component>
 </project>

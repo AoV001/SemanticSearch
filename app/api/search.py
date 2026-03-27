@@ -35,7 +35,8 @@ def search_endpoint(request: SearchRequest):
                 "answer": answer or "—",
                 "confidence": round(score, 2),
                 "context": block,
-                "evidence": format_triplets(triplets)
+                "evidence": format_triplets(triplets),
+                "triplets": [{"from": u, "rel": rel, "to": v} for u, rel, v in triplets]
             })
 
         response.append(question_data)
