@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="e94f34bc-5a55-4421-9054-ef0a949d0e9b" name="Changes" comment="add header and footer">
-      <change afterPath="$PROJECT_DIR$/frontend/src/components/ResultModal.jsx" afterDir="false" />
+    <list default="true" id="e94f34bc-5a55-4421-9054-ef0a949d0e9b" name="Changes" comment="unversioned files">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/api/search.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/search.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/history.db" beforeDir="false" afterPath="$PROJECT_DIR$/data/history.db" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/ResultModal.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/ResultModal.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -375,7 +375,23 @@
       <option name="project" value="LOCAL" />
       <updated>1774642961720</updated>
     </task>
-    <option name="localTasksCounter" value="34" />
+    <task id="LOCAL-00034" summary="add new window to show the evidence card more comfortable">
+      <option name="closed" value="true" />
+      <created>1774643723978</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1774643723978</updated>
+    </task>
+    <task id="LOCAL-00035" summary="unversioned files">
+      <option name="closed" value="true" />
+      <created>1774643752521</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1774643752522</updated>
+    </task>
+    <option name="localTasksCounter" value="36" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -390,8 +406,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="adjust upload.py : return length of the text" />
-    <MESSAGE value="adjust logik: add extract_temporal_answer (before, after)" />
     <MESSAGE value="adjust extract temporal answer: add anker to mark the events linear" />
     <MESSAGE value="adjust answer extraction and search service: add more temporal markers" />
     <MESSAGE value="add docker" />
@@ -415,6 +429,8 @@
     <MESSAGE value="debugging by delete all files" />
     <MESSAGE value="change the interface colors" />
     <MESSAGE value="add header and footer" />
-    <option name="LAST_COMMIT_MESSAGE" value="add header and footer" />
+    <MESSAGE value="add new window to show the evidence card more comfortable" />
+    <MESSAGE value="unversioned files" />
+    <option name="LAST_COMMIT_MESSAGE" value="unversioned files" />
   </component>
 </project>

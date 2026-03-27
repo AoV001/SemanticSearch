@@ -1,3 +1,5 @@
+import { useState } from 'react'
+
 const DEP_DESCRIPTIONS = {
   "nsubj":     "is the subject of",
   "nsubjpass": "is the passive subject of",
@@ -18,19 +20,19 @@ const DEP_DESCRIPTIONS = {
 }
 
 function DependencyGraph({ triplets, answer }) {
+  const [hoveredEdge, setHoveredEdge] = useState(null)
+
   if (!triplets || triplets.length === 0) return null
 
-  // Собираем уникальные узлы
   const nodeSet = new Set()
   triplets.forEach(t => { nodeSet.add(t.from); nodeSet.add(t.to) })
   const nodes = Array.from(nodeSet)
 
   const W = 600
-  const H = Math.max(200, nodes.length * 60)
+  const H = Math.max(220, nodes.length * 70)
   const cx = W / 2
-  const r = Math.min(180, (H / 2) - 40)
+  const r = Math.min(200, (H / 2) - 50)
 
-  // Располагаем узлы по кругу
   const positions = {}
   nodes.forEach((node, i) => {
     const angle = (2 * Math.PI * i) / nodes.length - Math.PI / 2
@@ -43,76 +45,95 @@ function DependencyGraph({ triplets, answer }) {
   const isAnswer = (node) => node.toLowerCase() === answer?.toLowerCase()
 
   return (
-    <svg width="100%" viewBox={`0 0 ${W} ${H}`} style={{maxHeight: '280px'}}>
-      <defs>
-        <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
-          <path d="M0,0 L0,6 L8,3 z" fill="#2dd4bf" />
-        </marker>
-        <marker id="arrow-pink" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
-          <path d="M0,0 L0,6 L8,3 z" fill="#f472b6" />
-        </marker>
-      </defs>
+    <div className="relative">
+      <svg width="100%" viewBox={`0 0 ${W} ${H}`} style={{maxHeight: '300px'}}>
+        <defs>
+          <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#2dd4bf" />
+          </marker>
+          <marker id="arrow-pink" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#f472b6" />
+          </marker>
+          <marker id="arrow-hover" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#ffffff" />
+          </marker>
+        </defs>
 
-      {/* Рёбра */}
-      {triplets.map((t, i) => {
-        const from = positions[t.from]
-        const to = positions[t.to]
-        if (!from || !to) return null
+        {triplets.map((t, i) => {
+          const from = positions[t.from]
+          const to = positions[t.to]
+          if (!from || !to) return null
 
-        const dx = to.x - from.x
-        const dy = to.y - from.y
-        const dist = Math.sqrt(dx*dx + dy*dy)
-        const nx = dx / dist
-        const ny = dy / dist
-        const nodeR = 28
+          const dx = to.x - from.x
+          const dy = to.y - from.y
+          const dist = Math.sqrt(dx*dx + dy*dy)
+          const nx = dx / dist
+          const ny = dy / dist
+          const nodeR = 30
 
-        const x1 = from.x + nx * nodeR
-        const y1 = from.y + ny * nodeR
-        const x2 = to.x - nx * (nodeR + 8)
-        const y2 = to.y - ny * (nodeR + 8)
+          const x1 = from.x + nx * nodeR
+          const y1 = from.y + ny * nodeR
+          const x2 = to.x - nx * (nodeR + 8)
+          const y2 = to.y - ny * (nodeR + 8)
+          const mx = (x1 + x2) / 2
+          const my = (y1 + y2) / 2 - 15
 
-        const mx = (x1 + x2) / 2
-        const my = (y1 + y2) / 2 - 20
+          const isAnswerEdge = isAnswer(t.from) || isAnswer(t.to)
+          const isHovered = hoveredEdge === i
+          const color = isHovered ? '#ffffff' : isAnswerEdge ? '#f472b6' : '#2dd4bf'
+          const markerId = isHovered ? 'arrow-hover' : isAnswerEdge ? 'arrow-pink' : 'arrow'
 
-        const isAnswerEdge = isAnswer(t.from) || isAnswer(t.to)
-        const color = isAnswerEdge ? '#f472b6' : '#2dd4bf'
-        const markerId = isAnswerEdge ? 'arrow-pink' : 'arrow'
+          return (
+            <g key={i}
+              onMouseEnter={() => setHoveredEdge(i)}
+              onMouseLeave={() => setHoveredEdge(null)}
+              style={{cursor: 'pointer'}}>
+              {/* Невидимая широкая зона для hover */}
+              <path d={`M ${x1} ${y1} Q ${mx} ${my} ${x2} ${y2}`}
+                stroke="transparent" strokeWidth="12" fill="none" />
+              {/* Видимая стрелка */}
+              <path d={`M ${x1} ${y1} Q ${mx} ${my} ${x2} ${y2}`}
+                stroke={color} strokeWidth={isHovered ? 2 : 1.5}
+                fill="none" markerEnd={`url(#${markerId})`} opacity="0.8"
+              />
+              {/* Подпись появляется при hover */}
+              {isHovered && (
+                <text x={mx} y={my - 6} textAnchor="middle"
+                  fontSize="10" fill="#ffffff"
+                  style={{pointerEvents: 'none'}}>
+                  {t.rel}
+                </text>
+              )}
+            </g>
+          )
+        })}
 
-        return (
-          <g key={i}>
-            <path
-              d={`M ${x1} ${y1} Q ${mx} ${my} ${x2} ${y2}`}
-              stroke={color} strokeWidth="1.5" fill="none"
-              markerEnd={`url(#${markerId})`} opacity="0.7"
-            />
-            <text x={mx} y={my - 4} textAnchor="middle"
-              fontSize="9" fill={color} opacity="0.9">
-              {t.rel}
-            </text>
-          </g>
-        )
-      })}
+        {nodes.map((node) => {
+          const pos = positions[node]
+          const highlight = isAnswer(node)
+          return (
+            <g key={node}>
+              <circle cx={pos.x} cy={pos.y} r={30}
+                fill={highlight ? 'rgba(244,114,182,0.2)' : 'rgba(45,212,191,0.1)'}
+                stroke={highlight ? '#f472b6' : '#2dd4bf'}
+                strokeWidth={highlight ? 2 : 1}
+              />
+              <text x={pos.x} y={pos.y + 4} textAnchor="middle"
+                fontSize="11" fill={highlight ? '#f472b6' : '#e2e8f0'}
+                fontWeight={highlight ? 'bold' : 'normal'}
+                style={{pointerEvents: 'none'}}>
+                {node}
+              </text>
+            </g>
+          )
+        })}
+      </svg>
 
-      {/* Узлы */}
-      {nodes.map((node) => {
-        const pos = positions[node]
-        const highlight = isAnswer(node)
-        return (
-          <g key={node}>
-            <circle cx={pos.x} cy={pos.y} r={28}
-              fill={highlight ? 'rgba(244,114,182,0.2)' : 'rgba(45,212,191,0.1)'}
-              stroke={highlight ? '#f472b6' : '#2dd4bf'}
-              strokeWidth={highlight ? 2 : 1}
-            />
-            <text x={pos.x} y={pos.y + 4} textAnchor="middle"
-              fontSize="11" fill={highlight ? '#f472b6' : '#e2e8f0'}
-              fontWeight={highlight ? 'bold' : 'normal'}>
-              {node}
-            </text>
-          </g>
-        )
-      })}
-    </svg>
+      {/* Подсказка */}
+      <p className="text-xs text-center mt-1" style={{color: '#2a2d3a'}}>
+        hover over edges to see relation labels
+      </p>
+    </div>
   )
 }
 
