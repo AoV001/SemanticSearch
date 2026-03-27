@@ -13,7 +13,7 @@ export default function Home() {
   const [resolvedText, setResolvedText] = useState(null)
   const [results, setResults] = useState([])
   const [loading, setLoading] = useState(false)
-  const [highlightAnswer, setHighlightAnswer] = useState(null)
+  const [highlightData, setHighlightData] = useState(null)
 
   useEffect(() => {
     getFiles().then(data => setFiles(data.files))
@@ -22,7 +22,7 @@ export default function Home() {
   const handleSelect = async (filename) => {
     setSelectedFile(filename)
     setResults([])
-    setHighlightAnswer(null)
+    setHighlightData(null)
     try {
       const data = await getFileText(filename)
       setFileText(data.text)
@@ -48,7 +48,7 @@ export default function Home() {
   const handleSearch = async (questions) => {
     setLoading(true)
     setResults([])
-    setHighlightAnswer(null)
+    setHighlightData(null)
     try {
       const data = await searchFile(selectedFile, questions)
       setResults(data.results)
@@ -112,7 +112,8 @@ export default function Home() {
               <div className="flex-1 overflow-hidden p-4">
                 <TextViewer
                   text={fileText}
-                  highlightAnswer={highlightAnswer}
+                  resolvedText={resolvedText}
+                  highlightData={highlightData}
                 />
               </div>
             </>
@@ -138,7 +139,7 @@ export default function Home() {
               <ResultCard
                 key={i}
                 result={result}
-                onHover={setHighlightAnswer}
+                onHover={setHighlightData}
               />
             ))}
           </div>

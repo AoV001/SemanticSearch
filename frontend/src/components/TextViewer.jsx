@@ -1,4 +1,4 @@
-export default function TextViewer({ text, highlightAnswer }) {
+export default function TextViewer({ text, resolvedText, highlightData }) {
   if (!text) {
     return (
       <div className="h-full flex items-center justify-center text-gray-300 text-sm">
@@ -8,9 +8,8 @@ export default function TextViewer({ text, highlightAnswer }) {
   }
 
   const normalize = (str) => str.replace(/\s+/g, ' ').trim()
-  const normalizedText = normalize(text)
 
-  if (!highlightAnswer) {
+  if (!highlightData) {
     return (
       <div className="h-full overflow-y-auto text-sm text-gray-700 leading-relaxed whitespace-pre-wrap">
         {text}
@@ -18,29 +17,33 @@ export default function TextViewer({ text, highlightAnswer }) {
     )
   }
 
-  // Разбиваем на предложения и ищем то которое содержит answer
-  const sentences = normalizedText.split(/(?<=[.!?])\s+/)
-  const targetSent = sentences.find(s =>
-    s.toLowerCase().includes(highlightAnswer.toLowerCase())
-  )
+  const { answer, context } = highlightData
+  const base = resolvedText || text
 
-  if (!targetSent) {
+  const origSents = normalize(text).split(/(?<=[.!?])\s+/)
+  const resolvedSents = normalize(base).split(/(?<=[.!?])\s+/)
+  const normalizedContext = normalize(context)
+
+  const matchedIndices = resolvedSents.reduce((acc, sent, i) => {
+    if (normalizedContext.includes(normalize(sent))) acc.push(i)
+    return acc
+  }, [])
+
+  if (!matchedIndices.length) {
     return (
       <div className="h-full overflow-y-auto text-sm text-gray-700 leading-relaxed whitespace-pre-wrap">
         {text}
       </div>
     )
   }
-
-  const idx = normalizedText.indexOf(targetSent)
-  const before = normalizedText.slice(0, idx)
-  const after = normalizedText.slice(idx + targetSent.length)
 
   return (
     <div className="h-full overflow-y-auto text-sm text-gray-700 leading-relaxed whitespace-pre-wrap">
-      {before}
-      <mark className="bg-yellow-200 rounded px-0.5">{targetSent}</mark>
-      {after}
+      {origSents.map((sent, i) => (
+        matchedIndices.includes(i)
+          ? <mark key={i} className="bg-yellow-200 rounded px-0.5">{sent} </mark>
+          : <span key={i}>{sent} </span>
+      ))}
     </div>
   )
 }
