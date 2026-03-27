@@ -63,23 +63,20 @@ export default function Home() {
   }
 
   return (
-    <div className="h-screen flex flex-col bg-gray-50">
-      <header className="bg-white border-b border-gray-200 px-6 py-3 shrink-0">
+    <div className="h-screen flex flex-col" style={{background: '#0f1117'}}>
+      <header style={{background: '#1a1d27', borderBottom: '1px solid #2a2d3a'}} className="px-6 py-3 shrink-0">
         <div className="flex items-center gap-3">
-          <img src="/favicon.png" alt="logo" className="w-8 h-8" />
-          <h1 className="text-lg font-bold text-gray-800">Semantic Search</h1>
+          <h1 className="text-lg font-bold" style={{color: '#2dd4bf'}}>Semantic Search</h1>
         </div>
       </header>
 
       <div className="flex-1 overflow-hidden grid grid-cols-10">
 
         {/* Левая — 2/10 */}
-        <div className="col-span-2 border-r border-gray-200 bg-white flex flex-col overflow-hidden">
-          <div className="p-3 border-b border-gray-100 shrink-0">
-            <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">Files</p>
-            {selectedFile && (
-              <FileUpload onUploadSuccess={handleUploadSuccess} />
-            )}
+        <div className="col-span-2 flex flex-col overflow-hidden" style={{background: '#1a1d27', borderRight: '1px solid #2a2d3a'}}>
+          <div className="p-3 shrink-0" style={{borderBottom: '1px solid #2a2d3a'}}>
+            <p className="text-xs font-semibold uppercase tracking-wide mb-2" style={{color: '#64748b'}}>Files</p>
+            {selectedFile && <FileUpload onUploadSuccess={handleUploadSuccess} />}
           </div>
           <div className="flex-1 overflow-y-auto p-3">
             <FileList
@@ -88,34 +85,34 @@ export default function Home() {
               onSelect={handleSelect}
               onDelete={handleDelete}
               onDeleteAll={() => {
-                  setFiles([])
-                  setSelectedFile(null)
-                  setFileText(null)
-                  setResults([])
-                  }}
+                setFiles([])
+                setSelectedFile(null)
+                setFileText(null)
+                setResults([])
+              }}
             />
           </div>
         </div>
 
         {/* Центр — 5/10 */}
-        <div className="col-span-5 border-r border-gray-200 bg-white flex flex-col overflow-hidden">
+        <div className="col-span-5 flex flex-col overflow-hidden" style={{background: '#13151f', borderRight: '1px solid #2a2d3a'}}>
           {!selectedFile ? (
             <div className="flex-1 flex flex-col items-center justify-center p-12">
-              <p className="text-2xl font-bold text-gray-700 mb-2">Welcome</p>
-              <p className="text-sm text-gray-400 mb-8">Upload a file to get started</p>
+              <p className="text-2xl font-bold mb-2" style={{color: '#e2e8f0'}}>Welcome</p>
+              <p className="text-sm mb-8" style={{color: '#64748b'}}>Upload a file to get started</p>
               <div className="w-full max-w-sm">
                 <FileUpload onUploadSuccess={handleUploadSuccess} />
               </div>
               {files.length > 0 && (
-                <p className="text-xs text-gray-400 mt-6">
+                <p className="text-xs mt-6" style={{color: '#64748b'}}>
                   Or select an existing file from the left panel
                 </p>
               )}
             </div>
           ) : (
             <>
-              <div className="px-4 py-2 border-b border-gray-100 shrink-0">
-                <p className="text-xs text-gray-400 truncate">{selectedFile}</p>
+              <div className="px-4 py-2 shrink-0" style={{borderBottom: '1px solid #2a2d3a'}}>
+                <p className="text-xs truncate" style={{color: '#64748b'}}>{selectedFile}</p>
               </div>
               <div className="flex-1 overflow-hidden p-4">
                 <TextViewer
@@ -130,8 +127,8 @@ export default function Home() {
         </div>
 
         {/* Правая — 3/10 */}
-        <div className="col-span-3 bg-gray-50 flex flex-col overflow-hidden">
-          <div className="p-4 border-b border-gray-200 bg-white shrink-0">
+        <div className="col-span-3 flex flex-col overflow-hidden" style={{background: '#1a1d27'}}>
+          <div className="p-4 shrink-0" style={{borderBottom: '1px solid #2a2d3a'}}>
             <SearchForm
               selectedFile={selectedFile}
               onSearch={handleSearch}
@@ -140,7 +137,7 @@ export default function Home() {
           </div>
           <div className="flex-1 overflow-y-auto p-4 space-y-3">
             {results.length === 0 && (
-              <p className="text-xs text-gray-400 text-center pt-8">
+              <p className="text-xs text-center pt-8" style={{color: '#64748b'}}>
                 Results will appear here
               </p>
             )}

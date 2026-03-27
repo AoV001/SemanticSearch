@@ -11,10 +11,7 @@ export default function SearchForm({ selectedFile, onSearch, loading }) {
     setQuestions(updated)
   }
 
-  const removeQuestion = (index) => {
-    setQuestions(questions.filter((_, i) => i !== index))
-  }
-
+  const removeQuestion = (index) => setQuestions(questions.filter((_, i) => i !== index))
   const clearAll = () => setQuestions([''])
 
   const handleSubmit = () => {
@@ -24,21 +21,20 @@ export default function SearchForm({ selectedFile, onSearch, loading }) {
   }
 
   return (
-    <div className="bg-white rounded-xl border border-gray-200 p-4 space-y-3">
+    <div className="rounded-xl p-4 space-y-3"
+      style={{background: '#222536', border: '1px solid #2a2d3a'}}>
+
       <div className="flex items-center justify-between">
-        <h2 className="text-sm font-semibold text-gray-700">Ask questions</h2>
+        <h2 className="text-sm font-semibold" style={{color: '#e2e8f0'}}>Ask questions</h2>
         {questions.some(q => q.trim()) && (
-          <button
-            onClick={clearAll}
-            className="text-xs text-red-400 hover:text-red-600"
-          >
+          <button onClick={clearAll} className="text-xs" style={{color: '#f472b6'}}>
             Clear all
           </button>
         )}
       </div>
 
       {!selectedFile && (
-        <p className="text-xs text-amber-500">Select a file first</p>
+        <p className="text-xs" style={{color: '#f472b6'}}>Select a file first</p>
       )}
 
       <div className="space-y-2">
@@ -50,31 +46,25 @@ export default function SearchForm({ selectedFile, onSearch, loading }) {
               onChange={(e) => updateQuestion(i, e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
               placeholder={`Question ${i + 1}`}
-              className="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-400"
+              className="flex-1 rounded-lg px-3 py-2 text-sm focus:outline-none"
+              style={{background: '#1a1d27', border: '1px solid #2a2d3a', color: '#e2e8f0'}}
             />
             {questions.length > 1 && (
-              <button
-                onClick={() => removeQuestion(i)}
-                className="text-red-400 hover:text-red-600 px-2"
-              >
-                ✕
-              </button>
+              <button onClick={() => removeQuestion(i)} style={{color: '#f472b6'}}>✕</button>
             )}
           </div>
         ))}
       </div>
 
-      <div className="flex gap-2">
-        <button
-          onClick={addQuestion}
-          className="text-xs text-blue-500 hover:text-blue-700"
-        >
+      <div className="flex gap-2 items-center">
+        <button onClick={addQuestion} className="text-xs" style={{color: '#2dd4bf'}}>
           + Add question
         </button>
         <button
           onClick={handleSubmit}
           disabled={!selectedFile || loading}
-          className="ml-auto bg-blue-600 text-white px-4 py-1.5 rounded-lg text-sm hover:bg-blue-700 disabled:opacity-50 transition"
+          className="ml-auto px-4 py-1.5 rounded-lg text-sm font-medium disabled:opacity-40 transition"
+          style={{background: '#2dd4bf', color: '#0f1117'}}
         >
           {loading ? 'Searching...' : 'Search'}
         </button>

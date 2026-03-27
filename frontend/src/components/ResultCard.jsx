@@ -3,9 +3,9 @@ export default function ResultCard({ result, onHover }) {
 
   if (!results.length) {
     return (
-      <div className="bg-white rounded-xl border border-gray-200 p-5">
-        <p className="text-sm text-gray-500">Q: {question}</p>
-        <p className="text-sm text-gray-400 mt-1">No answer found.</p>
+      <div className="rounded-xl p-5" style={{background: '#222536', border: '1px solid #2a2d3a'}}>
+        <p className="text-sm" style={{color: '#64748b'}}>Q: {question}</p>
+        <p className="text-sm mt-1" style={{color: '#64748b'}}>No answer found.</p>
       </div>
     )
   }
@@ -14,23 +14,24 @@ export default function ResultCard({ result, onHover }) {
 
   return (
     <div
-      className="bg-white rounded-xl border border-gray-200 p-5 space-y-3 cursor-default"
+      className="rounded-xl p-5 space-y-3 cursor-default transition"
+      style={{background: '#222536', border: '1px solid #2a2d3a'}}
       onMouseEnter={() => onHover({ answer: top.answer, context: top.context })}
       onMouseLeave={() => onHover(null)}
     >
-      <p className="text-sm text-gray-500">Q: {question}</p>
-      <p className="text-2xl font-bold text-blue-700">{top.answer}</p>
-      <p className="text-xs text-gray-400">
+      <p className="text-xs" style={{color: '#64748b'}}>Q: {question}</p>
+      <p className="text-2xl font-bold" style={{color: '#2dd4bf'}}>{top.answer}</p>
+      <p className="text-xs" style={{color: '#64748b'}}>
         Confidence: {Math.round(top.confidence * 100)}%
       </p>
 
       <details>
-        <summary className="text-xs text-gray-400 cursor-pointer hover:text-gray-600">
+        <summary className="text-xs cursor-pointer" style={{color: '#64748b'}}>
           Show evidence
         </summary>
         <ul className="mt-2 space-y-1">
           {top.evidence.map((e, i) => (
-            <li key={i} className="text-xs text-gray-600 bg-gray-50 px-3 py-1 rounded-lg">
+            <li key={i} className="text-xs px-3 py-1 rounded-lg" style={{color: '#e2e8f0', background: '#1a1d27'}}>
               • {e}
             </li>
           ))}
@@ -38,10 +39,10 @@ export default function ResultCard({ result, onHover }) {
       </details>
 
       <details>
-        <summary className="text-xs text-gray-400 cursor-pointer hover:text-gray-600">
+        <summary className="text-xs cursor-pointer" style={{color: '#64748b'}}>
           Show context
         </summary>
-        <p className="mt-2 text-sm text-gray-600 bg-gray-50 p-3 rounded-lg leading-relaxed">
+        <p className="mt-2 text-sm p-3 rounded-lg leading-relaxed" style={{color: '#e2e8f0', background: '#1a1d27'}}>
           {top.context}
         </p>
       </details>

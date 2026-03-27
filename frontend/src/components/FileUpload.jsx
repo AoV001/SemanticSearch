@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { uploadFile, uploadText } from '../api/client'
 
 export default function FileUpload({ onUploadSuccess }) {
-  const [mode, setMode] = useState('file')  // 'file' | 'text'
+  const [mode, setMode] = useState('file')
   const [dragging, setDragging] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
@@ -43,16 +43,22 @@ export default function FileUpload({ onUploadSuccess }) {
   return (
     <div className="space-y-3">
       {/* Переключатель */}
-      <div className="flex rounded-lg border border-gray-200 overflow-hidden text-xs">
+      <div className="flex rounded-lg overflow-hidden text-xs" style={{border: '1px solid #2a2d3a'}}>
         <button
           onClick={() => setMode('file')}
-          className={`flex-1 py-1.5 transition ${mode === 'file' ? 'bg-blue-600 text-white' : 'bg-white text-gray-500 hover:bg-gray-50'}`}
+          className="flex-1 py-1.5 transition"
+          style={mode === 'file'
+            ? {background: '#2dd4bf', color: '#0f1117'}
+            : {background: '#1a1d27', color: '#64748b'}}
         >
           Upload file
         </button>
         <button
           onClick={() => setMode('text')}
-          className={`flex-1 py-1.5 transition ${mode === 'text' ? 'bg-blue-600 text-white' : 'bg-white text-gray-500 hover:bg-gray-50'}`}
+          className="flex-1 py-1.5 transition"
+          style={mode === 'text'
+            ? {background: '#2dd4bf', color: '#0f1117'}
+            : {background: '#1a1d27', color: '#64748b'}}
         >
           Paste text
         </button>
@@ -63,18 +69,18 @@ export default function FileUpload({ onUploadSuccess }) {
           onDragOver={(e) => { e.preventDefault(); setDragging(true) }}
           onDragLeave={() => setDragging(false)}
           onDrop={(e) => { e.preventDefault(); setDragging(false); handleFile(e.dataTransfer.files[0]) }}
-          className={`border-2 border-dashed rounded-xl p-6 text-center transition-colors
-            ${dragging ? 'border-blue-500 bg-blue-50' : 'border-gray-300 bg-white'}`}
+          className="rounded-xl p-6 text-center transition-all"
+          style={{
+            border: dragging ? '2px dashed #2dd4bf' : '2px dashed #2a2d3a',
+            background: dragging ? 'rgba(45,212,191,0.05)' : '#0f1117'
+          }}
         >
-          <p className="text-gray-400 text-xs mb-2">Drag & drop or</p>
-          <label className="cursor-pointer bg-blue-600 text-white px-3 py-1.5 rounded-lg text-xs hover:bg-blue-700 transition">
+          <p className="text-xs mb-2" style={{color: '#64748b'}}>Drag & drop or</p>
+          <label className="cursor-pointer px-3 py-1.5 rounded-lg text-xs font-medium transition"
+            style={{background: '#2dd4bf', color: '#0f1117'}}>
             Browse
-            <input
-              type="file"
-              accept=".txt,.pdf"
-              className="hidden"
-              onChange={(e) => handleFile(e.target.files[0])}
-            />
+            <input type="file" accept=".txt,.pdf" className="hidden"
+              onChange={(e) => handleFile(e.target.files[0])} />
           </label>
         </div>
       ) : (
@@ -84,27 +90,30 @@ export default function FileUpload({ onUploadSuccess }) {
             value={pasteName}
             onChange={(e) => setPasteName(e.target.value)}
             placeholder="Filename (e.g. my-text)"
-            className="w-full border border-gray-300 rounded-lg px-3 py-1.5 text-xs focus:outline-none focus:border-blue-400"
+            className="w-full rounded-lg px-3 py-1.5 text-xs focus:outline-none"
+            style={{background: '#0f1117', border: '1px solid #2a2d3a', color: '#e2e8f0'}}
           />
           <textarea
             value={pasteText}
             onChange={(e) => setPasteText(e.target.value)}
             placeholder="Paste your text here..."
             rows={5}
-            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-blue-400 resize-none"
+            className="w-full rounded-lg px-3 py-2 text-xs focus:outline-none resize-none"
+            style={{background: '#0f1117', border: '1px solid #2a2d3a', color: '#e2e8f0'}}
           />
           <button
             onClick={handlePaste}
             disabled={loading}
-            className="w-full bg-blue-600 text-white py-1.5 rounded-lg text-xs hover:bg-blue-700 disabled:opacity-50 transition"
+            className="w-full py-1.5 rounded-lg text-xs font-medium disabled:opacity-50 transition"
+            style={{background: '#2dd4bf', color: '#0f1117'}}
           >
             {loading ? 'Saving...' : 'Save & open'}
           </button>
         </div>
       )}
 
-      {error && <p className="text-red-500 text-xs">{error}</p>}
-      {loading && mode === 'file' && <p className="text-blue-500 text-xs text-center">Uploading...</p>}
+      {error && <p className="text-xs" style={{color: '#f472b6'}}>{error}</p>}
+      {loading && mode === 'file' && <p className="text-xs text-center" style={{color: '#2dd4bf'}}>Uploading...</p>}
     </div>
   )
 }

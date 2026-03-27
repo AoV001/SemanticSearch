@@ -1,7 +1,7 @@
 export default function TextViewer({ text, resolvedText, highlightData, corefMap }) {
   if (!text) {
     return (
-      <div className="h-full flex items-center justify-center text-gray-300 text-sm">
+      <div className="h-full flex items-center justify-center text-sm" style={{color: '#64748b'}}>
         Select a file to view text
       </div>
     )
@@ -9,9 +9,21 @@ export default function TextViewer({ text, resolvedText, highlightData, corefMap
 
   const normalize = (str) => str.replace(/\s+/g, ' ').trim()
 
+  const getFontSize = (t) => {
+    const words = t.trim().split(/\s+/).length
+    if (words < 50) return 'text-2xl'
+    if (words < 150) return 'text-lg'
+    if (words < 400) return 'text-base'
+    if (words < 800) return 'text-sm'
+    return 'text-xs'
+  }
+
+  const fontSize = getFontSize(text)
+
   if (!highlightData) {
     return (
-      <div className="h-full overflow-y-auto text-sm text-gray-700 leading-relaxed whitespace-pre-wrap">
+      <div className={`h-full overflow-y-auto ${fontSize} leading-relaxed whitespace-pre-wrap`}
+        style={{color: '#e2e8f0'}}>
         {text}
       </div>
     )
@@ -35,7 +47,8 @@ export default function TextViewer({ text, resolvedText, highlightData, corefMap
 
   if (!matchedIndices.length) {
     return (
-      <div className="h-full overflow-y-auto text-sm text-gray-700 leading-relaxed whitespace-pre-wrap">
+      <div className={`h-full overflow-y-auto ${fontSize} leading-relaxed whitespace-pre-wrap`}
+        style={{color: '#e2e8f0'}}>
         {text}
       </div>
     )
@@ -53,27 +66,26 @@ export default function TextViewer({ text, resolvedText, highlightData, corefMap
     return parts.map((word, j) => {
       const wordLower = word.toLowerCase().replace(/[.,!?;:]/g, '')
       if (wordLower && relatedWords.has(wordLower)) {
-        return <mark key={j} className="bg-blue-300 rounded px-0.5 font-medium">{word}</mark>
+        return (
+          <mark key={j} style={{
+            background: 'rgba(244, 114, 182, 0.3)',
+            borderRadius: '3px',
+            color: '#e2e8f0'
+          }}>
+            {word}
+          </mark>
+        )
       }
       return word
     })
   }
 
-  const getFontSize = (text) => {
-  const words = text.trim().split(/\s+/).length
-  if (words < 50) return 'text-2xl'
-  if (words < 150) return 'text-lg'
-  if (words < 400) return 'text-base'
-  if (words < 800) return 'text-sm'
-  return 'text-xs'
-}
-  const fontSize = getFontSize(text)
-
   return (
-    <div className={`h-full overflow-y-auto ${fontSize} text-gray-700 leading-relaxed whitespace-pre-wrap`}>
+    <div className={`h-full overflow-y-auto ${fontSize} leading-relaxed whitespace-pre-wrap`}
+      style={{color: '#e2e8f0'}}>
       {origSents.map((sent, i) => (
         matchedIndices.includes(i)
-          ? <span key={i} className="bg-yellow-100 rounded">
+          ? <span key={i} style={{background: 'rgba(45, 212, 191, 0.15)', borderRadius: '4px'}}>
               {highlightWords(sent)}{' '}
             </span>
           : <span key={i}>{sent} </span>

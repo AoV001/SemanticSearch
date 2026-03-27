@@ -29,92 +29,78 @@ export default function FileList({ files, selectedFile, onSelect, onDelete, onDe
     }
   }
 
+  const Dialog = ({ title, message, onConfirm, onCancel }) => (
+    <div className="fixed inset-0 flex items-center justify-center z-50" style={{background: 'rgba(0,0,0,0.6)'}}>
+      <div className="rounded-xl p-6 shadow-xl max-w-sm w-full mx-4" style={{background: '#1a1d27', border: '1px solid #2a2d3a'}}>
+        <h3 className="font-semibold mb-2" style={{color: '#e2e8f0'}}>{title}</h3>
+        <p className="text-sm mb-5" style={{color: '#f472b6'}}>{message}</p>
+        <div className="flex gap-3 justify-end">
+          <button onClick={onCancel}
+            className="px-4 py-2 text-sm rounded-lg"
+            style={{border: '1px solid #2a2d3a', color: '#e2e8f0'}}>
+            Cancel
+          </button>
+          <button onClick={onConfirm}
+            className="px-4 py-2 text-sm rounded-lg font-medium"
+            style={{background: '#f472b6', color: '#0f1117'}}>
+            Delete
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+
   if (files.length === 0) {
-    return <p className="text-gray-400 text-sm text-center py-4">No files uploaded yet</p>
+    return <p className="text-sm text-center py-4" style={{color: '#64748b'}}>No files uploaded yet</p>
   }
 
   return (
     <>
-      {historyFile && (
-        <HistoryOverlay
-          filename={historyFile}
-          onClose={() => setHistoryFile(null)}
+      {historyFile && <HistoryOverlay filename={historyFile} onClose={() => setHistoryFile(null)} />}
+
+      {confirmDelete && (
+        <Dialog
+          title="Delete file?"
+          message="This will permanently delete the file and its search history."
+          onConfirm={handleConfirmDelete}
+          onCancel={() => setConfirmDelete(null)}
         />
       )}
 
-      {confirmDelete && (
-        <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl p-6 shadow-xl max-w-sm w-full mx-4">
-            <h3 className="font-semibold text-gray-800 mb-2">Delete file?</h3>
-            <p className="text-sm text-red-500 mb-5">
-              This will permanently delete the file and its search history.
-            </p>
-            <div className="flex gap-3 justify-end">
-              <button onClick={() => setConfirmDelete(null)}
-                className="px-4 py-2 text-sm rounded-lg border border-gray-300 hover:bg-gray-50">
-                Cancel
-              </button>
-              <button onClick={handleConfirmDelete}
-                className="px-4 py-2 text-sm rounded-lg bg-red-500 text-white hover:bg-red-600">
-                Delete
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
       {confirmDeleteAll && (
-        <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl p-6 shadow-xl max-w-sm w-full mx-4">
-            <h3 className="font-semibold text-gray-800 mb-2">Delete all files?</h3>
-            <p className="text-sm text-red-500 mb-5">
-              This will permanently delete all files and their search history.
-            </p>
-            <div className="flex gap-3 justify-end">
-              <button onClick={() => setConfirmDeleteAll(false)}
-                className="px-4 py-2 text-sm rounded-lg border border-gray-300 hover:bg-gray-50">
-                Cancel
-              </button>
-              <button onClick={handleDeleteAll}
-                className="px-4 py-2 text-sm rounded-lg bg-red-500 text-white hover:bg-red-600">
-                Delete all
-              </button>
-            </div>
-          </div>
-        </div>
+        <Dialog
+          title="Delete all files?"
+          message="This will permanently delete all files and their search history."
+          onConfirm={handleDeleteAll}
+          onCancel={() => setConfirmDeleteAll(false)}
+        />
       )}
 
-      {/* Кнопка Delete all */}
       <div className="flex justify-end mb-2">
-        <button
-          onClick={() => setConfirmDeleteAll(true)}
-          className="text-xs text-red-400 hover:text-red-600"
-        >
+        <button onClick={() => setConfirmDeleteAll(true)} className="text-xs" style={{color: '#f472b6'}}>
           Delete all
         </button>
       </div>
 
       <ul className="space-y-2">
         {files.map((file) => (
-          <li key={file}
-            className={`rounded-xl border transition
-              ${selectedFile === file ? 'border-blue-300 bg-blue-50' : 'border-gray-200 bg-white'}`}
-          >
+          <li key={file} className="rounded-xl transition"
+            style={{
+              background: selectedFile === file ? '#222536' : '#1a1d27',
+              border: selectedFile === file ? '1px solid #2dd4bf' : '1px solid #2a2d3a'
+            }}>
             <div className="flex items-center gap-2 px-3 py-2">
-              <span className="text-base">{file.endsWith('.pdf') ? '📄' : '📝'}</span>
-              <span className="text-sm text-gray-700 truncate flex-1">{file}</span>
+              <span>{file.endsWith('.pdf') ? '📄' : '📝'}</span>
+              <span className="text-sm truncate flex-1" style={{color: '#e2e8f0'}}>{file}</span>
             </div>
             <div className="flex gap-1 px-3 pb-2">
-              <button onClick={() => onSelect(file)}
-                className="text-xs text-blue-500 hover:text-blue-700 px-2 py-1 rounded hover:bg-blue-50">
+              <button onClick={() => onSelect(file)} className="text-xs px-2 py-1 rounded" style={{color: '#2dd4bf'}}>
                 Search
               </button>
-              <button onClick={() => setHistoryFile(file)}
-                className="text-xs text-gray-500 hover:text-gray-700 px-2 py-1 rounded hover:bg-gray-100">
+              <button onClick={() => setHistoryFile(file)} className="text-xs px-2 py-1 rounded" style={{color: '#64748b'}}>
                 History
               </button>
-              <button onClick={() => setConfirmDelete(file)}
-                className="text-xs text-red-400 hover:text-red-600 px-2 py-1 rounded hover:bg-red-50 ml-auto">
+              <button onClick={() => setConfirmDelete(file)} className="text-xs px-2 py-1 rounded ml-auto" style={{color: '#f472b6'}}>
                 ✕ Delete
               </button>
             </div>
