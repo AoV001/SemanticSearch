@@ -59,8 +59,18 @@ export default function TextViewer({ text, resolvedText, highlightData, corefMap
     })
   }
 
+  const getFontSize = (text) => {
+  const words = text.trim().split(/\s+/).length
+  if (words < 50) return 'text-2xl'
+  if (words < 150) return 'text-lg'
+  if (words < 400) return 'text-base'
+  if (words < 800) return 'text-sm'
+  return 'text-xs'
+}
+  const fontSize = getFontSize(text)
+
   return (
-    <div className="h-full overflow-y-auto text-sm text-gray-700 leading-relaxed whitespace-pre-wrap">
+    <div className={`h-full overflow-y-auto ${fontSize} text-gray-700 leading-relaxed whitespace-pre-wrap`}>
       {origSents.map((sent, i) => (
         matchedIndices.includes(i)
           ? <span key={i} className="bg-yellow-100 rounded">
