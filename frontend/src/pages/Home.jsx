@@ -10,6 +10,7 @@ export default function Home() {
   const [files, setFiles] = useState([])
   const [selectedFile, setSelectedFile] = useState(null)
   const [fileText, setFileText] = useState(null)
+  const [resolvedText, setResolvedText] = useState(null)
   const [results, setResults] = useState([])
   const [loading, setLoading] = useState(false)
   const [highlightContext, setHighlightContext] = useState(null)
@@ -44,13 +45,14 @@ export default function Home() {
     }
   }
 
-  const handleSearch = async (questions) => {
+const handleSearch = async (questions) => {
     setLoading(true)
     setResults([])
     setHighlightContext(null)
     try {
       const data = await searchFile(selectedFile, questions)
-      setResults(data)
+      setResults(data.results)
+      setResolvedText(data.resolved_text)
     } catch (e) {
       console.error(e)
     } finally {
@@ -61,7 +63,10 @@ export default function Home() {
   return (
     <div className="h-screen flex flex-col bg-gray-50">
       <header className="bg-white border-b border-gray-200 px-6 py-3 shrink-0">
-        <h1 className="text-lg font-bold text-gray-800">Semantic Search</h1>
+        <div className="flex items-center gap-3">
+            <img src="/favicon.png" alt="logo" className="w-8 h-8" />
+            <h1 className="text-lg font-bold text-gray-800">Semantic Search</h1>
+        </div>
       </header>
 
       {/* 2:5:3 через grid */}

@@ -1,5 +1,3 @@
-from fileinput import filename
-
 from app.graph.graph_builder import build_dependency_graph
 from app.nlp.text_processing import split_sentences
 from app.nlp.coreference import simple_coreference
@@ -36,6 +34,18 @@ def search(questions: List[str], text: str, top_k: int = 3, threshold=0.4, filen
     blocks = split_blocks(sentences, window_size=WINDOW_SIZE)
     resolved_blocks = [simple_coreference(block) for block in blocks]
 
+    resolved_sentences = []
+    for i, sent in enumerate(sentences):
+        # Даём контекст — текущее + предыдущее предложение
+        context = sentences[i - 1] + " " + sent if i > 0 else sent
+        resolved = simple_coreference(context)
+        # Берём только вторую часть если давали контекст
+        if i > 0:
+            prev_resolved = simple_coreference(sentences[i - 1])
+            resolved = resolved[len(prev_resolved):].strip()
+        resolved_sentences.append(resolved)
+
+    resolved_text = " ".join(resolved_sentences)
     all_results = {}
 
     for question in questions:
@@ -70,4 +80,4 @@ def search(questions: List[str], text: str, top_k: int = 3, threshold=0.4, filen
 
 
 
-    return all_results
+    return all_results, resolved_text

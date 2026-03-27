@@ -15,7 +15,10 @@ export default function ResultCard({ result, onHover }) {
   return (
     <div
       className="bg-white rounded-xl border border-gray-200 p-5 space-y-3 cursor-default"
-      onMouseEnter={() => onHover(top.context)}
+      onMouseEnter={() => {
+        console.log('hover context:', top.context)
+        onHover(top.context)
+      }}
       onMouseLeave={() => onHover(null)}
     >
       <p className="text-sm text-gray-500">Q: {question}</p>
