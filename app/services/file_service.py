@@ -39,3 +39,10 @@ def delete_file(filename: str) -> bool:
 
 def file_exists(filename: str) -> bool:
     return os.path.exists(os.path.join(UPLOAD_FOLDER, filename))
+
+def delete_all_files() -> int:
+    ensure_upload_folder()
+    files = list_files()
+    for f in files:
+        delete_file(f)
+    return len(files)

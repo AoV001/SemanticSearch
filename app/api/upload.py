@@ -3,7 +3,7 @@ import os
 from pydantic import BaseModel
 from app.services.file_service import (
     read_file, ensure_upload_folder,
-    list_files, delete_file, file_exists
+    list_files, delete_file, file_exists, delete_all_files
 )
 from app.nlp.text_processing import split_sentences
 
@@ -65,6 +65,10 @@ def delete_file_endpoint(filename: str):
     delete_file(filename)
     return {"message": f"File '{filename}' deleted successfully"}
 
+@router.delete("/files")
+def delete_all_files_endpoint():
+    count = delete_all_files()
+    return {"message": f"Deleted {count} files"}
 
 class TextInput(BaseModel):
     text: str

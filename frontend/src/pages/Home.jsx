@@ -87,6 +87,12 @@ export default function Home() {
               selectedFile={selectedFile}
               onSelect={handleSelect}
               onDelete={handleDelete}
+              onDeleteAll={() => {
+                  setFiles([])
+                  setSelectedFile(null)
+                  setFileText(null)
+                  setResults([])
+                  }}
             />
           </div>
         </div>

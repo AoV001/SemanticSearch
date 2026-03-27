@@ -15,6 +15,8 @@ export default function SearchForm({ selectedFile, onSearch, loading }) {
     setQuestions(questions.filter((_, i) => i !== index))
   }
 
+  const clearAll = () => setQuestions([''])
+
   const handleSubmit = () => {
     const filtered = questions.filter(q => q.trim())
     if (!filtered.length || !selectedFile) return
@@ -22,11 +24,21 @@ export default function SearchForm({ selectedFile, onSearch, loading }) {
   }
 
   return (
-    <div className="bg-white rounded-xl border border-gray-200 p-6 space-y-4">
-      <h2 className="text-lg font-semibold text-gray-700">Ask questions</h2>
+    <div className="bg-white rounded-xl border border-gray-200 p-4 space-y-3">
+      <div className="flex items-center justify-between">
+        <h2 className="text-sm font-semibold text-gray-700">Ask questions</h2>
+        {questions.some(q => q.trim()) && (
+          <button
+            onClick={clearAll}
+            className="text-xs text-red-400 hover:text-red-600"
+          >
+            Clear all
+          </button>
+        )}
+      </div>
 
       {!selectedFile && (
-        <p className="text-sm text-amber-500">Select a file first</p>
+        <p className="text-xs text-amber-500">Select a file first</p>
       )}
 
       <div className="space-y-2">
@@ -55,14 +67,14 @@ export default function SearchForm({ selectedFile, onSearch, loading }) {
       <div className="flex gap-2">
         <button
           onClick={addQuestion}
-          className="text-sm text-blue-500 hover:text-blue-700"
+          className="text-xs text-blue-500 hover:text-blue-700"
         >
           + Add question
         </button>
         <button
           onClick={handleSubmit}
           disabled={!selectedFile || loading}
-          className="ml-auto bg-blue-600 text-white px-5 py-2 rounded-lg text-sm hover:bg-blue-700 disabled:opacity-50 transition"
+          className="ml-auto bg-blue-600 text-white px-4 py-1.5 rounded-lg text-sm hover:bg-blue-700 disabled:opacity-50 transition"
         >
           {loading ? 'Searching...' : 'Search'}
         </button>

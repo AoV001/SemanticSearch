@@ -1,10 +1,11 @@
 import { useState } from 'react'
-import { deleteFile } from '../api/client'
+import { deleteFile, deleteAllFiles } from '../api/client'
 import HistoryOverlay from './HistoryOverlay'
 
 export default function FileList({ files, selectedFile, onSelect, onDelete }) {
   const [confirmDelete, setConfirmDelete] = useState(null)
   const [historyFile, setHistoryFile] = useState(null)
+  const [confirmDeleteAll, setConfirmDeleteAll] = useState(false)
 
   const handleConfirmDelete = async () => {
     try {
@@ -16,6 +17,54 @@ export default function FileList({ files, selectedFile, onSelect, onDelete }) {
       setConfirmDelete(null)
     }
   }
+
+
+  const handleDeleteAll = async () => {
+    try {
+      await deleteAllFiles()
+      onDeleteAll()
+    } catch (e) {
+      console.error(e)
+    } finally {
+      setConfirmDeleteAll(false)
+    }
+  }
+  {files.length > 0 && (
+    <div className="flex justify-end mb-2">
+      <button
+        onClick={() => setConfirmDeleteAll(true)}
+        className="text-xs text-red-400 hover:text-red-600"
+      >
+        Delete all
+      </button>
+    </div>
+  )}
+
+  {confirmDeleteAll && (
+    <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+      <div className="bg-white rounded-xl p-6 shadow-xl max-w-sm w-full mx-4">
+        <h3 className="font-semibold text-gray-800 mb-2">Delete all files?</h3>
+        <p className="text-sm text-red-500 mb-5">
+          This will permanently delete all files and their search history.
+        </p>
+        <div className="flex gap-3 justify-end">
+          <button
+            onClick={() => setConfirmDeleteAll(false)}
+            className="px-4 py-2 text-sm rounded-lg border border-gray-300 hover:bg-gray-50"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={handleDeleteAll}
+            className="px-4 py-2 text-sm rounded-lg bg-red-500 text-white hover:bg-red-600"
+          >
+            Delete all
+          </button>
+        </div>
+      </div>
+    </div>
+  )}
+
 
   if (files.length === 0) {
     return <p className="text-gray-400 text-sm text-center py-4">No files uploaded yet</p>

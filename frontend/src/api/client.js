@@ -62,3 +62,9 @@ export const uploadText = async (filename, text) => {
   if (!res.ok) throw new Error(await res.text())
   return res.json()
 }
+
+export const deleteAllFiles = async () => {
+  const res = await fetch(`${API_URL}/api/files`, { method: 'DELETE' })
+  if (!res.ok) throw new Error(await res.text())
+  return res.json()
+}
