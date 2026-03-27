@@ -1,4 +1,23 @@
+import { useState } from 'react'
+import { getDefinition } from '../api/dictionary'
+import WordModal from './WordModal'
+
 export default function TextViewer({ text, resolvedText, highlightData, corefMap }) {
+  const [wordModal, setWordModal] = useState(null)
+  const [definition, setDefinition] = useState(null)
+  const [defLoading, setDefLoading] = useState(false)
+
+  const handleWordClick = async (word) => {
+    const clean = word.replace(/[^a-zA-Z]/g, '')
+    if (!clean) return
+    setWordModal(clean)
+    setDefinition(null)
+    setDefLoading(true)
+    const def = await getDefinition(clean)
+    setDefinition(def)
+    setDefLoading(false)
+  }
+
   if (!text) {
     return (
       <div className="h-full flex items-center justify-center text-sm" style={{color: '#64748b'}}>
@@ -20,12 +39,39 @@ export default function TextViewer({ text, resolvedText, highlightData, corefMap
 
   const fontSize = getFontSize(text)
 
+  // Рендерим текст как кликабельные слова
+  const renderClickable = (str) =>
+    str.split(/(\s+)/).map((token, i) => {
+      if (/^\s+$/.test(token)) return token
+      const clean = token.replace(/[^a-zA-Z]/g, '')
+      if (!clean) return token
+      return (
+        <span key={i}
+          onClick={() => handleWordClick(token)}
+          className="cursor-pointer rounded transition-colors"
+          style={{}}
+          onMouseEnter={e => e.currentTarget.style.color = '#2dd4bf'}
+          onMouseLeave={e => e.currentTarget.style.color = ''}
+        >
+          {token}
+        </span>
+      )
+    })
+
   if (!highlightData) {
     return (
-      <div className={`h-full overflow-y-auto ${fontSize} leading-relaxed whitespace-pre-wrap`}
-        style={{color: '#e2e8f0'}}>
-        {text}
-      </div>
+      <>
+        <WordModal
+          word={wordModal}
+          definition={definition}
+          loading={defLoading}
+          onClose={() => setWordModal(null)}
+        />
+        <div className={`h-full overflow-y-auto ${fontSize} leading-relaxed whitespace-pre-wrap`}
+          style={{color: '#e2e8f0'}}>
+          {renderClickable(text)}
+        </div>
+      </>
     )
   }
 
@@ -45,15 +91,6 @@ export default function TextViewer({ text, resolvedText, highlightData, corefMap
     return acc
   }, [])
 
-  if (!matchedIndices.length) {
-    return (
-      <div className={`h-full overflow-y-auto ${fontSize} leading-relaxed whitespace-pre-wrap`}
-        style={{color: '#e2e8f0'}}>
-        {text}
-      </div>
-    )
-  }
-
   const answerLower = answer.toLowerCase()
   const relatedWords = new Set([
     answerLower,
@@ -67,29 +104,45 @@ export default function TextViewer({ text, resolvedText, highlightData, corefMap
       const wordLower = word.toLowerCase().replace(/[.,!?;:]/g, '')
       if (wordLower && relatedWords.has(wordLower)) {
         return (
-          <mark key={j} style={{
-            background: 'rgba(244, 114, 182, 0.3)',
-            borderRadius: '3px',
-            color: '#e2e8f0'
-          }}>
+          <mark key={j}
+            onClick={() => handleWordClick(word)}
+            className="cursor-pointer"
+            style={{background: 'rgba(244, 114, 182, 0.3)', borderRadius: '3px', color: '#e2e8f0'}}>
             {word}
           </mark>
         )
       }
-      return word
+      return (
+        <span key={j}
+          onClick={() => handleWordClick(word)}
+          className="cursor-pointer rounded"
+          onMouseEnter={e => e.currentTarget.style.color = '#2dd4bf'}
+          onMouseLeave={e => e.currentTarget.style.color = ''}
+        >
+          {word}
+        </span>
+      )
     })
   }
 
   return (
-    <div className={`h-full overflow-y-auto ${fontSize} leading-relaxed whitespace-pre-wrap`}
-      style={{color: '#e2e8f0'}}>
-      {origSents.map((sent, i) => (
-        matchedIndices.includes(i)
-          ? <span key={i} style={{background: 'rgba(45, 212, 191, 0.15)', borderRadius: '4px'}}>
-              {highlightWords(sent)}{' '}
-            </span>
-          : <span key={i}>{sent} </span>
-      ))}
-    </div>
+    <>
+      <WordModal
+        word={wordModal}
+        definition={definition}
+        loading={defLoading}
+        onClose={() => setWordModal(null)}
+      />
+      <div className={`h-full overflow-y-auto ${fontSize} leading-relaxed whitespace-pre-wrap`}
+        style={{color: '#e2e8f0'}}>
+        {origSents.map((sent, i) => (
+          matchedIndices.includes(i)
+            ? <span key={i} style={{background: 'rgba(45, 212, 191, 0.15)', borderRadius: '4px'}}>
+                {highlightWords(sent)}{' '}
+              </span>
+            : <span key={i}>{renderClickable(sent)} </span>
+        ))}
+      </div>
+    </>
   )
 }

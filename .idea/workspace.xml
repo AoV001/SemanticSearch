@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="e94f34bc-5a55-4421-9054-ef0a949d0e9b" name="Changes" comment="unversioned files">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="e94f34bc-5a55-4421-9054-ef0a949d0e9b" name="Changes" comment="adjust the visualisation of graphs">
+      <change afterPath="$PROJECT_DIR$/frontend/src/api/dictionary.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/components/WordModal.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/data/history.db" beforeDir="false" afterPath="$PROJECT_DIR$/data/history.db" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/ResultModal.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/ResultModal.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/TextViewer.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/TextViewer.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -391,7 +392,15 @@
       <option name="project" value="LOCAL" />
       <updated>1774643752522</updated>
     </task>
-    <option name="localTasksCounter" value="36" />
+    <task id="LOCAL-00036" summary="adjust the visualisation of graphs">
+      <option name="closed" value="true" />
+      <created>1774645032978</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1774645032978</updated>
+    </task>
+    <option name="localTasksCounter" value="37" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -406,7 +415,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="adjust extract temporal answer: add anker to mark the events linear" />
     <MESSAGE value="adjust answer extraction and search service: add more temporal markers" />
     <MESSAGE value="add docker" />
     <MESSAGE value="add new endpoints: get and delete" />
@@ -431,6 +439,7 @@
     <MESSAGE value="add header and footer" />
     <MESSAGE value="add new window to show the evidence card more comfortable" />
     <MESSAGE value="unversioned files" />
-    <option name="LAST_COMMIT_MESSAGE" value="unversioned files" />
+    <MESSAGE value="adjust the visualisation of graphs" />
+    <option name="LAST_COMMIT_MESSAGE" value="adjust the visualisation of graphs" />
   </component>
 </project>
