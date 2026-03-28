@@ -19,6 +19,10 @@ FEMALE_NOUNS = {
     "girl", "woman", "mother", "daughter", "sister", "aunt", "queen",
     "princess", "wife", "grandmother", "lady", "female", "mrs", "ms", "madam"
 }
+TEMPORAL_NOUNS = {
+    "morning", "evening", "afternoon", "night", "day", "week",
+    "month", "year", "summer", "winter", "spring", "autumn", "time"
+}
 
 def get_gender(token) -> str | None:
 
@@ -47,7 +51,6 @@ def simple_coreference(text: str) -> str:
     for token in doc:
         lower = token.text.lower()
 
-
         if token.pos_ in {"NOUN", "PROPN"} and lower not in PRONOUNS:
             gender = get_gender(token)
             if gender == "Masc":
@@ -57,8 +60,9 @@ def simple_coreference(text: str) -> str:
             elif gender == "Neut":
                 last["Neut"] = token.text
             else:
-
-                last["Neut"] = token.text
+                # Только не-временные существительные как кандидат для "it"
+                if lower not in TEMPORAL_NOUNS:
+                    last["Neut"] = token.text
             resolved_tokens.append(token.text)
             continue
 
@@ -70,7 +74,6 @@ def simple_coreference(text: str) -> str:
         elif lower in NEUTRAL and last["Neut"]:
             resolved_tokens.append(last["Neut"])
         elif lower in PLURAL:
-            # they/them — берём последнее существительное любого рода
             candidate = last["Plur"] or last["Masc"] or last["Fem"] or last["Neut"]
             resolved_tokens.append(candidate if candidate else token.text)
         else:

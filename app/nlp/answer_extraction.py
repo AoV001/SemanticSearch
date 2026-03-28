@@ -6,9 +6,9 @@ nlp = spacy.load("en_core_web_sm")
 QUESTION_TYPES = {
     "who":   {"deps": ["nsubj", "nsubjpass", "attr"], "ents": ["PERSON", "ORG"]},
     "when":  {"deps": ["npadvmod", "tmod", "prep"],   "ents": ["DATE", "TIME"]},
-    "where": {"deps": ["prep", "npadvmod"],            "ents": ["GPE", "LOC", "FAC"]},
-    "what":  {"deps": ["nsubj", "dobj", "attr"],       "ents": ["PRODUCT", "WORK_OF_ART", "ORG", "NORP"]},
-    "how":   {"deps": ["advmod", "npadvmod"],          "ents": ["QUANTITY", "CARDINAL"]},
+    "where": {"deps": ["prep", "npadvmod", "pobj"],   "ents": ["GPE", "LOC", "FAC"]},
+    "what":  {"deps": ["dobj", "attr", "nsubj"],      "ents": ["PRODUCT", "WORK_OF_ART", "ORG", "NORP"]},
+    "how":   {"deps": ["advmod", "npadvmod", "acomp", "xcomp"], "ents": ["QUANTITY", "CARDINAL"]},
     "why":   {"deps": ["advcl", "prep"],               "ents": []},
     "which": {"deps": ["nsubj", "dobj", "attr"],       "ents": []},
 }
@@ -57,14 +57,23 @@ def extract_why_answer(triplets: list, original_block: str) -> str | None:
 
     return " ".join(related) if related else cause_verb
 
-def extract_answer(triplets: list, question_graph, original_block: str, original_question: str = "") -> str | None:
 
+
+def extract_answer(triplets: list, question_graph, original_block: str, original_question: str = "") -> str | None:
     qtype = classify_question(original_question if original_question else "what")
     strategy = QUESTION_TYPES[qtype]
 
     if qtype == "why":
-        result = extract_why_answer(triplets, original_block)
-        return result
+        return extract_why_answer_v2(original_block)
+
+    if qtype == "where":
+        return extract_where_answer(triplets, original_block)
+
+    if qtype == "what":
+        return extract_what_answer(triplets, original_block, question_graph)
+
+    if qtype == "how":
+        return extract_how_answer(triplets, original_block)
 
     target_deps = strategy["deps"]
     for u, rel, v in triplets:
@@ -81,6 +90,95 @@ def extract_answer(triplets: list, question_graph, original_block: str, original
             if ent.label_ in target_ents:
                 return ent.text
 
+    return None
+
+
+def extract_where_answer(triplets, original_block: str) -> str | None:
+    """Для where — ищем GPE/LOC entity или pobj от prep."""
+    doc = nlp(original_block)
+
+    # Сначала NER
+    for ent in doc.ents:
+        if ent.label_ in {"GPE", "LOC", "FAC"}:
+            return ent.text
+
+    # Потом pobj — объект предлога
+    for u, rel, v in triplets:
+        if rel == "pobj":
+            return v
+        if rel == "prep":
+            # ищем pobj от этого предлога в тексте
+            for token in doc:
+                if token.text == v and token.dep_ == "prep":
+                    for child in token.children:
+                        if child.dep_ == "pobj":
+                            return child.text
+
+    return None
+
+
+def extract_what_answer(triplets, original_block: str, question_graph) -> str | None:
+    """Для what — сначала dobj от глагола вопроса, потом attr, потом nsubj."""
+    question_verbs = {
+        data["lemma"] for _, data in question_graph.nodes(data=True)
+        if data.get("pos") == "VERB"
+    }
+
+    # Приоритет: dobj от глагола вопроса
+    for u, rel, v in triplets:
+        if rel == "dobj" and u.lower() in question_verbs:
+            return v
+
+    # Потом любой dobj
+    for u, rel, v in triplets:
+        if rel == "dobj":
+            return v
+
+    # Потом attr
+    for u, rel, v in triplets:
+        if rel == "attr":
+            return v
+
+    # NER fallback
+    doc = nlp(original_block)
+    for ent in doc.ents:
+        if ent.label_ in {"PRODUCT", "WORK_OF_ART", "ORG", "NORP", "FAC"}:
+            return ent.text
+
+    return None
+
+
+def extract_how_answer(triplets, original_block: str) -> str | None:
+    """Для how — ищем acomp, advmod, xcomp."""
+    for u, rel, v in triplets:
+        if rel in {"acomp", "advmod", "xcomp"}:
+            return v
+
+    # Fallback — ищем прилагательное после feel/become/seem
+    doc = nlp(original_block)
+    COPULA_VERBS = {"feel", "become", "seem", "look", "sound", "appear"}
+    for token in doc:
+        if token.lemma_.lower() in COPULA_VERBS:
+            for child in token.children:
+                if child.dep_ in {"acomp", "advmod"} and child.pos_ in {"ADJ", "ADV"}:
+                    return child.text
+
+    return None
+
+
+def extract_why_answer_v2(original_block: str) -> str | None:
+    """Для why — ищем because/since клаузу прямо в тексте без опоры на triplets."""
+    doc = nlp(original_block)
+    CAUSE_MARKERS = {"because", "since", "as", "therefore", "thus", "so"}
+
+    for sent in doc.sents:
+        for token in sent:
+            if token.text.lower() in CAUSE_MARKERS:
+                clause = [t.text for t in sent if t.i >= token.i and t.text not in {".", "!", "?"}]
+                if clause:
+                    return " ".join(clause)
+
+    # Fallback — advcl из triplets
     return None
 
 
