@@ -23,7 +23,16 @@ When she returned home, Emma felt proud of what she had done. She also learned t
 
 
 questions = [
-    "What activities did they organize for the children?",
+        "When did Emma join the volunteer program?",
+        "Where was the village located?",
+        "Why was the village very quiet?",
+        "What building did the volunteers repair?",
+        "What did they do every morning?",
+        "What activities did they organize for the children?",
+        "Why was Emma worried at the beginning?",
+        "How did the villagers feel about the volunteers?",
+        "What happened one evening in the village?",
+        "What lesson did Emma learn from this experience?",
 ]
 results, resolved_text, coref_map = search(questions=questions, text=text, top_k=3, threshold=0.1)
 
