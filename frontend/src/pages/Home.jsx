@@ -121,7 +121,7 @@ export default function Home() {
         </div>
 
         {/* Центр — 5/10 */}
-        <div className="col-span-5 flex flex-col overflow-hidden" style={{background: '#13151f', borderRight: '1px solid #2a2d3a'}}>
+        <div className="col-span-4 flex flex-col overflow-hidden" style={{background: '#13151f', borderRight: '1px solid #2a2d3a'}}>
           {!selectedFile ? (
             <div className="flex-1 flex flex-col items-center justify-center p-12">
               <p className="text-2xl font-bold mb-2" style={{color: '#e2e8f0'}}>Welcome</p>
@@ -153,7 +153,7 @@ export default function Home() {
         </div>
 
         {/* Правая — 3/10 */}
-        <div className="col-span-3 flex flex-col overflow-hidden" style={{background: '#1a1d27'}}>
+        <div className="col-span-4 flex flex-col overflow-hidden" style={{background: '#1a1d27'}}>
           <div className="p-4 shrink-0" style={{borderBottom: '1px solid #2a2d3a'}}>
             <SearchForm
               selectedFile={selectedFile}
