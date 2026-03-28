@@ -70,7 +70,7 @@ def extract_answer(triplets: list, question_graph, original_block: str, original
         return extract_where_answer(triplets, original_block)
 
     if qtype == "what":
-        return extract_what_answer(triplets, original_block, question_graph)
+        return extract_what_answer(triplets, original_block, question_graph, original_question)
 
     if qtype == "how":
         return extract_how_answer(triplets, original_block)
@@ -117,7 +117,7 @@ def extract_where_answer(triplets, original_block: str) -> str | None:
     return None
 
 
-def extract_what_answer(triplets, original_block: str, question_graph) -> str | None:
+def extract_what_answer(triplets, original_block: str, question_graph, original_question: str = "") -> str | None:
     question_verbs = {
         data["lemma"] for _, data in question_graph.nodes(data=True)
         if data.get("pos") == "VERB"
@@ -138,9 +138,14 @@ def extract_what_answer(triplets, original_block: str, question_graph) -> str | 
         data["lemma"] for _, data in question_graph.nodes(data=True)
         if data.get("pos") in {"NOUN", "PROPN"}
     }
+    q_words = set(original_question.lower().split()) - {
+        "what", "did", "do", "does", "the", "a", "an", "they", "he", "she", "it",
+        "for", "to", "of", "in", "on", "at", "with", "?", "about"
+    }
     for u, rel, v in triplets:
-        if rel == "amod" and (v.lower() in question_nouns or u.lower() in question_nouns):
-            return v
+        if rel == "amod":
+            if u.lower() in q_words or v.lower() in q_words:
+                return v
 
     # 4. глагол из npadvmod — "what did they do" → берём сам глагол
     for u, rel, v in triplets:
@@ -263,7 +268,6 @@ TEMPORAL_MARKERS = {"before", "after", "when", "while", "then"}
 SEQUENTIAL_MARKERS = {"as soon as"}  # двусловные — обрабатываем отдельно
 QUANTITATIVE_MARKERS = {"how long", "how often", "how much", "how many"}
 
-# Какую клаузу брать для каждого маркера
 # "same" = всё предложение, "before" = до маркера, "after" = после маркера
 MARKER_STRATEGY = {
     # маркер в тексте → что брать если вопрос спрашивает before/after/while
