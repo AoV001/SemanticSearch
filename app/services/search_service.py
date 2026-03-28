@@ -22,7 +22,7 @@ def split_blocks(sentences, window_size=WINDOW_SIZE):
         blocks.append(block)
     return blocks
 
-def search(questions: List[str], text: str, top_k: int = 3, threshold=0.4, filename: str = ""):
+def search(questions: List[str], text: str, top_k: int = 3, threshold=0.3, filename: str = ""):
     nlp_sent = English()
     nlp_sent.add_pipe("sentencizer")
     cleaned_text = text.replace("\n", " ")
