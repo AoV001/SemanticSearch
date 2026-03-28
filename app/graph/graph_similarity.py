@@ -1,16 +1,26 @@
 import networkx as nx
 
 
-def node_similarity(g1, g2):
-    # g1 = вопрос, g2 = блок
+def node_similarity(g1: nx.Graph, g2: nx.Graph):
     nodes1 = {data.get("lemma") for _, data in g1.nodes(data=True) if "lemma" in data}
     nodes2 = {data.get("lemma") for _, data in g2.nodes(data=True) if "lemma" in data}
 
-    intersection = nodes1 & nodes2
     if not nodes1:
         return 0
-    # Recall: сколько узлов вопроса нашлось в блоке
-    return len(intersection) / len(nodes1)
+
+    score = 0
+    for n1 in nodes1:
+        if n1 in nodes2:
+            score += 1.0  # точное совпадение
+        else:
+            # мягкое совпадение — одно содержит другое
+            # "workplace" содержит "work", "commute" близко к "commuting"
+            for n2 in nodes2:
+                if n1 in n2 or n2 in n1:
+                    score += 0.5
+                    break
+
+    return score / len(nodes1)
 
 
 def edge_similarity(g1, g2):
