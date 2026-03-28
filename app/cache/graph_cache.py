@@ -1,7 +1,7 @@
-from app.graph.graph_builder import build_dependency_graph
+from app.graph.graph_builder import build_dependency_graph, nlp
 from app.nlp.coreference import simple_coreference
 
-
+_doc_cache: dict = {}
 _coref_cache: dict = {}
 _cache: dict = {}
 
@@ -14,6 +14,11 @@ def get_graph(text: str):
     if text not in _cache:
         _cache[text] = build_dependency_graph(text)
     return _cache[text]
+
+def get_doc(text: str):
+    if text not in _doc_cache:
+        _doc_cache[text] = nlp(text)
+    return _doc_cache[text]
 
 def clear_cache():
     _cache.clear()

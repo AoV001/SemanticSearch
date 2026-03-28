@@ -1,4 +1,5 @@
 import spacy
+from app.cache.graph_cache import get_doc
 
 nlp = spacy.load("en_core_web_sm")
 
@@ -34,7 +35,7 @@ def extract_why_answer(triplets: list, original_block: str) -> str | None:
         return None
 
 
-    doc = nlp(original_block)
+    doc = get_doc(original_block)
 
     CAUSE_MARKERS = {"because", "since", "as", "so", "therefore", "thus"}
 
@@ -85,7 +86,7 @@ def extract_answer(triplets: list, question_graph, original_block: str, original
 
     target_ents = strategy["ents"]
     if target_ents:
-        doc = nlp(original_block)
+        doc = get_doc(original_block)
         for ent in doc.ents:
             if ent.label_ in target_ents:
                 return ent.text
@@ -95,7 +96,7 @@ def extract_answer(triplets: list, question_graph, original_block: str, original
 
 def extract_where_answer(triplets, original_block: str) -> str | None:
     """Для where — ищем GPE/LOC entity или pobj от prep."""
-    doc = nlp(original_block)
+    doc = get_doc(original_block)
 
     # Сначала NER
     for ent in doc.ents:
@@ -144,7 +145,7 @@ def extract_what_answer(triplets, original_block: str, question_graph, original_
     for u, rel, v in triplets:
         if rel == "ccomp":
             # ищем всю клаузу в тексте
-            doc = nlp(original_block)
+            doc = get_doc(original_block)
             for sent in doc.sents:
                 for token in sent:
                     if token.text == v and token.dep_ == "ccomp":
@@ -153,7 +154,7 @@ def extract_what_answer(triplets, original_block: str, question_graph, original_
             return v
 
     # 2в. ищем "that"-клаузу прямо в тексте по глаголу вопроса
-    doc = nlp(original_block)
+    doc = get_doc(original_block)
     for sent in doc.sents:
         for token in sent:
             if token.lemma_.lower() in question_verbs:
@@ -166,7 +167,7 @@ def extract_what_answer(triplets, original_block: str, question_graph, original_
     # 2г. relcl — относительная клауза как определение ("model where employees work...")
     for u, rel, v in triplets:
         if rel == "relcl" and u.lower() not in q_words:
-            doc = nlp(original_block)
+            doc = get_doc(original_block)
             for token in doc:
                 if token.text == v and token.dep_ == "relcl":
                     clause = [t.text for t in token.subtree if not t.is_punct]
@@ -177,7 +178,7 @@ def extract_what_answer(triplets, original_block: str, question_graph, original_
     for u, rel, v in triplets:
         if rel == "nsubj" and u.lower() in q_words:
             # берём всю клаузу от v
-            doc = nlp(original_block)
+            doc = get_doc(original_block)
             for token in doc:
                 if token.text == v:
                     clause = [t.text for t in token.subtree if not t.is_punct]
@@ -191,7 +192,7 @@ def extract_what_answer(triplets, original_block: str, question_graph, original_
             return u
 
     # 3. "such as" конструкция — ищем pcomp или prep+pobj после "such as"
-    doc = nlp(original_block)
+    doc = get_doc(original_block)
     for sent in doc.sents:
         for token in sent:
             if token.text.lower() == "as" and token.i > 0:
@@ -263,7 +264,7 @@ def extract_how_answer(triplets, original_block: str) -> str | None:
             return v
 
     # xcomp — только если это не глагол
-    doc = nlp(original_block)
+    doc = get_doc(original_block)
     for u, rel, v in triplets:
         if rel == "xcomp":
             for token in doc:
@@ -282,7 +283,7 @@ def extract_how_answer(triplets, original_block: str) -> str | None:
 
 
 def extract_why_answer_v2(original_block: str) -> str | None:
-    doc = nlp(original_block)
+    doc = get_doc(original_block)
     # "because" и "since" — настоящие причинные маркеры
     # "as" только если НЕ часть "such as"
     CAUSE_MARKERS = {"because", "since", "therefore", "thus"}
@@ -404,7 +405,7 @@ def extract_temporal_answer(original_block: str, original_question: str) -> str 
         return None
 
     anchor_words = _get_anchor_words(original_question, q_marker)
-    doc = nlp(original_block)
+    doc = get_doc(original_block)
 
     for sent in doc.sents:
         sent_lemmas = {t.lemma_.lower() for t in sent}
@@ -447,7 +448,7 @@ def extract_quantitative_answer(original_block: str, original_question: str) -> 
         "does", "was", "the", "a", "an", "?"
     }
 
-    doc = nlp(original_block)
+    doc = get_doc(original_block)
     TARGET_ENTS = {"DATE", "TIME", "QUANTITY", "CARDINAL", "PERCENT", "MONEY"}
 
     for sent in doc.sents:
