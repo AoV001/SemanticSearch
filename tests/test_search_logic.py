@@ -11,28 +11,28 @@ from spacy.lang.en import English
 init_db()
 
 text = """
-Last summer, Emma decided to try something new. Instead of spending her vacation at home, she joined a volunteer program in a small village near the mountains. The village was beautiful but very quiet, and many young people had moved away to bigger cities.
-Emma and other volunteers worked together to repair an old community center. Every morning they painted walls, fixed broken windows, and cleaned the yard around the building. In the afternoons, they organized activities for local children, such as drawing, playing games, and reading stories.
+In recent years, the way people work has changed dramatically. One of the biggest changes has been the rise of remote work. Thanks to modern technology, many employees no longer need to travel to an office every day. Instead, they can work from home, from a café, or even from another country.
 
-At first, Emma was worried because she didn’t know anyone there. However, after a few days she began to feel comfortable. The volunteers became good friends, and the villagers were very kind and grateful for their help.
+For many workers, remote work offers significant advantages. It allows people to save time because they do not need to commute. In large cities, commuting can take several hours a day, so working remotely can greatly improve a person’s quality of life. In addition, employees often have more flexibility in organizing their schedules.
 
-One evening, the village organized a small celebration to thank the volunteers. There was traditional food, music, and dancing. Emma realized that although the work was sometimes difficult, the experience was unforgettable.
+However, remote work also has its challenges. Some people find it difficult to separate their professional and personal lives when both take place in the same space. Others may feel isolated because they have fewer face-to-face interactions with colleagues.
 
-When she returned home, Emma felt proud of what she had done. She also learned that helping others can be one of the most rewarding experiences in life.
-"""
+Companies are still trying to find the best balance between remote and office work. Some organizations prefer a hybrid model, where employees work from home a few days a week and come to the office on other days. This approach allows workers to enjoy flexibility while still maintaining personal contact with their teams.
+
+As technology continues to develop, experts believe that remote work will remain an important part of the modern workplace. The challenge for both employers and employees will be learning how to use this system in a healthy and productive way."""
 
 
 questions = [
-        "When did Emma join the volunteer program?",
-        "Where was the village located?",
-        "Why was the village very quiet?",
-        "What building did the volunteers repair?",
-        "What did they do every morning?",
-        "What activities did they organize for the children?",
-        "Why was Emma worried at the beginning?",
-        "How did the villagers feel about the volunteers?",
-        "What happened one evening in the village?",
-        "What lesson did Emma learn from this experience?",
+        "What major change in the workplace is described in the text?",
+        "What technology has made remote work possible?",
+        "Why can remote work improve people’s quality of life?",
+        "What is one benefit related to employees’ schedules?",
+        "What problem can occur when people work and live in the same place?",
+        "Why might remote workers feel isolated?",
+        "What solution are some companies using to solve the problems of remote work?",
+        "What is a hybrid work model?",
+        "According to experts, what will happen to remote work in the future?",
+        "What challenge will employers and employees face?",
 ]
 results, resolved_text, coref_map = search(questions=questions, text=text, top_k=3, threshold=0.1)
 

@@ -140,6 +140,18 @@ def extract_what_answer(triplets, original_block: str, question_graph, original_
             chain = _collect_conj_chain(v, triplets)
             return ", ".join(chain) if len(chain) > 1 else v
 
+    # 2б. ccomp — придаточное предложение как ответ ("learned that...")
+    for u, rel, v in triplets:
+        if rel == "ccomp":
+            # ищем всю клаузу в тексте
+            doc = nlp(original_block)
+            for sent in doc.sents:
+                for token in sent:
+                    if token.text == v and token.dep_ == "ccomp":
+                        clause = [t.text for t in token.subtree if not t.is_punct]
+                        return " ".join(clause) if clause else v
+            return v
+
     # 2в. ищем "that"-клаузу прямо в тексте по глаголу вопроса
     doc = nlp(original_block)
     for sent in doc.sents:
@@ -150,6 +162,28 @@ def extract_what_answer(triplets, original_block: str, question_graph, original_
                         clause = [t.text for t in child.subtree if not t.is_punct]
                         if clause:
                             return " ".join(clause)
+
+    # 2г. relcl — относительная клауза как определение ("model where employees work...")
+    for u, rel, v in triplets:
+        if rel == "relcl" and u.lower() not in q_words:
+            doc = nlp(original_block)
+            for token in doc:
+                if token.text == v and token.dep_ == "relcl":
+                    clause = [t.text for t in token.subtree if not t.is_punct]
+                    if clause:
+                        return " ".join(clause)
+
+    # 2д. nsubj где u это ключевое слово вопроса
+    for u, rel, v in triplets:
+        if rel == "nsubj" and u.lower() in q_words:
+            # берём всю клаузу от v
+            doc = nlp(original_block)
+            for token in doc:
+                if token.text == v:
+                    clause = [t.text for t in token.subtree if not t.is_punct]
+                    if clause and len(clause) > 1:
+                        return " ".join(clause)
+            return v
 
     # 3. "such as" конструкция — ищем pcomp или prep+pobj после "such as"
     doc = nlp(original_block)
