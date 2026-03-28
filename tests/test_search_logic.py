@@ -31,22 +31,6 @@ print("\n" + "="*60)
 print("SEARCH LOGIC TEST")
 print("="*60)
 
-nlp_sent = English()
-nlp_sent.add_pipe("sentencizer")
-doc = nlp_sent(text.replace("\n", " "))
-sentences = [sent.text.strip() for sent in doc.sents]
-blocks = split_blocks(sentences)
-resolved_blocks = [simple_coreference(block) for block in blocks]
-
-question = "What activities did they organize for the children?"
-qg = build_dependency_graph(question)
-
-for i, block in enumerate(resolved_blocks):
-    bg = build_dependency_graph(block)
-    score = graph_similarity(qg, bg)
-    print(f"\nBlock {i} (score={score:.2f}):")
-    print(f"  {block[:100]}")
-
 for question, hits in results.items():
     print(f"\nQ: {question}")
     if not hits:
