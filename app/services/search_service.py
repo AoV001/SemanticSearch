@@ -9,6 +9,7 @@ from app.cache.graph_cache import get_graph
 from app.nlp.coreference import simple_coreference, get_coreference_map
 from typing import List
 from app.db.history import save_search
+from app.cache.graph_cache import get_resolved
 
 WINDOW_SIZE = 3
 ALL_TEMPORAL = TEMPORAL_MARKERS | {"as soon as", "how long", "how often", "how much", "how many"}
@@ -30,7 +31,7 @@ def search(questions: List[str], text: str, top_k: int = 3, threshold=0.3, filen
 
     sentences = [sent.text.strip() for sent in doc.sents]
     blocks = split_blocks(sentences, window_size=WINDOW_SIZE)
-    resolved_blocks = [simple_coreference(block) for block in blocks]
+    resolved_blocks = [get_resolved(block) for block in blocks]
     coref_map = get_coreference_map(" ".join(sentences))
 
     resolved_sentences = []
