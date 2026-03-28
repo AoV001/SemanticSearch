@@ -140,6 +140,17 @@ def extract_what_answer(triplets, original_block: str, question_graph, original_
             chain = _collect_conj_chain(v, triplets)
             return ", ".join(chain) if len(chain) > 1 else v
 
+    # 2в. ищем "that"-клаузу прямо в тексте по глаголу вопроса
+    doc = nlp(original_block)
+    for sent in doc.sents:
+        for token in sent:
+            if token.lemma_.lower() in question_verbs:
+                for child in token.children:
+                    if child.dep_ == "ccomp":
+                        clause = [t.text for t in child.subtree if not t.is_punct]
+                        if clause:
+                            return " ".join(clause)
+
     # 3. "such as" конструкция — ищем pcomp или prep+pobj после "such as"
     doc = nlp(original_block)
     for sent in doc.sents:
