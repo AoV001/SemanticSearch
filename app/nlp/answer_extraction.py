@@ -185,6 +185,11 @@ def extract_what_answer(triplets, original_block: str, question_graph, original_
                         return " ".join(clause)
             return v
 
+    # последний fallback — nsubj если ничего не нашли
+    for u, rel, v in triplets:
+        if rel == "nsubj" and u.lower() not in q_words:
+            return u
+
     # 3. "such as" конструкция — ищем pcomp или prep+pobj после "such as"
     doc = nlp(original_block)
     for sent in doc.sents:
