@@ -122,42 +122,56 @@ def extract_what_answer(triplets, original_block: str, question_graph, original_
         data["lemma"] for _, data in question_graph.nodes(data=True)
         if data.get("pos") == "VERB"
     }
-
-    # 1. dobj от глагола вопроса
-    for u, rel, v in triplets:
-        if rel == "dobj" and u.lower() in question_verbs:
-            return v
-
-    # 2. любой dobj
-    for u, rel, v in triplets:
-        if rel == "dobj":
-            return v
-
-    # 3. amod где v это существительное из вопроса или ключевое слово
-    question_nouns = {
-        data["lemma"] for _, data in question_graph.nodes(data=True)
-        if data.get("pos") in {"NOUN", "PROPN"}
-    }
     q_words = set(original_question.lower().split()) - {
         "what", "did", "do", "does", "the", "a", "an", "they", "he", "she", "it",
         "for", "to", "of", "in", "on", "at", "with", "?", "about"
     }
+
+    # 1. dobj от глагола вопроса
     for u, rel, v in triplets:
-        if rel == "amod":
+        if rel == "dobj" and u.lower() in question_verbs:
+            # Собираем conj цепочку если есть
+            chain = _collect_conj_chain(v, triplets)
+            return ", ".join(chain) if len(chain) > 1 else v
+
+    # 2. любой dobj
+    for u, rel, v in triplets:
+        if rel == "dobj":
+            chain = _collect_conj_chain(v, triplets)
+            return ", ".join(chain) if len(chain) > 1 else v
+
+    # 3. "such as" конструкция — ищем pcomp или prep+pobj после "such as"
+    doc = nlp(original_block)
+    for sent in doc.sents:
+        for token in sent:
+            if token.text.lower() == "as" and token.i > 0:
+                prev = doc[token.i - 1]
+                if prev.text.lower() == "such":
+                    # собираем всё после "such as" до конца предложения
+                    items = []
+                    for t in sent:
+                        if t.i > token.i and t.pos_ in {"NOUN", "VERB"} and not t.is_stop:
+                            items.append(t.text)
+                    if items:
+                        return ", ".join(items)
+
+    # 4. amod по словам вопроса — но только если v не в q_words
+    for u, rel, v in triplets:
+        if rel == "amod" and v.lower() not in q_words:
             if u.lower() in q_words or v.lower() in q_words:
                 return v
 
-    # 4. глагол из npadvmod — "what did they do" → берём сам глагол
+    # 5. npadvmod
     for u, rel, v in triplets:
         if rel == "npadvmod":
-            return v  # v это глагол действия
+            return v
 
-    # 5. attr
+    # 6. attr
     for u, rel, v in triplets:
         if rel == "attr":
             return v
 
-    # 6. nsubj от organized/happened — для "what happened"
+    # 7. what happened
     q_lower = " ".join(question_verbs)
     if any(w in q_lower for w in {"happen", "occur", "take"}):
         for u, rel, v in triplets:
@@ -165,12 +179,26 @@ def extract_what_answer(triplets, original_block: str, question_graph, original_
                 return u
 
     # NER fallback
-    doc = nlp(original_block)
     for ent in doc.ents:
         if ent.label_ in {"PRODUCT", "WORK_OF_ART", "ORG", "NORP", "FAC", "EVENT"}:
             return ent.text
 
     return None
+
+
+def _collect_conj_chain(start_node: str, triplets: list) -> list:
+    """Собираем цепочку conj от стартового узла."""
+    chain = [start_node]
+    visited = {start_node}
+    queue = [start_node]
+    while queue:
+        current = queue.pop(0)
+        for u, rel, v in triplets:
+            if rel == "conj" and u == current and v not in visited:
+                chain.append(v)
+                visited.add(v)
+                queue.append(v)
+    return chain
 
 
 def extract_how_answer(triplets, original_block: str) -> str | None:
