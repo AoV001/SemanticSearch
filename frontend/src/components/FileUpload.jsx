@@ -9,8 +9,14 @@ export default function FileUpload({ onUploadSuccess }) {
   const [pasteText, setPasteText] = useState('')
   const [pasteName, setPasteName] = useState('')
 
+  const MAX_TEXT = 5000
+  const MAX_FILE_MB = 5
+
   const handleFile = async (file) => {
     if (!file) return
+    if (file.size > MAX_FILE_MB * 1024 * 1024) {
+      return setError(`File too large. Maximum size is ${MAX_FILE_MB}MB`)
+  }
     setError(null)
     setLoading(true)
     try {
@@ -93,14 +99,20 @@ export default function FileUpload({ onUploadSuccess }) {
             className="w-full rounded-lg px-3 py-1.5 text-xs focus:outline-none"
             style={{background: '#0f1117', border: '1px solid #2a2d3a', color: '#e2e8f0'}}
           />
-          <textarea
+         <textarea
             value={pasteText}
-            onChange={(e) => setPasteText(e.target.value)}
+            onChange={(e) => {
+                if (e.target.value.length <= MAX_TEXT) setPasteText(e.target.value)
+            }}
             placeholder="Paste your text here..."
             rows={5}
             className="w-full rounded-lg px-3 py-2 text-xs focus:outline-none resize-none"
             style={{background: '#0f1117', border: '1px solid #2a2d3a', color: '#e2e8f0'}}
-          />
+        />
+// Счётчик под textarea:
+        <p className="text-xs text-right" style={{color: pasteText.length > MAX_TEXT * 0.9 ? '#f472b6' : '#64748b'}}>
+            {pasteText.length}/{MAX_TEXT}
+        </p>
           <button
             onClick={handlePaste}
             disabled={loading}

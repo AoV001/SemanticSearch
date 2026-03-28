@@ -4,6 +4,8 @@ export default function SearchForm({ selectedFile, onSearch, loading }) {
   const [input, setInput] = useState('')
   const [collapsed, setCollapsed] = useState(false)
 
+  const MAX_Q = 200
+
   const parseQuestions = (text) =>
     text.split(/\n|;/).map(q => q.trim()).filter(q => q.length > 0)
 
@@ -53,7 +55,12 @@ export default function SearchForm({ selectedFile, onSearch, loading }) {
           </p>
           <textarea
             value={input}
-            onChange={(e) => setInput(e.target.value)}
+            onChange={(e) => {
+                const lines = e.target.value.split(/\n|;/)
+                const valid = lines.every(l => l.length <= MAX_Q)
+                if (valid) setInput(e.target.value)
+            }}
+
             onKeyDown={(e) => {
               if (e.key === 'Enter' && e.ctrlKey) handleSubmit()
             }}
@@ -66,6 +73,9 @@ export default function SearchForm({ selectedFile, onSearch, loading }) {
               color: '#e2e8f0',
             }}
           />
+          <p className="text-xs" style={{color: '#64748b'}}>
+                Max {MAX_Q} characters per question
+            </p>
           <div className="flex items-center justify-between">
             {input.trim() && (
               <button onClick={() => setInput('')} className="text-xs" style={{color: '#f472b6'}}>

@@ -11,6 +11,10 @@ router = APIRouter()
 UPLOAD_FOLDER = "data/"
 ALLOWED_EXTENSIONS = {".txt", ".pdf"}
 
+MAX_FILE_SIZE = 5 * 1024 * 1024  # 5MB
+MAX_TEXT_LENGTH = 5000
+MAX_FILENAME_LENGTH = 100
+
 @router.post("/upload")
 async def upload_file(file: UploadFile = File(...)):
     ext = os.path.splitext(file.filename)[1].lower()
@@ -23,6 +27,10 @@ async def upload_file(file: UploadFile = File(...)):
         raise HTTPException(status_code=409, detail=f"File '{file.filename}' already exists")
 
     content = await file.read()
+
+    if len(content) > MAX_FILE_SIZE:
+        raise HTTPException(status_code=413, detail="File too large. Maximum size is 5MB")
+
     if not content.strip():
         raise HTTPException(status_code=400, detail="File is empty")
 
@@ -30,7 +38,7 @@ async def upload_file(file: UploadFile = File(...)):
     with open(file_location, "wb") as f:
         f.write(content)
 
-    text = read_file(file_location)  # универсальное чтение
+    text = read_file(file_location)
     sentences = split_sentences(text)
 
     return {
@@ -80,7 +88,13 @@ def upload_text(data: TextInput):
     if not data.filename.strip():
         raise HTTPException(status_code=400, detail="Filename cannot be empty")
 
+    if len(data.text) > MAX_TEXT_LENGTH:
+        raise HTTPException(status_code=413, detail=f"Text too long. Maximum is {MAX_TEXT_LENGTH} characters")
+
     filename = data.filename if data.filename.endswith(".txt") else data.filename + ".txt"
+
+    if len(filename) > MAX_FILENAME_LENGTH:
+        raise HTTPException(status_code=400, detail="Filename too long")
 
     if file_exists(filename):
         raise HTTPException(status_code=409, detail=f"File '{filename}' already exists")
