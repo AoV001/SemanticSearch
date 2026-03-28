@@ -118,45 +118,77 @@ def extract_where_answer(triplets, original_block: str) -> str | None:
 
 
 def extract_what_answer(triplets, original_block: str, question_graph) -> str | None:
-    """Для what — сначала dobj от глагола вопроса, потом attr, потом nsubj."""
     question_verbs = {
         data["lemma"] for _, data in question_graph.nodes(data=True)
         if data.get("pos") == "VERB"
     }
 
-    # Приоритет: dobj от глагола вопроса
+    # 1. dobj от глагола вопроса
     for u, rel, v in triplets:
         if rel == "dobj" and u.lower() in question_verbs:
             return v
 
-    # Потом любой dobj
+    # 2. любой dobj
     for u, rel, v in triplets:
         if rel == "dobj":
             return v
 
-    # Потом attr
+    # 3. amod где v это существительное из вопроса или ключевое слово
+    question_nouns = {
+        data["lemma"] for _, data in question_graph.nodes(data=True)
+        if data.get("pos") in {"NOUN", "PROPN"}
+    }
+    for u, rel, v in triplets:
+        if rel == "amod" and (v.lower() in question_nouns or u.lower() in question_nouns):
+            return v
+
+    # 4. глагол из npadvmod — "what did they do" → берём сам глагол
+    for u, rel, v in triplets:
+        if rel == "npadvmod":
+            return v  # v это глагол действия
+
+    # 5. attr
     for u, rel, v in triplets:
         if rel == "attr":
             return v
 
+    # 6. nsubj от organized/happened — для "what happened"
+    q_lower = " ".join(question_verbs)
+    if any(w in q_lower for w in {"happen", "occur", "take"}):
+        for u, rel, v in triplets:
+            if rel == "nsubj":
+                return u
+
     # NER fallback
     doc = nlp(original_block)
     for ent in doc.ents:
-        if ent.label_ in {"PRODUCT", "WORK_OF_ART", "ORG", "NORP", "FAC"}:
+        if ent.label_ in {"PRODUCT", "WORK_OF_ART", "ORG", "NORP", "FAC", "EVENT"}:
             return ent.text
 
     return None
 
 
 def extract_how_answer(triplets, original_block: str) -> str | None:
-    """Для how — ищем acomp, advmod, xcomp."""
+    # acomp — прилагательное после feel/seem/become
     for u, rel, v in triplets:
-        if rel in {"acomp", "advmod", "xcomp"}:
+        if rel == "acomp":
             return v
 
-    # Fallback — ищем прилагательное после feel/become/seem
+    # advmod
+    for u, rel, v in triplets:
+        if rel == "advmod":
+            return v
+
+    # xcomp — только если это не глагол
     doc = nlp(original_block)
-    COPULA_VERBS = {"feel", "become", "seem", "look", "sound", "appear"}
+    for u, rel, v in triplets:
+        if rel == "xcomp":
+            for token in doc:
+                if token.text == v and token.pos_ == "ADJ":
+                    return v
+
+    # Fallback — прилагательное после copula
+    COPULA_VERBS = {"feel", "become", "seem", "look", "sound", "appear", "get"}
     for token in doc:
         if token.lemma_.lower() in COPULA_VERBS:
             for child in token.children:
@@ -167,18 +199,26 @@ def extract_how_answer(triplets, original_block: str) -> str | None:
 
 
 def extract_why_answer_v2(original_block: str) -> str | None:
-    """Для why — ищем because/since клаузу прямо в тексте без опоры на triplets."""
     doc = nlp(original_block)
-    CAUSE_MARKERS = {"because", "since", "as", "therefore", "thus", "so"}
+    # "because" и "since" — настоящие причинные маркеры
+    # "as" только если НЕ часть "such as"
+    CAUSE_MARKERS = {"because", "since", "therefore", "thus"}
 
     for sent in doc.sents:
         for token in sent:
-            if token.text.lower() in CAUSE_MARKERS:
-                clause = [t.text for t in sent if t.i >= token.i and t.text not in {".", "!", "?"}]
+            t = token.text.lower()
+            if t in CAUSE_MARKERS:
+                clause = [x.text for x in sent if x.i >= token.i and x.text not in {".", "!", "?"}]
                 if clause:
                     return " ".join(clause)
+            # "as" только если предыдущий токен не "such"
+            if t == "as":
+                prev = doc[token.i - 1] if token.i > 0 else None
+                if prev and prev.text.lower() != "such":
+                    clause = [x.text for x in sent if x.i >= token.i and x.text not in {".", "!", "?"}]
+                    if clause:
+                        return " ".join(clause)
 
-    # Fallback — advcl из triplets
     return None
 
 
