@@ -47,11 +47,12 @@ class TestSearch:
         assert "boy" in answer.lower()
 
     def test_high_threshold_no_results(self):
+        # Вопрос который точно не совпадёт с текстом
         results, _, _ = search(
-            questions=["Who kicked the ball?"],
+            questions=["Who invented the telephone?"],
             text=TEXT, top_k=1, threshold=0.99
         )
-        hits = results.get("Who kicked the ball?", [])
+        hits = results.get("Who invented the telephone?", [])
         assert len(hits) == 0
 
     def test_empty_text_no_results(self):
