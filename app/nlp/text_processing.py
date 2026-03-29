@@ -1,6 +1,17 @@
 
 import spacy
 
+"""
+Text Processing Utilities
+
+Provides basic NLP preprocessing functions using spaCy.
+
+Functions:
+- split_sentences(text): splits text into a list of sentences
+- preprocess_sentence(sentence): tokenizes a sentence into lowercase lemmas,
+  removing stopwords and punctuation for further analysis
+"""
+
 # load the model one time by starting the app
 nlp = spacy.load("en_core_web_sm")
 

@@ -1,5 +1,20 @@
 from app.graph.graph_builder import build_dependency_graph, nlp
 from app.nlp.coreference import simple_coreference
+"""
+NLP Processing Cache
+
+Provides simple in-memory caching for expensive NLP operations used in the
+search pipeline. The module caches results of coreference resolution,
+dependency graph construction, and spaCy document parsing to avoid
+recomputing them for the same input text.
+
+Functions:
+- get_resolved(text): returns cached coreference-resolved text
+- get_graph(text): returns cached dependency graph
+- get_doc(text): returns cached spaCy Doc object
+- clear_cache(): clears the graph cache
+- cache_size(): returns the current size of the graph cache
+"""
 
 _doc_cache: dict = {}
 _coref_cache: dict = {}

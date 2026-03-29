@@ -1,5 +1,23 @@
 import spacy
 
+"""
+Simple Coreference Resolution
+
+Provides functions to resolve pronouns to their antecedents in English text
+using rule-based gender and number heuristics with spaCy.
+
+Features:
+- Resolves first-person, second-person, male, female, neutral, and plural pronouns
+- Maintains the last seen noun of each gender/number as the antecedent
+- Skips temporal nouns for neutral pronouns
+- Rebuilds text after resolution preserving punctuation
+- Generates a coreference map linking nouns to their pronouns
+
+Main Functions:
+- simple_coreference(text): returns text with pronouns resolved
+- get_coreference_map(text): returns mapping of nouns to pronouns
+"""
+
 nlp = spacy.load("en_core_web_sm")
 
 FIRST_PERSON = {"i", "me", "my", "mine", "we", "us", "our", "ours"}
@@ -60,13 +78,11 @@ def simple_coreference(text: str) -> str:
             elif gender == "Neut":
                 last["Neut"] = token.text
             else:
-                # Только не-временные существительные как кандидат для "it"
                 if lower not in TEMPORAL_NOUNS:
                     last["Neut"] = token.text
             resolved_tokens.append(token.text)
             continue
 
-        # Резолвим местоимения
         if lower in MALE and last["Masc"]:
             resolved_tokens.append(last["Masc"])
         elif lower in FEMALE and last["Fem"]:
@@ -83,7 +99,6 @@ def simple_coreference(text: str) -> str:
 
 
 def _rebuild_text(tokens: list[str]) -> str:
-    """Собираем токены обратно в строку с пробелами."""
     result = ""
     for tok in tokens:
         if tok in {".", ",", "?", "!", ":", ";", "'s"}:

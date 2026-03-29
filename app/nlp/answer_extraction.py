@@ -1,6 +1,36 @@
 import spacy
 from app.cache.graph_cache import get_doc
 
+"""
+Answer Extraction Module
+
+This module provides functions for extracting answers from text blocks
+based on parsed dependency graphs and question classification.
+
+Key Features:
+- Classifies questions by type (who, what, where, when, why, how, which)
+- Extracts answers according to question type using triplets, dependency
+  labels, named entities, and heuristic rules
+- Handles special cases:
+    - 'why' questions: identifies causal clauses and markers
+    - 'where' questions: extracts location entities or objects of prepositions
+    - 'what' questions: resolves direct objects, clausal complements, relative clauses
+    - 'how' questions: extracts adjectives/adverbs linked to actions
+    - temporal questions: identifies clauses before/after markers, quantitative info
+- Formats extracted triplets into human-readable sentences
+- Uses spaCy NLP pipeline and cached Doc objects for efficiency
+
+Main Functions:
+- extract_answer(triplets, question_graph, original_block, original_question)
+- extract_temporal_answer(original_block, original_question)
+- extract_quantitative_answer(original_block, original_question)
+- format_triplets(triplets)
+
+Utilities:
+- classify_question(question): determines the type of question
+- _collect_conj_chain(start_node, triplets): gathers conjunction chains in graphs
+"""
+
 nlp = spacy.load("en_core_web_sm")
 
 
@@ -95,20 +125,16 @@ def extract_answer(triplets: list, question_graph, original_block: str, original
 
 
 def extract_where_answer(triplets, original_block: str) -> str | None:
-    """Для where — ищем GPE/LOC entity или pobj от prep."""
     doc = get_doc(original_block)
 
-    # Сначала NER
     for ent in doc.ents:
         if ent.label_ in {"GPE", "LOC", "FAC"}:
             return ent.text
 
-    # Потом pobj — объект предлога
     for u, rel, v in triplets:
         if rel == "pobj":
             return v
         if rel == "prep":
-            # ищем pobj от этого предлога в тексте
             for token in doc:
                 if token.text == v and token.dep_ == "prep":
                     for child in token.children:
@@ -128,23 +154,18 @@ def extract_what_answer(triplets, original_block: str, question_graph, original_
         "for", "to", "of", "in", "on", "at", "with", "?", "about"
     }
 
-    # 1. dobj от глагола вопроса
     for u, rel, v in triplets:
         if rel == "dobj" and u.lower() in question_verbs:
-            # Собираем conj цепочку если есть
             chain = _collect_conj_chain(v, triplets)
             return ", ".join(chain) if len(chain) > 1 else v
 
-    # 2. любой dobj
     for u, rel, v in triplets:
         if rel == "dobj":
             chain = _collect_conj_chain(v, triplets)
             return ", ".join(chain) if len(chain) > 1 else v
 
-    # 2б. ccomp — придаточное предложение как ответ ("learned that...")
     for u, rel, v in triplets:
         if rel == "ccomp":
-            # ищем всю клаузу в тексте
             doc = get_doc(original_block)
             for sent in doc.sents:
                 for token in sent:
@@ -153,7 +174,6 @@ def extract_what_answer(triplets, original_block: str, question_graph, original_
                         return " ".join(clause) if clause else v
             return v
 
-    # 2в. ищем "that"-клаузу прямо в тексте по глаголу вопроса
     doc = get_doc(original_block)
     for sent in doc.sents:
         for token in sent:
@@ -164,7 +184,6 @@ def extract_what_answer(triplets, original_block: str, question_graph, original_
                         if clause:
                             return " ".join(clause)
 
-    # 2г. relcl — относительная клауза как определение ("model where employees work...")
     for u, rel, v in triplets:
         if rel == "relcl" and u.lower() not in q_words:
             doc = get_doc(original_block)
@@ -174,10 +193,8 @@ def extract_what_answer(triplets, original_block: str, question_graph, original_
                     if clause:
                         return " ".join(clause)
 
-    # 2д. nsubj где u это ключевое слово вопроса
     for u, rel, v in triplets:
         if rel == "nsubj" and u.lower() in q_words:
-            # берём всю клаузу от v
             doc = get_doc(original_block)
             for token in doc:
                 if token.text == v:
@@ -186,19 +203,16 @@ def extract_what_answer(triplets, original_block: str, question_graph, original_
                         return " ".join(clause)
             return v
 
-    # последний fallback — nsubj если ничего не нашли
     for u, rel, v in triplets:
         if rel == "nsubj" and u.lower() not in q_words:
             return u
 
-    # 3. "such as" конструкция — ищем pcomp или prep+pobj после "such as"
     doc = get_doc(original_block)
     for sent in doc.sents:
         for token in sent:
             if token.text.lower() == "as" and token.i > 0:
                 prev = doc[token.i - 1]
                 if prev.text.lower() == "such":
-                    # собираем всё после "such as" до конца предложения
                     items = []
                     for t in sent:
                         if t.i > token.i and t.pos_ in {"NOUN", "VERB"} and not t.is_stop:
@@ -206,7 +220,6 @@ def extract_what_answer(triplets, original_block: str, question_graph, original_
                     if items:
                         return ", ".join(items)
 
-    # 4. amod по словам вопроса — но только если v не в q_words
     for u, rel, v in triplets:
         if rel == "amod" and v.lower() not in q_words:
             if u.lower() in q_words or v.lower() in q_words:
@@ -253,7 +266,6 @@ def _collect_conj_chain(start_node: str, triplets: list) -> list:
 
 
 def extract_how_answer(triplets, original_block: str) -> str | None:
-    # acomp — прилагательное после feel/seem/become
     for u, rel, v in triplets:
         if rel == "acomp":
             return v
@@ -263,7 +275,6 @@ def extract_how_answer(triplets, original_block: str) -> str | None:
         if rel == "advmod":
             return v
 
-    # xcomp — только если это не глагол
     doc = get_doc(original_block)
     for u, rel, v in triplets:
         if rel == "xcomp":
@@ -271,7 +282,6 @@ def extract_how_answer(triplets, original_block: str) -> str | None:
                 if token.text == v and token.pos_ == "ADJ":
                     return v
 
-    # Fallback — прилагательное после copula
     COPULA_VERBS = {"feel", "become", "seem", "look", "sound", "appear", "get"}
     for token in doc:
         if token.lemma_.lower() in COPULA_VERBS:
@@ -284,8 +294,6 @@ def extract_how_answer(triplets, original_block: str) -> str | None:
 
 def extract_why_answer_v2(original_block: str) -> str | None:
     doc = get_doc(original_block)
-    # "because" и "since" — настоящие причинные маркеры
-    # "as" только если НЕ часть "such as"
     CAUSE_MARKERS = {"because", "since", "therefore", "thus"}
 
     for sent in doc.sents:
@@ -295,7 +303,6 @@ def extract_why_answer_v2(original_block: str) -> str | None:
                 clause = [x.text for x in sent if x.i >= token.i and x.text not in {".", "!", "?"}]
                 if clause:
                     return " ".join(clause)
-            # "as" только если предыдущий токен не "such"
             if t == "as":
                 prev = doc[token.i - 1] if token.i > 0 else None
                 if prev and prev.text.lower() != "such":
@@ -341,15 +348,12 @@ def format_triplets(triplets: list[tuple]) -> list[str]:
             result.append(f"'{u}' → '{v}' ({rel})")
     return result
 
-# answer_extraction.py — заменяем всю temporal часть
 
 TEMPORAL_MARKERS = {"before", "after", "when", "while", "then"}
-SEQUENTIAL_MARKERS = {"as soon as"}  # двусловные — обрабатываем отдельно
+SEQUENTIAL_MARKERS = {"as soon as"}
 QUANTITATIVE_MARKERS = {"how long", "how often", "how much", "how many"}
 
-# "same" = всё предложение, "before" = до маркера, "after" = после маркера
 MARKER_STRATEGY = {
-    # маркер в тексте → что брать если вопрос спрашивает before/after/while
     "after":      {"before": "after",  "after": "before", "while": "same"},
     "before":     {"before": "before", "after": "after",  "while": "same"},
     "while":      {"while": "after",   "before": "before","after": "after"},
@@ -359,20 +363,17 @@ MARKER_STRATEGY = {
 }
 
 def _get_clause(sent, token_i: int, side: str) -> str | None:
-    """Извлекаем клаузу до или после позиции token_i в предложении."""
     if side == "before":
         tokens = [t.text for t in sent if t.i < token_i and not t.is_punct]
     elif side == "after":
         tokens = [t.text for t in sent if t.i > token_i and not t.is_punct]
-    else:  # same — всё предложение
+    else:
         tokens = [t.text for t in sent if not t.is_punct]
     return " ".join(tokens) if tokens else None
 
 def _get_anchor_words(question: str, marker: str) -> set:
-    """Слова после маркера в вопросе — используем как якорь для поиска предложения."""
     words = question.lower().split()
     marker_words = marker.split()
-    # ищем позицию маркера в вопросе
     for i in range(len(words)):
         if words[i:i+len(marker_words)] == marker_words:
             anchor = set(words[i + len(marker_words):])
@@ -384,7 +385,6 @@ def extract_temporal_answer(original_block: str, original_question: str) -> str 
     q_lower = original_question.lower()
     words = q_lower.split()
 
-    # Определяем маркер вопроса (сначала двусловные)
     q_marker = None
     for m in SEQUENTIAL_MARKERS:
         if m in q_lower:
@@ -396,7 +396,6 @@ def extract_temporal_answer(original_block: str, original_question: str) -> str 
                 q_marker = m
                 break
 
-    # Проверяем quantitative
     for qm in QUANTITATIVE_MARKERS:
         if q_lower.startswith(qm):
             return extract_quantitative_answer(original_block, original_question)
@@ -410,13 +409,11 @@ def extract_temporal_answer(original_block: str, original_question: str) -> str 
     for sent in doc.sents:
         sent_lemmas = {t.lemma_.lower() for t in sent}
 
-        # Предложение должно содержать хотя бы одно слово из якоря
         if anchor_words and not sent_lemmas & anchor_words:
             continue
 
         sent_text = sent.text.lower()
 
-        # Ищем маркер в предложении (сначала двусловные)
         for text_marker, strategies in MARKER_STRATEGY.items():
             if text_marker not in sent_text:
                 continue
@@ -424,11 +421,9 @@ def extract_temporal_answer(original_block: str, original_question: str) -> str 
             if not side:
                 continue
 
-            # Находим позицию маркера в предложении
             marker_words = text_marker.split()
             for token in sent:
                 if token.text.lower() == marker_words[0]:
-                    # Для двусловных проверяем следующий токен
                     if len(marker_words) > 1:
                         next_tok = sent[token.i + 1] if token.i + 1 < len(sent) else None
                         if not next_tok or next_tok.text.lower() != marker_words[1]:
@@ -441,7 +436,6 @@ def extract_temporal_answer(original_block: str, original_question: str) -> str 
 
 
 def extract_quantitative_answer(original_block: str, original_question: str) -> str | None:
-    """Для how long/often/much/many — ищем NUMBER/DATE/QUANTITY entity."""
     q_lower = original_question.lower()
     anchor_words = set(q_lower.split()) - {
         "how", "long", "often", "much", "many", "did",
@@ -459,14 +453,12 @@ def extract_quantitative_answer(original_block: str, original_question: str) -> 
             if ent.label_ in TARGET_ENTS:
                 return ent.text
 
-    # Fallback — ищем числа через POS
     for sent in doc.sents:
         sent_lemmas = {t.lemma_.lower() for t in sent}
         if not sent_lemmas & anchor_words:
             continue
         for token in sent:
             if token.pos_ == "NUM":
-                # берём число + следующее слово для контекста ("2 hours", "every day")
                 next_tok = sent[token.i + 1] if token.i + 1 < len(sent) else None
                 if next_tok and next_tok.pos_ in {"NOUN", "ADV"}:
                     return f"{token.text} {next_tok.text}"

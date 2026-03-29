@@ -1,5 +1,18 @@
 import networkx as nx
 
+"""
+Graph Similarity and Subgraph Extraction
+
+Provides functions to compare dependency graphs and extract
+relevant subgraphs for semantic search.
+
+Functions:
+- node_similarity(g1, g2): calculates similarity based on node lemmas
+- edge_similarity(g1, g2): calculates similarity based on edges
+- graph_similarity(g1, g2): weighted combination of node and edge similarity
+- extract_relevant_subgraph(question_graph, block_graph, hop=1): extracts
+  a subgraph from a text block that is relevant to the question graph
+"""
 
 def node_similarity(g1: nx.Graph, g2: nx.Graph):
     nodes1 = {data.get("lemma") for _, data in g1.nodes(data=True) if "lemma" in data}
@@ -11,10 +24,8 @@ def node_similarity(g1: nx.Graph, g2: nx.Graph):
     score = 0
     for n1 in nodes1:
         if n1 in nodes2:
-            score += 1.0  # точное совпадение
+            score += 1.0
         else:
-            # мягкое совпадение — одно содержит другое
-            # "workplace" содержит "work", "commute" близко к "commuting"
             for n2 in nodes2:
                 if n1 in n2 or n2 in n1:
                     score += 0.5
@@ -35,7 +46,7 @@ def edge_similarity(g1, g2):
     edges1, edges2 = edge_set(g1), edge_set(g2)
     if not edges1:
         return 0
-    # Тоже recall по рёбрам вопроса
+
     return len(edges1 & edges2) / len(edges1)
 
 def graph_similarity(g1: nx.DiGraph, g2: nx.DiGraph):
@@ -58,7 +69,7 @@ def extract_relevant_subgraph(question_graph, block_graph, hop=1):
         if data.get("lemma") in question_lemmas
     }
 
-    # Расширяем БЕЗ фильтра по вопросу — берём всех соседей seed
+
     relevant_nodes = set(seed_nodes)
     for _ in range(hop):
         neighbors = set()

@@ -1,6 +1,18 @@
 import networkx as nx
 import spacy
 
+"""
+Dependency Graph Builder
+
+Creates a dependency graph from a sentence using spaCy parsing.
+Each node represents a meaningful token, and edges represent
+syntactic dependency relations between tokens.
+
+The graph filters out punctuation, stopwords, and predefined
+meta words to keep only semantically relevant terms.
+Uses NetworkX for graph representation.
+"""
+
 nlp = spacy.load("en_core_web_sm")
 META_WORDS = {
     "describe", "mention", "discuss", "say", "state", "text",

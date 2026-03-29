@@ -6,6 +6,24 @@ from app.services.file_service import (
     list_files, delete_file, file_exists, delete_all_files
 )
 from app.nlp.text_processing import split_sentences
+"""
+File Management API Router
+
+Provides endpoints for uploading, reading, listing, and deleting text or PDF files
+used by the search system.
+
+Main features:
+- Upload files (.txt, .pdf) with size validation
+- Upload raw text as a file
+- List available files
+- Retrieve full text of a file
+- Delete a specific file or all files
+
+Limits:
+- Maximum file size: 5 MB
+- Maximum text length (text upload): 5000 characters
+- Maximum filename length: 100 characters
+"""
 
 router = APIRouter()
 UPLOAD_FOLDER = "data/"

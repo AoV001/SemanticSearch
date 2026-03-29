@@ -2,6 +2,21 @@ import os
 import pdfplumber
 from app.db.history import delete_history_by_file
 
+"""
+File Service Utilities
+
+Provides functions for reading, managing, and maintaining uploaded files
+and their associated search history.
+
+Key Features:
+- read_file(path): reads text from .txt or .pdf files
+- ensure_upload_folder(): creates the upload folder if missing
+- list_files(): lists all .txt and .pdf files in the upload folder
+- delete_file(filename): deletes a file and clears its search history
+- file_exists(filename): checks if a file exists
+- delete_all_files(): deletes all uploaded files and returns the count
+"""
+
 UPLOAD_FOLDER = "data/"
 
 def read_txt_file(path: str) -> str:

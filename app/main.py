@@ -3,6 +3,17 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.api import upload, search, history
 from app.db.database import init_db
 
+"""
+Main FastAPI app
+
+- Initializes database
+- Configures CORS for frontend at http://localhost:5173
+- Registers API routers:
+    - /api/upload   : file and text upload endpoints
+    - /api/search   : semantic search endpoints
+    - /api/history  : search history endpoints
+- Root endpoint (/) returns a simple status message
+"""
 
 app = FastAPI()
 init_db()

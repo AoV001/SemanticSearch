@@ -12,6 +12,27 @@ from app.db.history import save_search
 from app.cache.graph_cache import get_resolved
 import time
 
+"""
+Search Service
+
+Handles the main search pipeline: splitting text, resolving coreferences,
+building graphs, comparing with question graphs, extracting answers, and
+recording search history.
+
+Key Functions:
+- split_blocks(sentences, window_size): groups sentences into overlapping blocks
+- search(questions, text, top_k, threshold, filename):
+    - resolves coreferences in blocks
+    - builds dependency graphs for questions and blocks
+    - computes graph similarity
+    - extracts answers (including temporal questions)
+    - stores results and top answers in history
+    - returns: (all_results, resolved_text, coref_map)
+
+Constants:
+- WINDOW_SIZE: number of sentences per block
+- ALL_TEMPORAL: set of temporal markers for identifying temporal questions
+"""
 
 WINDOW_SIZE = 3
 ALL_TEMPORAL = TEMPORAL_MARKERS | {"as soon as", "how long", "how often", "how much", "how many"}
@@ -38,35 +59,14 @@ def search(questions: List[str], text: str, top_k: int = 3, threshold=0.3, filen
 
     resolved_sentences = []
 
-    # В search_service.py временно добавь:
-    t0 = time.perf_counter()
-    resolved_blocks = [get_resolved(block) for block in blocks]
-    print(f"Coreference: {time.perf_counter() - t0:.3f}s")
 
-    t1 = time.perf_counter()
-    for question in questions:
-        question_graph = get_graph(question)
-        for block in resolved_blocks:
-            block_graph = get_graph(block)
-    print(f"Graph building: {time.perf_counter() - t1:.3f}s")
-
-    t2 = time.perf_counter()
-    for question in questions:
-        question_graph = get_graph(question)
-        for block in resolved_blocks:
-            block_graph = get_graph(block)
-            score = graph_similarity(question_graph, block_graph)
-            if score >= threshold:
-                triplets = extract_relevant_subgraph(question_graph, block_graph, hop=1)
-                answer = extract_answer(triplets, question_graph, block, original_question=question)
-    print(f"Answer extraction: {time.perf_counter() - t2:.3f}s")
 
 
     for i, sent in enumerate(sentences):
-        # Даём контекст — текущее + предыдущее предложение
+
         context = sentences[i - 1] + " " + sent if i > 0 else sent
         resolved = simple_coreference(context)
-        # Берём только вторую часть если давали контекст
+
         if i > 0:
             prev_resolved = simple_coreference(sentences[i - 1])
             resolved = resolved[len(prev_resolved):].strip()

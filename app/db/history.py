@@ -1,5 +1,19 @@
 from app.db.database import get_connection
 
+"""
+Search History Storage
+
+Provides helper functions for storing and retrieving search history
+from the SQLite database.
+
+Main operations:
+- save_search(): store a search result with question, answer and confidence
+- get_history(): retrieve recent search history records
+- get_history_by_file(): retrieve history for a specific file
+- clear_history(): remove all history records
+- delete_history_by_file(): remove history associated with a specific file
+"""
+
 def save_search(filename: str, question: str, answer: str, confidence: float):
     conn = get_connection()
     conn.execute(
