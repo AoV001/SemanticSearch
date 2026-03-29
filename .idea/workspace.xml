@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="e94f34bc-5a55-4421-9054-ef0a949d0e9b" name="Changes" comment="adjust the visualisation of graphs">
-      <change afterPath="$PROJECT_DIR$/frontend/src/api/dictionary.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/components/WordModal.jsx" afterDir="false" />
+    <list default="true" id="e94f34bc-5a55-4421-9054-ef0a949d0e9b" name="Changes" comment="adjust README">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/example1.txt" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/data/history.db" beforeDir="false" afterPath="$PROJECT_DIR$/data/history.db" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/TextViewer.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/TextViewer.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -15,8 +14,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Python Script" />
         <option value="Dockerfile" />
+        <option value="Python Script" />
       </list>
     </option>
   </component>
@@ -47,28 +46,34 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;Python.test_search_service.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/vlaso/PycharmProjects/SemanticSearch/frontend/public&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "Python.debug_tests.executor": "Run",
+    "Python.graph_builder.executor": "Run",
+    "Python.ram_test.executor": "Run",
+    "Python.spacy_test.executor": "Run",
+    "Python.test_search_logic.executor": "Run",
+    "Python.test_search_service.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "C:/Users/vlaso/PycharmProjects/SemanticSearch",
+    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\vlaso\PycharmProjects\SemanticSearch" />
       <recent name="C:\Users\vlaso\PycharmProjects\SemanticSearch\frontend\public" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\vlaso\PycharmProjects\SemanticSearch\app" />
     </key>
   </component>
-  <component name="RunManager">
-    <configuration name="test_search_service" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+  <component name="RunManager" selected="Python tests.Python tests for tests.test_coreference.TestSimpleCoreference">
+    <configuration name="debug_tests" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="SemanticSearch" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -82,7 +87,7 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="RUN_TOOL" value="" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/tests/test_search_service.py" />
+      <option name="SCRIPT_NAME" value="C:\Users\vlaso\PycharmProjects\SemanticSearch\tests\debug_tests\debug_tests.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -91,9 +96,98 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="graph_builder" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="SemanticSearch" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/app/graph" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="RUN_TOOL" value="" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/app/graph/graph_builder.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="ram_test" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="SemanticSearch" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/tests" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="RUN_TOOL" value="" />
+      <option name="SCRIPT_NAME" value="C:\Users\vlaso\PycharmProjects\SemanticSearch\tests\debug_tests\ram_test.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="test_search_logic" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="SemanticSearch" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/tests" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="RUN_TOOL" value="" />
+      <option name="SCRIPT_NAME" value="C:\Users\vlaso\PycharmProjects\SemanticSearch\tests\debug_tests\test_search_logic.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Python tests for tests.test_coreference.TestSimpleCoreference" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+      <module name="SemanticSearch" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="RUN_TOOL" value="" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;tests.test_coreference.TestSimpleCoreference&quot;" />
+      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.test_search_service" />
+        <item itemvalue="Python tests.Python tests for tests.test_coreference.TestSimpleCoreference" />
+        <item itemvalue="Python.ram_test" />
+        <item itemvalue="Python.test_search_logic" />
+        <item itemvalue="Python.graph_builder" />
+        <item itemvalue="Python.debug_tests" />
       </list>
     </recent_temporary>
   </component>
@@ -111,86 +205,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1774099630151</updated>
-    </task>
-    <task id="LOCAL-00001" summary="adjust main.py first file">
-      <option name="closed" value="true" />
-      <created>1774101370378</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL-00001" />
-      <option name="project" value="LOCAL" />
-      <updated>1774101370378</updated>
-    </task>
-    <task id="LOCAL-00002" summary="project structure">
-      <option name="closed" value="true" />
-      <created>1774101882416</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1774101882416</updated>
-    </task>
-    <task id="LOCAL-00003" summary="add endpoint for txt.-files loading">
-      <option name="closed" value="true" />
-      <created>1774102299122</created>
-      <option name="number" value="00003" />
-      <option name="presentableId" value="LOCAL-00003" />
-      <option name="project" value="LOCAL" />
-      <updated>1774102299122</updated>
-    </task>
-    <task id="LOCAL-00004" summary="adjust main: add router">
-      <option name="closed" value="true" />
-      <created>1774102389608</created>
-      <option name="number" value="00004" />
-      <option name="presentableId" value="LOCAL-00004" />
-      <option name="project" value="LOCAL" />
-      <updated>1774102389608</updated>
-    </task>
-    <task id="LOCAL-00005" summary="add file service">
-      <option name="closed" value="true" />
-      <created>1774103866397</created>
-      <option name="number" value="00005" />
-      <option name="presentableId" value="LOCAL-00005" />
-      <option name="project" value="LOCAL" />
-      <updated>1774103866397</updated>
-    </task>
-    <task id="LOCAL-00006" summary="adjust upload.py : return length of the text">
-      <option name="closed" value="true" />
-      <created>1774103911081</created>
-      <option name="number" value="00006" />
-      <option name="presentableId" value="LOCAL-00006" />
-      <option name="project" value="LOCAL" />
-      <updated>1774103911081</updated>
-    </task>
-    <task id="LOCAL-00007" summary="adjust logik: add extract_temporal_answer (before, after)">
-      <option name="closed" value="true" />
-      <created>1774448441114</created>
-      <option name="number" value="00007" />
-      <option name="presentableId" value="LOCAL-00007" />
-      <option name="project" value="LOCAL" />
-      <updated>1774448441114</updated>
-    </task>
-    <task id="LOCAL-00008" summary="adjust extract temporal answer: add anker to mark the events linear">
-      <option name="closed" value="true" />
-      <created>1774448647810</created>
-      <option name="number" value="00008" />
-      <option name="presentableId" value="LOCAL-00008" />
-      <option name="project" value="LOCAL" />
-      <updated>1774448647810</updated>
-    </task>
-    <task id="LOCAL-00009" summary="adjust answer extraction and search service: add more temporal markers">
-      <option name="closed" value="true" />
-      <created>1774449024424</created>
-      <option name="number" value="00009" />
-      <option name="presentableId" value="LOCAL-00009" />
-      <option name="project" value="LOCAL" />
-      <updated>1774449024424</updated>
-    </task>
-    <task id="LOCAL-00010" summary="add docker">
-      <option name="closed" value="true" />
-      <created>1774521541932</created>
-      <option name="number" value="00010" />
-      <option name="presentableId" value="LOCAL-00010" />
-      <option name="project" value="LOCAL" />
-      <updated>1774521541932</updated>
     </task>
     <task id="LOCAL-00011" summary="add new endpoints: get and delete">
       <option name="closed" value="true" />
@@ -400,7 +414,191 @@
       <option name="project" value="LOCAL" />
       <updated>1774645032978</updated>
     </task>
-    <option name="localTasksCounter" value="37" />
+    <task id="LOCAL-00037" summary="add dictionary and the ability to look at the description of each word in text">
+      <option name="closed" value="true" />
+      <created>1774645487424</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1774645487424</updated>
+    </task>
+    <task id="LOCAL-00038" summary="adjust the size of blocks in the interface">
+      <option name="closed" value="true" />
+      <created>1774686815895</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1774686815895</updated>
+    </task>
+    <task id="LOCAL-00039" summary="adjust the input of questions, add the ability to hide the questions">
+      <option name="closed" value="true" />
+      <created>1774687013714</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1774687013714</updated>
+    </task>
+    <task id="LOCAL-00040" summary="add test for answer logik">
+      <option name="closed" value="true" />
+      <created>1774687818312</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1774687818312</updated>
+    </task>
+    <task id="LOCAL-00041" summary="debugging answer extraction">
+      <option name="closed" value="true" />
+      <created>1774688193512</created>
+      <option name="number" value="00041" />
+      <option name="presentableId" value="LOCAL-00041" />
+      <option name="project" value="LOCAL" />
+      <updated>1774688193512</updated>
+    </task>
+    <task id="LOCAL-00042" summary="debugging answer extraction : what how why">
+      <option name="closed" value="true" />
+      <created>1774688415960</created>
+      <option name="number" value="00042" />
+      <option name="presentableId" value="LOCAL-00042" />
+      <option name="project" value="LOCAL" />
+      <updated>1774688415960</updated>
+    </task>
+    <task id="LOCAL-00043" summary="adjust test">
+      <option name="closed" value="true" />
+      <created>1774693534644</created>
+      <option name="number" value="00043" />
+      <option name="presentableId" value="LOCAL-00043" />
+      <option name="project" value="LOCAL" />
+      <updated>1774693534644</updated>
+    </task>
+    <task id="LOCAL-00044" summary="debug">
+      <option name="closed" value="true" />
+      <created>1774693556133</created>
+      <option name="number" value="00044" />
+      <option name="presentableId" value="LOCAL-00044" />
+      <option name="project" value="LOCAL" />
+      <updated>1774693556133</updated>
+    </task>
+    <task id="LOCAL-00045" summary="debug: get list of activities">
+      <option name="closed" value="true" />
+      <created>1774693680975</created>
+      <option name="number" value="00045" />
+      <option name="presentableId" value="LOCAL-00045" />
+      <option name="project" value="LOCAL" />
+      <updated>1774693680975</updated>
+    </task>
+    <task id="LOCAL-00046" summary="adjust tests">
+      <option name="closed" value="true" />
+      <created>1774693693306</created>
+      <option name="number" value="00046" />
+      <option name="presentableId" value="LOCAL-00046" />
+      <option name="project" value="LOCAL" />
+      <updated>1774693693306</updated>
+    </task>
+    <task id="LOCAL-00047" summary="adjust tests">
+      <option name="closed" value="true" />
+      <created>1774694231138</created>
+      <option name="number" value="00047" />
+      <option name="presentableId" value="LOCAL-00047" />
+      <option name="project" value="LOCAL" />
+      <updated>1774694231138</updated>
+    </task>
+    <task id="LOCAL-00048" summary="adjust threshold to 0.3">
+      <option name="closed" value="true" />
+      <created>1774706635194</created>
+      <option name="number" value="00048" />
+      <option name="presentableId" value="LOCAL-00048" />
+      <option name="project" value="LOCAL" />
+      <updated>1774706635194</updated>
+    </task>
+    <task id="LOCAL-00049" summary="debugging answer_extraction.py">
+      <option name="closed" value="true" />
+      <created>1774706835286</created>
+      <option name="number" value="00049" />
+      <option name="presentableId" value="LOCAL-00049" />
+      <option name="project" value="LOCAL" />
+      <updated>1774706835286</updated>
+    </task>
+    <task id="LOCAL-00050" summary="debugging answer_extraction.py ann add new tests">
+      <option name="closed" value="true" />
+      <created>1774707479572</created>
+      <option name="number" value="00050" />
+      <option name="presentableId" value="LOCAL-00050" />
+      <option name="project" value="LOCAL" />
+      <updated>1774707479573</updated>
+    </task>
+    <task id="LOCAL-00051" summary="debugging graph_builder.py and add tests">
+      <option name="closed" value="true" />
+      <created>1774707780840</created>
+      <option name="number" value="00051" />
+      <option name="presentableId" value="LOCAL-00051" />
+      <option name="project" value="LOCAL" />
+      <updated>1774707780840</updated>
+    </task>
+    <task id="LOCAL-00052" summary="debugging graph_similarity.py node_similarity">
+      <option name="closed" value="true" />
+      <created>1774707956469</created>
+      <option name="number" value="00052" />
+      <option name="presentableId" value="LOCAL-00052" />
+      <option name="project" value="LOCAL" />
+      <updated>1774707956469</updated>
+    </task>
+    <task id="LOCAL-00053" summary="debugging: what question">
+      <option name="closed" value="true" />
+      <created>1774708174256</created>
+      <option name="number" value="00053" />
+      <option name="presentableId" value="LOCAL-00053" />
+      <option name="project" value="LOCAL" />
+      <updated>1774708174256</updated>
+    </task>
+    <task id="LOCAL-00054" summary="add size limits">
+      <option name="closed" value="true" />
+      <created>1774708921163</created>
+      <option name="number" value="00054" />
+      <option name="presentableId" value="LOCAL-00054" />
+      <option name="project" value="LOCAL" />
+      <updated>1774708921163</updated>
+    </task>
+    <task id="LOCAL-00055" summary="add readme description">
+      <option name="closed" value="true" />
+      <created>1774709257076</created>
+      <option name="number" value="00055" />
+      <option name="presentableId" value="LOCAL-00055" />
+      <option name="project" value="LOCAL" />
+      <updated>1774709257076</updated>
+    </task>
+    <task id="LOCAL-00056" summary="fix run time with cache">
+      <option name="closed" value="true" />
+      <created>1774711382769</created>
+      <option name="number" value="00056" />
+      <option name="presentableId" value="LOCAL-00056" />
+      <option name="project" value="LOCAL" />
+      <updated>1774711382769</updated>
+    </task>
+    <task id="LOCAL-00057" summary="test the run time">
+      <option name="closed" value="true" />
+      <created>1774711392838</created>
+      <option name="number" value="00057" />
+      <option name="presentableId" value="LOCAL-00057" />
+      <option name="project" value="LOCAL" />
+      <updated>1774711392838</updated>
+    </task>
+    <task id="LOCAL-00058" summary="add cache for nlp (answer extraction)">
+      <option name="closed" value="true" />
+      <created>1774711809841</created>
+      <option name="number" value="00058" />
+      <option name="presentableId" value="LOCAL-00058" />
+      <option name="project" value="LOCAL" />
+      <updated>1774711809841</updated>
+    </task>
+    <task id="LOCAL-00059" summary="adjust README">
+      <option name="closed" value="true" />
+      <created>1774712063793</created>
+      <option name="number" value="00059" />
+      <option name="presentableId" value="LOCAL-00059" />
+      <option name="project" value="LOCAL" />
+      <updated>1774712063793</updated>
+    </task>
+    <option name="localTasksCounter" value="60" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -415,31 +613,31 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="adjust answer extraction and search service: add more temporal markers" />
-    <MESSAGE value="add docker" />
-    <MESSAGE value="add new endpoints: get and delete" />
-    <MESSAGE value="add cache for graphs" />
-    <MESSAGE value="add ability to upload pdf files" />
-    <MESSAGE value="add ability to save search history" />
-    <MESSAGE value="add docker for front" />
-    <MESSAGE value="add frontend" />
-    <MESSAGE value="adjust docker for frontend" />
-    <MESSAGE value="adjust main for frontend" />
-    <MESSAGE value="adjust ability: show the history of uploaded files + delete them or set new questions for them" />
-    <MESSAGE value="adjust the interface and some tools" />
-    <MESSAGE value="adjust new interface" />
-    <MESSAGE value="add highlight and debugging" />
-    <MESSAGE value="debugging highlight" />
-    <MESSAGE value="adjust highlighting function: add highlight of answer words" />
-    <MESSAGE value="adjust the upload: save text as a new txt. file" />
-    <MESSAGE value="adjust the text view: bigger or smaller" />
-    <MESSAGE value="add new bottoms to delete all questions and all files" />
-    <MESSAGE value="debugging by delete all files" />
-    <MESSAGE value="change the interface colors" />
-    <MESSAGE value="add header and footer" />
     <MESSAGE value="add new window to show the evidence card more comfortable" />
     <MESSAGE value="unversioned files" />
     <MESSAGE value="adjust the visualisation of graphs" />
-    <option name="LAST_COMMIT_MESSAGE" value="adjust the visualisation of graphs" />
+    <MESSAGE value="add dictionary and the ability to look at the description of each word in text" />
+    <MESSAGE value="adjust the size of blocks in the interface" />
+    <MESSAGE value="adjust the input of questions, add the ability to hide the questions" />
+    <MESSAGE value="add test for answer logik" />
+    <MESSAGE value="debugging answer extraction" />
+    <MESSAGE value="debugging answer extraction : what how why" />
+    <MESSAGE value="adjust test" />
+    <MESSAGE value="debug" />
+    <MESSAGE value="debug: get list of activities" />
+    <MESSAGE value="adjust tests" />
+    <MESSAGE value="adjust threshold to 0.3" />
+    <MESSAGE value="debugging answer_extraction.py" />
+    <MESSAGE value="debugging answer_extraction.py ann add new tests" />
+    <MESSAGE value="debugging graph_builder.py and add tests" />
+    <MESSAGE value="debugging graph_similarity.py node_similarity" />
+    <MESSAGE value="debugging: what question" />
+    <MESSAGE value="add size limits" />
+    <MESSAGE value="add readme description" />
+    <MESSAGE value="fix run time with cache" />
+    <MESSAGE value="test the run time" />
+    <MESSAGE value="add cache for nlp (answer extraction)" />
+    <MESSAGE value="adjust README" />
+    <option name="LAST_COMMIT_MESSAGE" value="adjust README" />
   </component>
 </project>
