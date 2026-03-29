@@ -2,6 +2,24 @@ import { useState } from 'react'
 import { deleteFile, deleteAllFiles } from '../api/client'
 import HistoryOverlay from './HistoryOverlay'
 
+/**
+ * FileList component for displaying uploaded files with actions.
+ *
+ * Props:
+ * - files: Array of filenames (strings) to display.
+ * - selectedFile: Currently selected file for highlighting.
+ * - onSelect: Callback when "Search" button is clicked for a file. Receives filename.
+ * - onDelete: Callback when a single file is deleted. Receives filename.
+ * - onDeleteAll: Callback when all files are deleted.
+ *
+ * Features:
+ * - Shows file list with icons (PDF or TXT).
+ * - Buttons for "Search", "History", and "Delete" per file.
+ * - Delete confirmation dialogs for single and all files.
+ * - Integrates with HistoryOverlay component for viewing search history.
+ * - Handles core actions via API client functions (deleteFile, deleteAllFiles).
+ */
+
 export default function FileList({ files, selectedFile, onSelect, onDelete, onDeleteAll }) {
   const [confirmDelete, setConfirmDelete] = useState(null)
   const [historyFile, setHistoryFile] = useState(null)

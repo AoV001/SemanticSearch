@@ -1,6 +1,21 @@
 import { useState } from 'react'
 import { uploadFile, uploadText } from '../api/client'
 
+/**
+ * FileUpload component for uploading files or pasting text.
+ *
+ * Props:
+ * - onUploadSuccess: Callback function triggered after successful upload. Receives upload result.
+ *
+ * Features:
+ * - Two modes: "Upload file" and "Paste text".
+ * - File upload supports drag-and-drop or browse button.
+ * - Only accepts .txt and .pdf files with size limit (5 MB).
+ * - Paste text mode allows custom filename and text input with max 5000 characters.
+ * - Displays real-time character counter in text mode.
+ * - Shows loading and error messages for both modes.
+ */
+
 export default function FileUpload({ onUploadSuccess }) {
   const [mode, setMode] = useState('file')
   const [dragging, setDragging] = useState(false)
@@ -48,7 +63,6 @@ export default function FileUpload({ onUploadSuccess }) {
 
   return (
     <div className="space-y-3">
-      {/* Переключатель */}
       <div className="flex rounded-lg overflow-hidden text-xs" style={{border: '1px solid #2a2d3a'}}>
         <button
           onClick={() => setMode('file')}

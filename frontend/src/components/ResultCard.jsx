@@ -1,6 +1,27 @@
 import { useState } from 'react'
 import ResultModal from './ResultModal'
 
+/**
+ * ResultCard component displays a summarized answer for a single question.
+ *
+ * Props:
+ * - result: An object containing:
+ *     - question: The user’s question (string)
+ *     - results: Array of answer objects, each with:
+ *         - answer: The answer text
+ *         - context: The text block or context used to generate the answer
+ *         - confidence: A numeric score (0-1) representing confidence
+ * - onHover: Callback triggered when hovering over the card, receives { answer, context } or null
+ *
+ * Features:
+ * - Shows "No answer found" if results array is empty.
+ * - Displays the top answer (highest confidence) prominently.
+ * - Shows confidence as a percentage.
+ * - Opens a detailed ResultModal when "View details" button is clicked.
+ * - Calls `onHover` with top answer/context when mouse enters, and null when leaves.
+ * - Styled card with hover effects and smooth transitions.
+ */
+
 export default function ResultCard({ result, onHover }) {
   const [modalOpen, setModalOpen] = useState(false)
   const { question, results } = result

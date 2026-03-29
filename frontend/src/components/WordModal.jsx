@@ -1,3 +1,20 @@
+/**
+ * WordModal component displays the dictionary definition of a selected word in a modal overlay.
+ *
+ * Props:
+ * - word: string | null — the word to display
+ * - definition: object | null — the dictionary definition object retrieved from the API
+ * - loading: boolean — true while the definition is being fetched
+ * - onClose: function — callback to close the modal
+ *
+ * Features:
+ * - Dark-themed modal with rounded corners and scrollable content.
+ * - Header displays the word with a close button.
+ * - Shows a loading message while fetching definitions.
+ * - Renders up to 3 definitions per meaning, including part of speech and example sentences.
+ * - Clicking outside the modal closes it.
+ */
+
 export default function WordModal({ word, definition, loading, onClose }) {
   if (!word) return null
 

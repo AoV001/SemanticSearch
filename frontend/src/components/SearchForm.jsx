@@ -1,5 +1,27 @@
 import { useState } from 'react'
 
+/**
+ * SearchForm component allows users to input one or more questions
+ * and submit them to search within a selected file.
+ *
+ * Props:
+ * - selectedFile: string | null — the currently selected file; search is disabled if null
+ * - onSearch: function(questions: string[]) — callback invoked with parsed questions
+ * - loading: boolean — indicates whether a search is currently in progress
+ *
+ * Features:
+ * - Users can type multiple questions, separated by newlines or semicolons.
+ * - Each question is limited to MAX_Q characters (200).
+ * - Ctrl+Enter submits the questions.
+ * - Collapsible UI: the form can be collapsed to show a compact summary with question count.
+ * - Buttons for clearing input, submitting, and editing questions when collapsed.
+ * - Disabled state if no file is selected, input is empty, or loading.
+ * - Visual styling:
+ *    - Dark theme with borders and background colors for distinction.
+ *    - Button highlights for active actions and disabled opacity.
+ *    - Responsive layout for text area and controls.
+ */
+
 export default function SearchForm({ selectedFile, onSearch, loading }) {
   const [input, setInput] = useState('')
   const [collapsed, setCollapsed] = useState(false)
@@ -22,7 +44,6 @@ export default function SearchForm({ selectedFile, onSearch, loading }) {
     <div className="rounded-xl overflow-hidden"
       style={{background: '#222536', border: '1px solid #2a2d3a'}}>
 
-      {/* Header — всегда виден */}
       <div className="flex items-center justify-between px-4 py-3">
         <div className="flex items-center gap-2">
           <h2 className="text-sm font-semibold" style={{color: '#e2e8f0'}}>Ask questions</h2>
@@ -47,7 +68,6 @@ export default function SearchForm({ selectedFile, onSearch, loading }) {
         </div>
       </div>
 
-      {/* Тело — сворачивается */}
       {!collapsed && (
         <div className="px-4 pb-4 space-y-3" style={{borderTop: '1px solid #2a2d3a'}}>
           <p className="text-xs pt-3" style={{color: '#64748b'}}>
@@ -95,7 +115,6 @@ export default function SearchForm({ selectedFile, onSearch, loading }) {
         </div>
       )}
 
-      {/* Быстрый поиск когда свёрнуто */}
       {collapsed && (
         <div className="px-4 pb-3 flex gap-2" style={{borderTop: '1px solid #2a2d3a'}}>
           <button

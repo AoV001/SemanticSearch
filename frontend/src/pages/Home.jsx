@@ -6,6 +6,13 @@ import ResultCard from '../components/ResultCard'
 import TextViewer from '../components/TextViewer'
 import { getFiles, searchFile, getFileText } from '../api/client'
 
+// Home page component:
+//   - Left panel: file upload and selection, handles adding/removing files
+//   - Center panel: displays selected file text, highlights answers and coreferences
+//   - Right panel: question input via SearchForm, shows search results using ResultCard
+//   - Manages state for files, selected file, file text, resolved text, search results, loading, highlights, and coreference map
+//   - Integrates API calls: getFiles, getFileText, searchFile
+
 export default function Home() {
   const [files, setFiles] = useState([])
   const [selectedFile, setSelectedFile] = useState(null)
@@ -68,7 +75,6 @@ export default function Home() {
   style={{background: '#1a1d27', borderBottom: '1px solid #2a2d3a'}}>
 
   <div className="flex items-center gap-3">
-    {/* Логотип — простая SVG иконка */}
     <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
       <circle cx="7" cy="14" r="3" fill="#2dd4bf"/>
       <circle cx="21" cy="7" r="3" fill="#f472b6"/>
@@ -98,7 +104,6 @@ export default function Home() {
 
       <div className="flex-1 overflow-hidden grid grid-cols-10">
 
-        {/* Левая — 2/10 */}
         <div className="col-span-2 flex flex-col overflow-hidden" style={{background: '#1a1d27', borderRight: '1px solid #2a2d3a'}}>
           <div className="p-3 shrink-0" style={{borderBottom: '1px solid #2a2d3a'}}>
             <p className="text-xs font-semibold uppercase tracking-wide mb-2" style={{color: '#64748b'}}>Files</p>
@@ -120,7 +125,6 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Центр — 5/10 */}
         <div className="col-span-4 flex flex-col overflow-hidden" style={{background: '#13151f', borderRight: '1px solid #2a2d3a'}}>
           {!selectedFile ? (
             <div className="flex-1 flex flex-col items-center justify-center p-12">
@@ -152,7 +156,6 @@ export default function Home() {
           )}
         </div>
 
-        {/* Правая — 3/10 */}
         <div className="col-span-4 flex flex-col overflow-hidden" style={{background: '#1a1d27'}}>
           <div className="p-4 shrink-0" style={{borderBottom: '1px solid #2a2d3a'}}>
             <SearchForm

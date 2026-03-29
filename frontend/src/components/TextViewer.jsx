@@ -2,6 +2,25 @@ import { useState } from 'react'
 import { getDefinition } from '../api/dictionary'
 import WordModal from './WordModal'
 
+/**
+ * TextViewer component displays the content of a selected file as interactive text.
+ *
+ * Props:
+ * - text: string — original text of the file
+ * - resolvedText: string | null — optionally preprocessed or resolved text for coreference
+ * - highlightData: { answer: string, context: string } | null — highlights relevant sentences containing the answer
+ * - corefMap: object | null — maps answers to their coreferent words for highlighting
+ *
+ * Features:
+ * - Dynamically adjusts font size based on text length.
+ * - Renders all words as clickable spans; clicking fetches a dictionary definition.
+ * - Uses WordModal to display definitions asynchronously from dictionary API.
+ * - Highlights sentences and words related to a given answer when highlightData is provided.
+ * - Coreferent words are highlighted along with the answer.
+ * - Supports hover effects for clickable words and visually distinct highlights.
+ * - Scrollable, responsive layout with dark-themed styling and proper spacing.
+ */
+
 export default function TextViewer({ text, resolvedText, highlightData, corefMap }) {
   const [wordModal, setWordModal] = useState(null)
   const [definition, setDefinition] = useState(null)
@@ -39,7 +58,6 @@ export default function TextViewer({ text, resolvedText, highlightData, corefMap
 
   const fontSize = getFontSize(text)
 
-  // Рендерим текст как кликабельные слова
   const renderClickable = (str) =>
     str.split(/(\s+)/).map((token, i) => {
       if (/^\s+$/.test(token)) return token

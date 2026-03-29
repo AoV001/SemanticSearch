@@ -1,6 +1,25 @@
 import { useEffect, useState } from 'react'
 import { getFileHistory } from '../api/client'
 
+/**
+ * HistoryOverlay component displays the search history for a specific file.
+ *
+ * Props:
+ * - filename: The name of the file whose search history is being displayed.
+ * - onClose: Callback function triggered when the overlay is closed.
+ *
+ * Features:
+ * - Fetches search history using `getFileHistory` on mount and whenever `filename` changes.
+ * - Shows loading state while fetching data.
+ * - Displays a message if there are no searches for the file.
+ * - Lists each search entry with:
+ *   - Question asked
+ *   - Answer returned
+ *   - Confidence score (percentage)
+ *   - Timestamp of the search
+ * - Styled as a centered overlay with semi-transparent background.
+ */
+
 export default function HistoryOverlay({ filename, onClose }) {
   const [history, setHistory] = useState([])
   const [loading, setLoading] = useState(true)

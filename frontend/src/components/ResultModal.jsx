@@ -1,5 +1,36 @@
 import { useState } from 'react'
 
+/**
+ * ResultModal component displays detailed information for a single QA result.
+ *
+ * Components:
+ * 1. DependencyGraph
+ *    - Props:
+ *       - triplets: Array of dependency relations { from, rel, to }
+ *       - answer: The top answer string (used to highlight relevant nodes)
+ *    - Features:
+ *       - Nodes are arranged in a circular layout.
+ *       - Edges (relations) show arrows, highlight on hover, and indicate answer-related nodes.
+ *       - Hovering over an edge displays the relation label.
+ *       - Answer node(s) are visually highlighted with color and stroke.
+ *
+ * 2. ResultModal
+ *    - Props:
+ *       - result: Object containing `question` and `results` (array of answers with triplets, context, confidence)
+ *       - onClose: Callback function to close the modal
+ *    - Features:
+ *       - Shows the question and top answer prominently with confidence.
+ *       - Displays a DependencyGraph of the top answer's triplets.
+ *       - Lists key relationships in colored badges (from → rel → to).
+ *       - Shows the context text from which the answer was extracted.
+ *       - Styled overlay modal with scrollable content and close button.
+ *
+ * Notes:
+ * - Colors: cyan (#2dd4bf) for nodes/edges, pink (#f472b6) for highlights, grey tones for background/text.
+ * - Edges are interactive: hover shows label and changes color.
+ * - Layout is responsive with a maximum height and scrollable content.
+ */
+
 const DEP_DESCRIPTIONS = {
   "nsubj":     "is the subject of",
   "nsubjpass": "is the passive subject of",
@@ -88,15 +119,12 @@ function DependencyGraph({ triplets, answer }) {
               onMouseEnter={() => setHoveredEdge(i)}
               onMouseLeave={() => setHoveredEdge(null)}
               style={{cursor: 'pointer'}}>
-              {/* Невидимая широкая зона для hover */}
               <path d={`M ${x1} ${y1} Q ${mx} ${my} ${x2} ${y2}`}
                 stroke="transparent" strokeWidth="12" fill="none" />
-              {/* Видимая стрелка */}
               <path d={`M ${x1} ${y1} Q ${mx} ${my} ${x2} ${y2}`}
                 stroke={color} strokeWidth={isHovered ? 2 : 1.5}
                 fill="none" markerEnd={`url(#${markerId})`} opacity="0.8"
               />
-              {/* Подпись появляется при hover */}
               {isHovered && (
                 <text x={mx} y={my - 6} textAnchor="middle"
                   fontSize="10" fill="#ffffff"
@@ -129,7 +157,6 @@ function DependencyGraph({ triplets, answer }) {
         })}
       </svg>
 
-      {/* Подсказка */}
       <p className="text-xs text-center mt-1" style={{color: '#2a2d3a'}}>
         hover over edges to see relation labels
       </p>
@@ -158,7 +185,7 @@ export default function ResultModal({ result, onClose }) {
 
         <div className="overflow-y-auto px-6 py-5 space-y-6">
 
-          {/* Ответ */}
+          {/* Answer */}
           <div>
             <p className="text-xs uppercase tracking-wide mb-1" style={{color: '#64748b'}}>Answer</p>
             <p className="text-4xl font-bold" style={{color: '#2dd4bf'}}>{top.answer}</p>
@@ -167,7 +194,6 @@ export default function ResultModal({ result, onClose }) {
             </p>
           </div>
 
-          {/* Граф */}
           <div>
             <p className="text-xs uppercase tracking-wide mb-3" style={{color: '#64748b'}}>Dependency Graph</p>
             <div className="rounded-xl p-4" style={{background: '#0f1117', border: '1px solid #2a2d3a'}}>
@@ -175,7 +201,6 @@ export default function ResultModal({ result, onClose }) {
             </div>
           </div>
 
-          {/* Evidence — красивые карточки */}
           <div>
             <p className="text-xs uppercase tracking-wide mb-3" style={{color: '#64748b'}}>Key Relationships</p>
             <div className="space-y-2">
@@ -198,7 +223,7 @@ export default function ResultModal({ result, onClose }) {
             </div>
           </div>
 
-          {/* Контекст */}
+          {/* Context */}
           <div>
             <p className="text-xs uppercase tracking-wide mb-2" style={{color: '#64748b'}}>Context</p>
             <p className="text-sm leading-relaxed p-4 rounded-xl"

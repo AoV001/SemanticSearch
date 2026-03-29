@@ -1,3 +1,15 @@
+/**
+ * API client for interacting with the Semantic Search backend.
+ *
+ * Provides functions to:
+ * - Upload files or text
+ * - List, delete, and retrieve files
+ * - Perform semantic search on uploaded files
+ * - Retrieve search history
+ *
+ * Uses `VITE_API_URL` environment variable or defaults to http://localhost:8000
+ */
+
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 
 export const uploadFile = async (file) => {
