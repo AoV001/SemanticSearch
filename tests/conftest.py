@@ -1,5 +1,10 @@
-import pytest
+import sys
+import os
+
+sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
+
 from app.db.database import init_db
+import pytest
 
 @pytest.fixture(autouse=True)
 def setup_db():
