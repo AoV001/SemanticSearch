@@ -30,17 +30,55 @@ PRONOUNS = FIRST_PERSON | SECOND_PERSON | MALE | FEMALE | NEUTRAL | PLURAL
 
 # semantic sets for gender
 MALE_NOUNS = {
-    "boy", "man", "father", "son", "brother", "uncle", "king", "prince",
-    "husband", "grandfather", "guy", "male", "sir", "mr", "lord"
+    "boy",
+    "man",
+    "father",
+    "son",
+    "brother",
+    "uncle",
+    "king",
+    "prince",
+    "husband",
+    "grandfather",
+    "guy",
+    "male",
+    "sir",
+    "mr",
+    "lord",
 }
 FEMALE_NOUNS = {
-    "girl", "woman", "mother", "daughter", "sister", "aunt", "queen",
-    "princess", "wife", "grandmother", "lady", "female", "mrs", "ms", "madam"
+    "girl",
+    "woman",
+    "mother",
+    "daughter",
+    "sister",
+    "aunt",
+    "queen",
+    "princess",
+    "wife",
+    "grandmother",
+    "lady",
+    "female",
+    "mrs",
+    "ms",
+    "madam",
 }
 TEMPORAL_NOUNS = {
-    "morning", "evening", "afternoon", "night", "day", "week",
-    "month", "year", "summer", "winter", "spring", "autumn", "time"
+    "morning",
+    "evening",
+    "afternoon",
+    "night",
+    "day",
+    "week",
+    "month",
+    "year",
+    "summer",
+    "winter",
+    "spring",
+    "autumn",
+    "time",
 }
+
 
 def get_gender(token) -> str | None:
 
@@ -53,6 +91,7 @@ def get_gender(token) -> str | None:
     if token.ent_type_ in {"PERSON", "ORG"}:
         return "Neut"
     return None
+
 
 def simple_coreference(text: str) -> str:
     doc = nlp(text)

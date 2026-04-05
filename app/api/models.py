@@ -1,5 +1,6 @@
 from pydantic import BaseModel, field_validator
 from typing import List
+
 """
 Search Request Schema
 
@@ -38,6 +39,7 @@ Constants:
 MAX_QUESTION_LENGTH = 200
 MAX_QUESTIONS_COUNT = 20
 
+
 class SearchRequest(BaseModel):
     filename: str
     questions: List[str]
@@ -54,5 +56,7 @@ class SearchRequest(BaseModel):
             if not q.strip():
                 raise ValueError("questions cannot contain empty strings")
             if len(q) > MAX_QUESTION_LENGTH:
-                raise ValueError(f"Question too long. Maximum is {MAX_QUESTION_LENGTH} characters")
+                raise ValueError(
+                    f"Question too long. Maximum is {MAX_QUESTION_LENGTH} characters"
+                )
         return v

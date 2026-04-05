@@ -1,5 +1,5 @@
-import pytest
 from app.nlp.coreference import simple_coreference, get_coreference_map
+
 
 class TestSimpleCoreference:
 

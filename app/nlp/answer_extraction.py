@@ -35,14 +35,21 @@ nlp = spacy.load("en_core_web_sm")
 
 
 QUESTION_TYPES = {
-    "who":   {"deps": ["nsubj", "nsubjpass", "attr"], "ents": ["PERSON", "ORG"]},
-    "when":  {"deps": ["npadvmod", "tmod", "prep"],   "ents": ["DATE", "TIME"]},
-    "where": {"deps": ["prep", "npadvmod", "pobj"],   "ents": ["GPE", "LOC", "FAC"]},
-    "what":  {"deps": ["dobj", "attr", "nsubj"],      "ents": ["PRODUCT", "WORK_OF_ART", "ORG", "NORP"]},
-    "how":   {"deps": ["advmod", "npadvmod", "acomp", "xcomp"], "ents": ["QUANTITY", "CARDINAL"]},
-    "why":   {"deps": ["advcl", "prep"],               "ents": []},
-    "which": {"deps": ["nsubj", "dobj", "attr"],       "ents": []},
+    "who": {"deps": ["nsubj", "nsubjpass", "attr"], "ents": ["PERSON", "ORG"]},
+    "when": {"deps": ["npadvmod", "tmod", "prep"], "ents": ["DATE", "TIME"]},
+    "where": {"deps": ["prep", "npadvmod", "pobj"], "ents": ["GPE", "LOC", "FAC"]},
+    "what": {
+        "deps": ["dobj", "attr", "nsubj"],
+        "ents": ["PRODUCT", "WORK_OF_ART", "ORG", "NORP"],
+    },
+    "how": {
+        "deps": ["advmod", "npadvmod", "acomp", "xcomp"],
+        "ents": ["QUANTITY", "CARDINAL"],
+    },
+    "why": {"deps": ["advcl", "prep"], "ents": []},
+    "which": {"deps": ["nsubj", "dobj", "attr"], "ents": []},
 }
+
 
 def classify_question(question: str) -> str:
 
@@ -64,7 +71,6 @@ def extract_why_answer(triplets: list, original_block: str) -> str | None:
     if not cause_verb:
         return None
 
-
     doc = get_doc(original_block)
 
     CAUSE_MARKERS = {"because", "since", "as", "so", "therefore", "thus"}
@@ -73,13 +79,12 @@ def extract_why_answer(triplets: list, original_block: str) -> str | None:
         if token.text.lower() in CAUSE_MARKERS:
 
             clause_tokens = []
-            for t in doc[token.i:]:
+            for t in doc[token.i :]:
                 if t.text in {".", "!", "?"}:
                     break
                 clause_tokens.append(t.text)
             if clause_tokens:
                 return " ".join(clause_tokens)
-
 
     related = []
     for u, rel, v in triplets:
@@ -89,8 +94,9 @@ def extract_why_answer(triplets: list, original_block: str) -> str | None:
     return " ".join(related) if related else cause_verb
 
 
-
-def extract_answer(triplets: list, question_graph, original_block: str, original_question: str = "") -> str | None:
+def extract_answer(
+    triplets: list, question_graph, original_block: str, original_question: str = ""
+) -> str | None:
     qtype = classify_question(original_question if original_question else "what")
     strategy = QUESTION_TYPES[qtype]
 
@@ -101,7 +107,9 @@ def extract_answer(triplets: list, question_graph, original_block: str, original
         return extract_where_answer(triplets, original_block)
 
     if qtype == "what":
-        return extract_what_answer(triplets, original_block, question_graph, original_question)
+        return extract_what_answer(
+            triplets, original_block, question_graph, original_question
+        )
 
     if qtype == "how":
         return extract_how_answer(triplets, original_block)
@@ -144,14 +152,35 @@ def extract_where_answer(triplets, original_block: str) -> str | None:
     return None
 
 
-def extract_what_answer(triplets, original_block: str, question_graph, original_question: str = "") -> str | None:
+def extract_what_answer(
+    triplets, original_block: str, question_graph, original_question: str = ""
+) -> str | None:
     question_verbs = {
-        data["lemma"] for _, data in question_graph.nodes(data=True)
+        data["lemma"]
+        for _, data in question_graph.nodes(data=True)
         if data.get("pos") == "VERB"
     }
     q_words = set(original_question.lower().split()) - {
-        "what", "did", "do", "does", "the", "a", "an", "they", "he", "she", "it",
-        "for", "to", "of", "in", "on", "at", "with", "?", "about"
+        "what",
+        "did",
+        "do",
+        "does",
+        "the",
+        "a",
+        "an",
+        "they",
+        "he",
+        "she",
+        "it",
+        "for",
+        "to",
+        "of",
+        "in",
+        "on",
+        "at",
+        "with",
+        "?",
+        "about",
     }
 
     for u, rel, v in triplets:
@@ -215,7 +244,11 @@ def extract_what_answer(triplets, original_block: str, question_graph, original_
                 if prev.text.lower() == "such":
                     items = []
                     for t in sent:
-                        if t.i > token.i and t.pos_ in {"NOUN", "VERB"} and not t.is_stop:
+                        if (
+                            t.i > token.i
+                            and t.pos_ in {"NOUN", "VERB"}
+                            and not t.is_stop
+                        ):
                             items.append(t.text)
                     if items:
                         return ", ".join(items)
@@ -300,13 +333,21 @@ def extract_why_answer_v2(original_block: str) -> str | None:
         for token in sent:
             t = token.text.lower()
             if t in CAUSE_MARKERS:
-                clause = [x.text for x in sent if x.i >= token.i and x.text not in {".", "!", "?"}]
+                clause = [
+                    x.text
+                    for x in sent
+                    if x.i >= token.i and x.text not in {".", "!", "?"}
+                ]
                 if clause:
                     return " ".join(clause)
             if t == "as":
                 prev = doc[token.i - 1] if token.i > 0 else None
                 if prev and prev.text.lower() != "such":
-                    clause = [x.text for x in sent if x.i >= token.i and x.text not in {".", "!", "?"}]
+                    clause = [
+                        x.text
+                        for x in sent
+                        if x.i >= token.i and x.text not in {".", "!", "?"}
+                    ]
                     if clause:
                         return " ".join(clause)
 
@@ -314,28 +355,29 @@ def extract_why_answer_v2(original_block: str) -> str | None:
 
 
 DEP_LABELS = {
-    "nsubj":    lambda u, v: f"{u} performs '{v}'",
-    "nsubjpass":lambda u, v: f"{u} is subject of '{v}'",
-    "dobj":     lambda u, v: f"'{u}' acts on {v}",
-    "advcl":    lambda u, v: f"'{u}' happens because/when '{v}'",
-    "prep":     lambda u, v: f"'{u}' is related to '{v}'",
-    "attr":     lambda u, v: f"'{u}' is described as '{v}'",
-    "advmod":   lambda u, v: f"'{v}' describes how '{u}' happens",
+    "nsubj": lambda u, v: f"{u} performs '{v}'",
+    "nsubjpass": lambda u, v: f"{u} is subject of '{v}'",
+    "dobj": lambda u, v: f"'{u}' acts on {v}",
+    "advcl": lambda u, v: f"'{u}' happens because/when '{v}'",
+    "prep": lambda u, v: f"'{u}' is related to '{v}'",
+    "attr": lambda u, v: f"'{u}' is described as '{v}'",
+    "advmod": lambda u, v: f"'{v}' describes how '{u}' happens",
     "npadvmod": lambda u, v: f"'{v}' tells when/how '{u}'",
-    "tmod":     lambda u, v: f"'{u}' happens at '{v}'",
-    "amod":     lambda u, v: f"'{v}' describes '{u}'",
-    "pobj":     lambda u, v: f"object of preposition: '{v}'",
-    "iobj":     lambda u, v: f"'{u}' is given/shown to '{v}'",
-    "conj":     lambda u, v: f"'{u}' and '{v}' are connected",
-    "relcl":    lambda u, v: f"'{v}' describes '{u}'",
-    "acl":      lambda u, v: f"'{v}' describes '{u}'",
-    "ccomp":    lambda u, v: f"'{u}' implies that '{v}'",
-    "xcomp":    lambda u, v: f"'{u}' leads to '{v}'",
-    "aux":      lambda u, v: f"helper verb '{v}' for '{u}'",
-    "neg":      lambda u, v: f"'{u}' is negated",
+    "tmod": lambda u, v: f"'{u}' happens at '{v}'",
+    "amod": lambda u, v: f"'{v}' describes '{u}'",
+    "pobj": lambda u, v: f"object of preposition: '{v}'",
+    "iobj": lambda u, v: f"'{u}' is given/shown to '{v}'",
+    "conj": lambda u, v: f"'{u}' and '{v}' are connected",
+    "relcl": lambda u, v: f"'{v}' describes '{u}'",
+    "acl": lambda u, v: f"'{v}' describes '{u}'",
+    "ccomp": lambda u, v: f"'{u}' implies that '{v}'",
+    "xcomp": lambda u, v: f"'{u}' leads to '{v}'",
+    "aux": lambda u, v: f"helper verb '{v}' for '{u}'",
+    "neg": lambda u, v: f"'{u}' is negated",
     "compound": lambda u, v: f"'{u} {v}' is a compound",
-    "poss":     lambda u, v: f"'{v}' belongs to '{u}'",
+    "poss": lambda u, v: f"'{v}' belongs to '{u}'",
 }
+
 
 def format_triplets(triplets: list[tuple]) -> list[str]:
 
@@ -354,13 +396,14 @@ SEQUENTIAL_MARKERS = {"as soon as"}
 QUANTITATIVE_MARKERS = {"how long", "how often", "how much", "how many"}
 
 MARKER_STRATEGY = {
-    "after":      {"before": "after",  "after": "before", "while": "same"},
-    "before":     {"before": "before", "after": "after",  "while": "same"},
-    "while":      {"while": "after",   "before": "before","after": "after"},
-    "then":       {"after": "after",   "before": "before","then": "after"},
-    "as soon as": {"after": "after",   "before": "before","as soon as": "after"},
-    "when":       {"when": "after",    "before": "before","after": "after"},
+    "after": {"before": "after", "after": "before", "while": "same"},
+    "before": {"before": "before", "after": "after", "while": "same"},
+    "while": {"while": "after", "before": "before", "after": "after"},
+    "then": {"after": "after", "before": "before", "then": "after"},
+    "as soon as": {"after": "after", "before": "before", "as soon as": "after"},
+    "when": {"when": "after", "before": "before", "after": "after"},
 }
+
 
 def _get_clause(sent, token_i: int, side: str) -> str | None:
     if side == "before":
@@ -371,15 +414,17 @@ def _get_clause(sent, token_i: int, side: str) -> str | None:
         tokens = [t.text for t in sent if not t.is_punct]
     return " ".join(tokens) if tokens else None
 
+
 def _get_anchor_words(question: str, marker: str) -> set:
     words = question.lower().split()
     marker_words = marker.split()
     for i in range(len(words)):
-        if words[i:i+len(marker_words)] == marker_words:
-            anchor = set(words[i + len(marker_words):])
+        if words[i : i + len(marker_words)] == marker_words:
+            anchor = set(words[i + len(marker_words) :])
             anchor -= {"the", "a", "an", "to", "?", "did", "was", "is", "do", "does"}
             return anchor
     return set()
+
 
 def extract_temporal_answer(original_block: str, original_question: str) -> str | None:
     q_lower = original_question.lower()
@@ -425,7 +470,9 @@ def extract_temporal_answer(original_block: str, original_question: str) -> str 
             for token in sent:
                 if token.text.lower() == marker_words[0]:
                     if len(marker_words) > 1:
-                        next_tok = sent[token.i + 1] if token.i + 1 < len(sent) else None
+                        next_tok = (
+                            sent[token.i + 1] if token.i + 1 < len(sent) else None
+                        )
                         if not next_tok or next_tok.text.lower() != marker_words[1]:
                             continue
                     result = _get_clause(sent, token.i, side)
@@ -435,11 +482,23 @@ def extract_temporal_answer(original_block: str, original_question: str) -> str 
     return None
 
 
-def extract_quantitative_answer(original_block: str, original_question: str) -> str | None:
+def extract_quantitative_answer(
+    original_block: str, original_question: str
+) -> str | None:
     q_lower = original_question.lower()
     anchor_words = set(q_lower.split()) - {
-        "how", "long", "often", "much", "many", "did",
-        "does", "was", "the", "a", "an", "?"
+        "how",
+        "long",
+        "often",
+        "much",
+        "many",
+        "did",
+        "does",
+        "was",
+        "the",
+        "a",
+        "an",
+        "?",
     }
 
     doc = get_doc(original_block)

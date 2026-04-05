@@ -19,9 +19,11 @@ Key Features:
 
 UPLOAD_FOLDER = "data/"
 
+
 def read_txt_file(path: str) -> str:
     with open(path, "r", encoding="utf-8") as f:
         return f.read()
+
 
 def read_pdf_file(path: str) -> str:
     text = []
@@ -32,17 +34,21 @@ def read_pdf_file(path: str) -> str:
                 text.append(page_text)
     return "\n".join(text)
 
+
 def read_file(path: str) -> str:
     if path.endswith(".pdf"):
         return read_pdf_file(path)
     return read_txt_file(path)
 
+
 def ensure_upload_folder():
     os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
 
 def list_files() -> list[str]:
     ensure_upload_folder()
     return [f for f in os.listdir(UPLOAD_FOLDER) if f.endswith((".txt", ".pdf"))]
+
 
 def delete_file(filename: str) -> bool:
     path = os.path.join(UPLOAD_FOLDER, filename)
@@ -52,8 +58,10 @@ def delete_file(filename: str) -> bool:
     delete_history_by_file(filename)
     return True
 
+
 def file_exists(filename: str) -> bool:
     return os.path.exists(os.path.join(UPLOAD_FOLDER, filename))
+
 
 def delete_all_files() -> int:
     ensure_upload_folder()

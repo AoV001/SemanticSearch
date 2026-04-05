@@ -15,9 +15,20 @@ Uses NetworkX for graph representation.
 
 nlp = spacy.load("en_core_web_sm")
 META_WORDS = {
-    "describe", "mention", "discuss", "say", "state", "text",
-    "passage", "article", "paragraph", "author", "write", "explain"
+    "describe",
+    "mention",
+    "discuss",
+    "say",
+    "state",
+    "text",
+    "passage",
+    "article",
+    "paragraph",
+    "author",
+    "write",
+    "explain",
 }
+
 
 def build_dependency_graph(sentence: str):
     doc = nlp(sentence)
@@ -28,11 +39,7 @@ def build_dependency_graph(sentence: str):
             continue
         if token.lemma_.lower() in META_WORDS:  # фильтруем мета-слова
             continue
-        G.add_node(
-            token.text,
-            lemma=token.lemma_.lower(),
-            pos=token.pos_
-        )
+        G.add_node(token.text, lemma=token.lemma_.lower(), pos=token.pos_)
 
     for token in doc:
         if token.is_punct or token.is_stop:
@@ -42,9 +49,5 @@ def build_dependency_graph(sentence: str):
         head = token.head
         if head != token and not head.is_punct and not head.is_stop:
             if head.lemma_.lower() not in META_WORDS:
-                G.add_edge(
-                    head.text,
-                    token.text,
-                    relation=token.dep_
-                )
+                G.add_edge(head.text, token.text, relation=token.dep_)
     return G

@@ -1,4 +1,3 @@
-
 import spacy
 
 """
@@ -15,10 +14,12 @@ Functions:
 # load the model one time by starting the app
 nlp = spacy.load("en_core_web_sm")
 
+
 def split_sentences(text: str) -> list[str]:
     # split the text in sentences
     doc = nlp(text)
     return [sent.text.strip() for sent in doc.sents]
+
 
 def preprocess_sentence(sentence: str) -> list[str]:
     # make the sentence as a list of lemmas

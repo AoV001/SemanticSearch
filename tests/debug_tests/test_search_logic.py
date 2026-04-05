@@ -1,12 +1,5 @@
-
-
 from app.services.search_service import search
 from app.db.database import init_db
-from app.services.search_service import split_blocks
-from app.nlp.coreference import simple_coreference
-from app.graph.graph_builder import build_dependency_graph
-from app.graph.graph_similarity import graph_similarity
-from spacy.lang.en import English
 
 init_db()
 
@@ -23,22 +16,24 @@ As technology continues to develop, experts believe that remote work will remain
 
 
 questions = [
-        "What major change in the workplace is described in the text?",
-        "What technology has made remote work possible?",
-        "Why can remote work improve people’s quality of life?",
-        "What is one benefit related to employees’ schedules?",
-        "What problem can occur when people work and live in the same place?",
-        "Why might remote workers feel isolated?",
-        "What solution are some companies using to solve the problems of remote work?",
-        "What is a hybrid work model?",
-        "According to experts, what will happen to remote work in the future?",
-        "What challenge will employers and employees face?",
+    "What major change in the workplace is described in the text?",
+    "What technology has made remote work possible?",
+    "Why can remote work improve people’s quality of life?",
+    "What is one benefit related to employees’ schedules?",
+    "What problem can occur when people work and live in the same place?",
+    "Why might remote workers feel isolated?",
+    "What solution are some companies using to solve the problems of remote work?",
+    "What is a hybrid work model?",
+    "According to experts, what will happen to remote work in the future?",
+    "What challenge will employers and employees face?",
 ]
-results, resolved_text, coref_map = search(questions=questions, text=text, top_k=3, threshold=0.1)
+results, resolved_text, coref_map = search(
+    questions=questions, text=text, top_k=3, threshold=0.1
+)
 
-print("\n" + "="*60)
+print("\n" + "=" * 60)
 print("SEARCH LOGIC TEST")
-print("="*60)
+print("=" * 60)
 
 for question, hits in results.items():
     print(f"\nQ: {question}")

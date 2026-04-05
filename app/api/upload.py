@@ -2,10 +2,15 @@ from fastapi import APIRouter, File, UploadFile, HTTPException
 import os
 from pydantic import BaseModel
 from app.services.file_service import (
-    read_file, ensure_upload_folder,
-    list_files, delete_file, file_exists, delete_all_files
+    read_file,
+    ensure_upload_folder,
+    list_files,
+    delete_file,
+    file_exists,
+    delete_all_files,
 )
 from app.nlp.text_processing import split_sentences
+
 """
 File Management API Router
 
@@ -33,21 +38,28 @@ MAX_FILE_SIZE = 5 * 1024 * 1024  # 5MB
 MAX_TEXT_LENGTH = 5000
 MAX_FILENAME_LENGTH = 100
 
+
 @router.post("/upload")
 async def upload_file(file: UploadFile = File(...)):
     ext = os.path.splitext(file.filename)[1].lower()
     if ext not in ALLOWED_EXTENSIONS:
-        raise HTTPException(status_code=400, detail="Only .txt and .pdf files are allowed")
+        raise HTTPException(
+            status_code=400, detail="Only .txt and .pdf files are allowed"
+        )
 
     ensure_upload_folder()
 
     if file_exists(file.filename):
-        raise HTTPException(status_code=409, detail=f"File '{file.filename}' already exists")
+        raise HTTPException(
+            status_code=409, detail=f"File '{file.filename}' already exists"
+        )
 
     content = await file.read()
 
     if len(content) > MAX_FILE_SIZE:
-        raise HTTPException(status_code=413, detail="File too large. Maximum size is 5MB")
+        raise HTTPException(
+            status_code=413, detail="File too large. Maximum size is 5MB"
+        )
 
     if not content.strip():
         raise HTTPException(status_code=400, detail="File is empty")
@@ -64,13 +76,15 @@ async def upload_file(file: UploadFile = File(...)):
         "format": ext.lstrip("."),
         "length": len(text),
         "sentences_total": len(sentences),
-        "preview": sentences[:5]
+        "preview": sentences[:5],
     }
+
 
 @router.get("/files")
 def get_files():
     files = list_files()
     return {"files": files, "total": len(files)}
+
 
 @router.get("/files/{filename}/text")
 def get_file_text(filename: str):
@@ -79,11 +93,14 @@ def get_file_text(filename: str):
     text = read_file(os.path.join(UPLOAD_FOLDER, filename))
     return {"text": text}
 
+
 @router.delete("/files/{filename}")
 def delete_file_endpoint(filename: str):
     ext = os.path.splitext(filename)[1].lower()
     if ext not in ALLOWED_EXTENSIONS:
-        raise HTTPException(status_code=400, detail="Only .txt and .pdf files are allowed")
+        raise HTTPException(
+            status_code=400, detail="Only .txt and .pdf files are allowed"
+        )
 
     if not file_exists(filename):
         raise HTTPException(status_code=404, detail=f"File '{filename}' not found")
@@ -91,10 +108,12 @@ def delete_file_endpoint(filename: str):
     delete_file(filename)
     return {"message": f"File '{filename}' deleted successfully"}
 
+
 @router.delete("/files")
 def delete_all_files_endpoint():
     count = delete_all_files()
     return {"message": f"Deleted {count} files"}
+
 
 class TextInput(BaseModel):
     text: str
@@ -107,9 +126,14 @@ def upload_text(data: TextInput):
         raise HTTPException(status_code=400, detail="Filename cannot be empty")
 
     if len(data.text) > MAX_TEXT_LENGTH:
-        raise HTTPException(status_code=413, detail=f"Text too long. Maximum is {MAX_TEXT_LENGTH} characters")
+        raise HTTPException(
+            status_code=413,
+            detail=f"Text too long. Maximum is {MAX_TEXT_LENGTH} characters",
+        )
 
-    filename = data.filename if data.filename.endswith(".txt") else data.filename + ".txt"
+    filename = (
+        data.filename if data.filename.endswith(".txt") else data.filename + ".txt"
+    )
 
     if len(filename) > MAX_FILENAME_LENGTH:
         raise HTTPException(status_code=400, detail="Filename too long")
@@ -133,5 +157,5 @@ def upload_text(data: TextInput):
         "format": "txt",
         "length": len(data.text),
         "sentences_total": len(sentences),
-        "preview": sentences[:5]
+        "preview": sentences[:5],
     }

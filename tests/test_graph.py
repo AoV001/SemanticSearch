@@ -1,7 +1,7 @@
-import pytest
 import networkx as nx
 from app.graph.graph_builder import build_dependency_graph
 from app.graph.graph_similarity import graph_similarity, extract_relevant_subgraph
+
 
 class TestBuildDependencyGraph:
 

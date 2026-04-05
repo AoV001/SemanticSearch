@@ -15,16 +15,18 @@ Companies are still trying to find the best balance between remote and office wo
 
 As technology continues to develop, experts believe that remote work will remain an important part of the modern workplace. The challenge for both employers and employees will be learning how to use this system in a healthy and productive way."""
 
-questions = ["What major change in the workplace is described in the text?",
-        "What technology has made remote work possible?",
-        "Why can remote work improve people’s quality of life?",
-        "What is one benefit related to employees’ schedules?",
-        "What problem can occur when people work and live in the same place?",
-        "Why might remote workers feel isolated?",
-        "What solution are some companies using to solve the problems of remote work?",
-        "What is a hybrid work model?",
-        "According to experts, what will happen to remote work in the future?",
-        "What challenge will employers and employees face?",]
+questions = [
+    "What major change in the workplace is described in the text?",
+    "What technology has made remote work possible?",
+    "Why can remote work improve people’s quality of life?",
+    "What is one benefit related to employees’ schedules?",
+    "What problem can occur when people work and live in the same place?",
+    "Why might remote workers feel isolated?",
+    "What solution are some companies using to solve the problems of remote work?",
+    "What is a hybrid work model?",
+    "According to experts, what will happen to remote work in the future?",
+    "What challenge will employers and employees face?",
+]
 
 # RAM
 tracemalloc.start()
@@ -54,6 +56,6 @@ elapsed2 = time.perf_counter() - start2
 current2, peak2 = tracemalloc.get_traced_memory()
 tracemalloc.stop()
 
-print(f"\n--- Second run (cached) ---")
+print("\n--- Second run (cached) ---")
 print(f"Time:     {elapsed2:.3f}s")
 print(f"RAM peak: {peak2 / 1024:.1f} KB")

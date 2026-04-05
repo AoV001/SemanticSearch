@@ -1,6 +1,6 @@
-import pytest
 from app.graph.graph_builder import build_dependency_graph
 from app.nlp.answer_extraction import extract_answer, classify_question
+
 
 class TestClassifyQuestion:
 
@@ -30,6 +30,7 @@ class TestExtractAnswer:
 
     def _get_triplets_and_graph(self, question, block):
         from app.graph.graph_similarity import extract_relevant_subgraph
+
         qg = build_dependency_graph(question)
         bg = build_dependency_graph(block)
         triplets = extract_relevant_subgraph(qg, bg, hop=1)
@@ -77,5 +78,5 @@ class TestExtractAnswer:
         question = "Who invented the telephone?"
         block = "The cat sat on the mat."
         triplets, qg = self._get_triplets_and_graph(question, block)
-        answer = extract_answer(triplets, qg, block, original_question=question)
+        extract_answer(triplets, qg, block, original_question=question)
         assert True

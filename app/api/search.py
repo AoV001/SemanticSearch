@@ -4,6 +4,7 @@ from app.services.search_service import search
 from app.nlp.answer_extraction import format_triplets
 from app.services.file_service import read_file, file_exists
 import os
+
 """
 Search API Router
 
@@ -63,37 +64,40 @@ Error Handling:
 
 router = APIRouter()
 
+
 @router.post("/search")
 def search_endpoint(request: SearchRequest):
     if not file_exists(request.filename):
         raise HTTPException(
-            status_code=404,
-            detail=f"File '{request.filename}' not found")
+            status_code=404, detail=f"File '{request.filename}' not found"
+        )
 
     text = read_file(os.path.join("data/", request.filename))
     all_results = search(
         questions=request.questions,
         text=text,
         top_k=request.top_k,
-        filename=request.filename)
+        filename=request.filename,
+    )
 
     results_data, resolved_text, coref_map = all_results
     response = []
 
     for question, hits in results_data.items():
-        question_data = {
-            "question": question,
-            "results": []
-        }
+        question_data = {"question": question, "results": []}
 
         for block, score, triplets, answer in hits:
-            question_data["results"].append({
-                "answer": answer or "—",
-                "confidence": round(score, 2),
-                "context": block,
-                "evidence": format_triplets(triplets),
-                "triplets": [{"from": u, "rel": rel, "to": v} for u, rel, v in triplets]
-            })
+            question_data["results"].append(
+                {
+                    "answer": answer or "—",
+                    "confidence": round(score, 2),
+                    "context": block,
+                    "evidence": format_triplets(triplets),
+                    "triplets": [
+                        {"from": u, "rel": rel, "to": v} for u, rel, v in triplets
+                    ],
+                }
+            )
 
         response.append(question_data)
 

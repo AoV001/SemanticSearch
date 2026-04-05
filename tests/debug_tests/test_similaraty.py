@@ -1,7 +1,7 @@
 from app.graph.graph_builder import build_dependency_graph
 from app.graph.graph_similarity import graph_similarity
 
-s1 ="The boy kicked the ball."
+s1 = "The boy kicked the ball."
 s2 = "Who kicked the ball?"
 
 g1 = build_dependency_graph(s1)

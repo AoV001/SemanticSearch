@@ -6,7 +6,13 @@ block = "In recent years, the way people work has changed dramatically. One of t
 qg = build_dependency_graph(question)
 bg = build_dependency_graph(block)
 
-print("Question nodes:", {d['lemma'] for _, d in qg.nodes(data=True)})
-print("Block nodes:", {d['lemma'] for _, d in bg.nodes(data=True)})
-print("Question edges:", {(qg.nodes[u].get('lemma'), qg.nodes[v].get('lemma')) for u,v in qg.edges()})
-print("Block edges:", {(bg.nodes[u].get('lemma'), bg.nodes[v].get('lemma')) for u,v in bg.edges()})
+print("Question nodes:", {d["lemma"] for _, d in qg.nodes(data=True)})
+print("Block nodes:", {d["lemma"] for _, d in bg.nodes(data=True)})
+print(
+    "Question edges:",
+    {(qg.nodes[u].get("lemma"), qg.nodes[v].get("lemma")) for u, v in qg.edges()},
+)
+print(
+    "Block edges:",
+    {(bg.nodes[u].get("lemma"), bg.nodes[v].get("lemma")) for u, v in bg.edges()},
+)

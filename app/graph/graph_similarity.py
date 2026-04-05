@@ -14,6 +14,7 @@ Functions:
   a subgraph from a text block that is relevant to the question graph
 """
 
+
 def node_similarity(g1: nx.Graph, g2: nx.Graph):
     nodes1 = {data.get("lemma") for _, data in g1.nodes(data=True) if "lemma" in data}
     nodes2 = {data.get("lemma") for _, data in g2.nodes(data=True) if "lemma" in data}
@@ -49,6 +50,7 @@ def edge_similarity(g1, g2):
 
     return len(edges1 & edges2) / len(edges1)
 
+
 def graph_similarity(g1: nx.DiGraph, g2: nx.DiGraph):
 
     nodes_score = node_similarity(g1, g2)
@@ -59,16 +61,14 @@ def graph_similarity(g1: nx.DiGraph, g2: nx.DiGraph):
 
 def extract_relevant_subgraph(question_graph, block_graph, hop=1):
     question_lemmas = {
-        data["lemma"]
-        for _, data in question_graph.nodes(data=True)
-        if "lemma" in data
+        data["lemma"] for _, data in question_graph.nodes(data=True) if "lemma" in data
     }
 
     seed_nodes = {
-        node for node, data in block_graph.nodes(data=True)
+        node
+        for node, data in block_graph.nodes(data=True)
         if data.get("lemma") in question_lemmas
     }
-
 
     relevant_nodes = set(seed_nodes)
     for _ in range(hop):
@@ -84,5 +84,3 @@ def extract_relevant_subgraph(question_graph, block_graph, hop=1):
             triplets.append((u, data.get("relation", "?"), v))
 
     return triplets
-
-
