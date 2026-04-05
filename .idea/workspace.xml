@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="e94f34bc-5a55-4421-9054-ef0a949d0e9b" name="Changes" comment="adjust README">
+    <list default="true" id="e94f34bc-5a55-4421-9054-ef0a949d0e9b" name="Changes" comment="apply black formatting and fix lint issues">
+      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/The Boy kicked the ball. He ran aft.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/remote work.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/volunteer.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/debug_tests/data/history.db" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/example1.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/history.db" beforeDir="false" afterPath="$PROJECT_DIR$/data/history.db" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -46,126 +49,45 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "Python.debug_tests.executor": "Run",
-    "Python.graph_builder.executor": "Run",
-    "Python.ram_test.executor": "Run",
-    "Python.spacy_test.executor": "Run",
-    "Python.test_search_logic.executor": "Run",
-    "Python.test_search_service.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "main",
-    "last_opened_file_path": "C:/Users/vlaso/PycharmProjects/SemanticSearch",
-    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;Python tests.Python tests for tests.test_coreference.TestCoreferenceMap.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for tests.test_coreference.TestSimpleCoreference.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for tests.test_graph.TestBuildDependencyGraph.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for tests.test_graph.TestExtractRelevantSubgraph.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for tests.test_graph.TestGraphSimilarity.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for tests.test_search_service.TestSearch.test_high_threshold_no_results.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests in test_answer_extraction.py.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests in test_search_service.py.executor&quot;: &quot;Run&quot;,
+    &quot;Python.debug_tests.executor&quot;: &quot;Run&quot;,
+    &quot;Python.graph_builder.executor&quot;: &quot;Run&quot;,
+    &quot;Python.ram_test.executor&quot;: &quot;Run&quot;,
+    &quot;Python.spacy_test.executor&quot;: &quot;Run&quot;,
+    &quot;Python.test_search_logic.executor&quot;: &quot;Run&quot;,
+    &quot;Python.test_search_service.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/vlaso/PycharmProjects/SemanticSearch&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\vlaso\PycharmProjects\SemanticSearch" />
       <recent name="C:\Users\vlaso\PycharmProjects\SemanticSearch\frontend\public" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\vlaso\PycharmProjects\SemanticSearch\tests" />
+      <recent name="C:\Users\vlaso\PycharmProjects\SemanticSearch" />
+      <recent name="C:\Users\vlaso\PycharmProjects\SemanticSearch\tests\debug_tests" />
       <recent name="C:\Users\vlaso\PycharmProjects\SemanticSearch\app" />
     </key>
   </component>
-  <component name="RunManager" selected="Python tests.Python tests for tests.test_coreference.TestSimpleCoreference">
-    <configuration name="debug_tests" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="SemanticSearch" />
-      <option name="ENV_FILES" value="" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/tests" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="RUN_TOOL" value="" />
-      <option name="SCRIPT_NAME" value="C:\Users\vlaso\PycharmProjects\SemanticSearch\tests\debug_tests\debug_tests.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="graph_builder" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="SemanticSearch" />
-      <option name="ENV_FILES" value="" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/app/graph" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="RUN_TOOL" value="" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/app/graph/graph_builder.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="ram_test" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="SemanticSearch" />
-      <option name="ENV_FILES" value="" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/tests" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="RUN_TOOL" value="" />
-      <option name="SCRIPT_NAME" value="C:\Users\vlaso\PycharmProjects\SemanticSearch\tests\debug_tests\ram_test.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="test_search_logic" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="SemanticSearch" />
-      <option name="ENV_FILES" value="" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/tests" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="RUN_TOOL" value="" />
-      <option name="SCRIPT_NAME" value="C:\Users\vlaso\PycharmProjects\SemanticSearch\tests\debug_tests\test_search_logic.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="Python tests for tests.test_coreference.TestSimpleCoreference" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+  <component name="RunManager" selected="Python tests.Python tests for tests.test_search_service.TestSearch.test_high_threshold_no_results">
+    <configuration name="Python tests for tests.test_coreference.TestCoreferenceMap" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
       <module name="SemanticSearch" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -177,17 +99,81 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="RUN_TOOL" value="" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;tests.test_coreference.TestSimpleCoreference&quot;" />
+      <option name="_new_target" value="&quot;tests.test_coreference.TestCoreferenceMap&quot;" />
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Python tests for tests.test_graph.TestGraphSimilarity" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+      <module name="SemanticSearch" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="RUN_TOOL" value="" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;tests.test_graph.TestGraphSimilarity&quot;" />
+      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Python tests for tests.test_search_service.TestSearch.test_high_threshold_no_results" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+      <module name="SemanticSearch" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="RUN_TOOL" value="" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;tests.test_search_service.TestSearch.test_high_threshold_no_results&quot;" />
+      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Python tests in test_answer_extraction.py" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+      <module name="SemanticSearch" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="RUN_TOOL" value="" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;$PROJECT_DIR$/tests/test_answer_extraction.py&quot;" />
+      <option name="_new_targetType" value="&quot;PATH&quot;" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Python tests in test_search_service.py" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+      <module name="SemanticSearch" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="RUN_TOOL" value="" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;$PROJECT_DIR$/tests/test_search_service.py&quot;" />
+      <option name="_new_targetType" value="&quot;PATH&quot;" />
       <method v="2" />
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python tests.Python tests for tests.test_coreference.TestSimpleCoreference" />
-        <item itemvalue="Python.ram_test" />
-        <item itemvalue="Python.test_search_logic" />
-        <item itemvalue="Python.graph_builder" />
-        <item itemvalue="Python.debug_tests" />
+        <item itemvalue="Python tests.Python tests for tests.test_search_service.TestSearch.test_high_threshold_no_results" />
+        <item itemvalue="Python tests.Python tests in test_search_service.py" />
+        <item itemvalue="Python tests.Python tests in test_answer_extraction.py" />
+        <item itemvalue="Python tests.Python tests for tests.test_graph.TestGraphSimilarity" />
+        <item itemvalue="Python tests.Python tests for tests.test_coreference.TestCoreferenceMap" />
       </list>
     </recent_temporary>
   </component>
@@ -205,102 +191,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1774099630151</updated>
-    </task>
-    <task id="LOCAL-00011" summary="add new endpoints: get and delete">
-      <option name="closed" value="true" />
-      <created>1774522337322</created>
-      <option name="number" value="00011" />
-      <option name="presentableId" value="LOCAL-00011" />
-      <option name="project" value="LOCAL" />
-      <updated>1774522337322</updated>
-    </task>
-    <task id="LOCAL-00012" summary="add cache for graphs">
-      <option name="closed" value="true" />
-      <created>1774522630436</created>
-      <option name="number" value="00012" />
-      <option name="presentableId" value="LOCAL-00012" />
-      <option name="project" value="LOCAL" />
-      <updated>1774522630436</updated>
-    </task>
-    <task id="LOCAL-00013" summary="add ability to upload pdf files">
-      <option name="closed" value="true" />
-      <created>1774524140248</created>
-      <option name="number" value="00013" />
-      <option name="presentableId" value="LOCAL-00013" />
-      <option name="project" value="LOCAL" />
-      <updated>1774524140248</updated>
-    </task>
-    <task id="LOCAL-00014" summary="add ability to save search history">
-      <option name="closed" value="true" />
-      <created>1774524607957</created>
-      <option name="number" value="00014" />
-      <option name="presentableId" value="LOCAL-00014" />
-      <option name="project" value="LOCAL" />
-      <updated>1774524607957</updated>
-    </task>
-    <task id="LOCAL-00015" summary="add ability to save search history">
-      <option name="closed" value="true" />
-      <created>1774525603378</created>
-      <option name="number" value="00015" />
-      <option name="presentableId" value="LOCAL-00015" />
-      <option name="project" value="LOCAL" />
-      <updated>1774525603378</updated>
-    </task>
-    <task id="LOCAL-00016" summary="add docker for front">
-      <option name="closed" value="true" />
-      <created>1774526451452</created>
-      <option name="number" value="00016" />
-      <option name="presentableId" value="LOCAL-00016" />
-      <option name="project" value="LOCAL" />
-      <updated>1774526451452</updated>
-    </task>
-    <task id="LOCAL-00017" summary="add frontend">
-      <option name="closed" value="true" />
-      <created>1774527804691</created>
-      <option name="number" value="00017" />
-      <option name="presentableId" value="LOCAL-00017" />
-      <option name="project" value="LOCAL" />
-      <updated>1774527804691</updated>
-    </task>
-    <task id="LOCAL-00018" summary="adjust docker for frontend">
-      <option name="closed" value="true" />
-      <created>1774529248855</created>
-      <option name="number" value="00018" />
-      <option name="presentableId" value="LOCAL-00018" />
-      <option name="project" value="LOCAL" />
-      <updated>1774529248855</updated>
-    </task>
-    <task id="LOCAL-00019" summary="adjust main for frontend">
-      <option name="closed" value="true" />
-      <created>1774530619077</created>
-      <option name="number" value="00019" />
-      <option name="presentableId" value="LOCAL-00019" />
-      <option name="project" value="LOCAL" />
-      <updated>1774530619077</updated>
-    </task>
-    <task id="LOCAL-00020" summary="adjust ability: show the history of uploaded files + delete them or set new questions for them">
-      <option name="closed" value="true" />
-      <created>1774531158526</created>
-      <option name="number" value="00020" />
-      <option name="presentableId" value="LOCAL-00020" />
-      <option name="project" value="LOCAL" />
-      <updated>1774531158526</updated>
-    </task>
-    <task id="LOCAL-00021" summary="adjust the interface and some tools">
-      <option name="closed" value="true" />
-      <created>1774531639289</created>
-      <option name="number" value="00021" />
-      <option name="presentableId" value="LOCAL-00021" />
-      <option name="project" value="LOCAL" />
-      <updated>1774531639289</updated>
-    </task>
-    <task id="LOCAL-00022" summary="adjust new interface">
-      <option name="closed" value="true" />
-      <created>1774543328646</created>
-      <option name="number" value="00022" />
-      <option name="presentableId" value="LOCAL-00022" />
-      <option name="project" value="LOCAL" />
-      <updated>1774543328646</updated>
     </task>
     <task id="LOCAL-00023" summary="add highlight and debugging">
       <option name="closed" value="true" />
@@ -598,7 +488,103 @@
       <option name="project" value="LOCAL" />
       <updated>1774712063793</updated>
     </task>
-    <option name="localTasksCounter" value="60" />
+    <task id="LOCAL-00060" summary="move all tests to new folder">
+      <option name="closed" value="true" />
+      <created>1774801415669</created>
+      <option name="number" value="00060" />
+      <option name="presentableId" value="LOCAL-00060" />
+      <option name="project" value="LOCAL" />
+      <updated>1774801415669</updated>
+    </task>
+    <task id="LOCAL-00061" summary="add conftests with 2 texts">
+      <option name="closed" value="true" />
+      <created>1774801462204</created>
+      <option name="number" value="00061" />
+      <option name="presentableId" value="LOCAL-00061" />
+      <option name="project" value="LOCAL" />
+      <updated>1774801462204</updated>
+    </task>
+    <task id="LOCAL-00062" summary="add test for coreference">
+      <option name="closed" value="true" />
+      <created>1774801479910</created>
+      <option name="number" value="00062" />
+      <option name="presentableId" value="LOCAL-00062" />
+      <option name="project" value="LOCAL" />
+      <updated>1774801479910</updated>
+    </task>
+    <task id="LOCAL-00063" summary="add tests for graph builder and similarity">
+      <option name="closed" value="true" />
+      <created>1774801557015</created>
+      <option name="number" value="00063" />
+      <option name="presentableId" value="LOCAL-00063" />
+      <option name="project" value="LOCAL" />
+      <updated>1774801557016</updated>
+    </task>
+    <task id="LOCAL-00064" summary="add tests for answer_extraction">
+      <option name="closed" value="true" />
+      <created>1774801663241</created>
+      <option name="number" value="00064" />
+      <option name="presentableId" value="LOCAL-00064" />
+      <option name="project" value="LOCAL" />
+      <updated>1774801663241</updated>
+    </task>
+    <task id="LOCAL-00065" summary="add tests for search service">
+      <option name="closed" value="true" />
+      <created>1774801741287</created>
+      <option name="number" value="00065" />
+      <option name="presentableId" value="LOCAL-00065" />
+      <option name="project" value="LOCAL" />
+      <updated>1774801741287</updated>
+    </task>
+    <task id="LOCAL-00066" summary="adjust conftest">
+      <option name="closed" value="true" />
+      <created>1774801965030</created>
+      <option name="number" value="00066" />
+      <option name="presentableId" value="LOCAL-00066" />
+      <option name="project" value="LOCAL" />
+      <updated>1774801965030</updated>
+    </task>
+    <task id="LOCAL-00067" summary="adjust test high threshold no results">
+      <option name="closed" value="true" />
+      <created>1774802085622</created>
+      <option name="number" value="00067" />
+      <option name="presentableId" value="LOCAL-00067" />
+      <option name="project" value="LOCAL" />
+      <updated>1774802085622</updated>
+    </task>
+    <task id="LOCAL-00068" summary="add documentation for backend">
+      <option name="closed" value="true" />
+      <created>1774809344620</created>
+      <option name="number" value="00068" />
+      <option name="presentableId" value="LOCAL-00068" />
+      <option name="project" value="LOCAL" />
+      <updated>1774809344620</updated>
+    </task>
+    <task id="LOCAL-00069" summary="add documentation for frontend">
+      <option name="closed" value="true" />
+      <created>1774810416937</created>
+      <option name="number" value="00069" />
+      <option name="presentableId" value="LOCAL-00069" />
+      <option name="project" value="LOCAL" />
+      <updated>1774810416937</updated>
+    </task>
+    <task id="LOCAL-00070" summary="add pre commit hooks">
+      <option name="closed" value="true" />
+      <created>1775389034924</created>
+      <option name="number" value="00070" />
+      <option name="presentableId" value="LOCAL-00070" />
+      <option name="project" value="LOCAL" />
+      <updated>1775389034924</updated>
+    </task>
+    <task id="LOCAL-00071" summary="apply black formatting and fix lint issues">
+      <option name="closed" value="true" />
+      <created>1775389307367</created>
+      <option name="number" value="00071" />
+      <option name="presentableId" value="LOCAL-00071" />
+      <option name="project" value="LOCAL" />
+      <updated>1775389307367</updated>
+    </task>
+    <option name="localTasksCounter" value="72" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -613,19 +599,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="add new window to show the evidence card more comfortable" />
-    <MESSAGE value="unversioned files" />
-    <MESSAGE value="adjust the visualisation of graphs" />
-    <MESSAGE value="add dictionary and the ability to look at the description of each word in text" />
-    <MESSAGE value="adjust the size of blocks in the interface" />
-    <MESSAGE value="adjust the input of questions, add the ability to hide the questions" />
-    <MESSAGE value="add test for answer logik" />
-    <MESSAGE value="debugging answer extraction" />
-    <MESSAGE value="debugging answer extraction : what how why" />
-    <MESSAGE value="adjust test" />
-    <MESSAGE value="debug" />
-    <MESSAGE value="debug: get list of activities" />
-    <MESSAGE value="adjust tests" />
     <MESSAGE value="adjust threshold to 0.3" />
     <MESSAGE value="debugging answer_extraction.py" />
     <MESSAGE value="debugging answer_extraction.py ann add new tests" />
@@ -638,6 +611,19 @@
     <MESSAGE value="test the run time" />
     <MESSAGE value="add cache for nlp (answer extraction)" />
     <MESSAGE value="adjust README" />
-    <option name="LAST_COMMIT_MESSAGE" value="adjust README" />
+    <MESSAGE value="move all tests to new folder" />
+    <MESSAGE value="add conftests with 2 texts" />
+    <MESSAGE value="add test for coreference" />
+    <MESSAGE value="add tests for graph builder and similarity" />
+    <MESSAGE value="add tests for answer_extraction" />
+    <MESSAGE value="add tests for search service" />
+    <MESSAGE value="adjust conftest" />
+    <MESSAGE value="adjust test high threshold no results" />
+    <MESSAGE value="add documentation for backend" />
+    <MESSAGE value="add documentation for frontend" />
+    <MESSAGE value="add pre commit hooks" />
+    <MESSAGE value="apply black formatting" />
+    <MESSAGE value="apply black formatting and fix lint issues" />
+    <option name="LAST_COMMIT_MESSAGE" value="apply black formatting and fix lint issues" />
   </component>
 </project>
