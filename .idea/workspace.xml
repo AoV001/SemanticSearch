@@ -1,13 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="e94f34bc-5a55-4421-9054-ef0a949d0e9b" name="Changes" comment="apply black formatting and fix lint issues">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data/The Boy kicked the ball. He ran aft.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data/remote work.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data/volunteer.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/debug_tests/data/history.db" afterDir="false" />
+    <list default="true" id="e94f34bc-5a55-4421-9054-ef0a949d0e9b" name="Changes" comment="apply black">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/db/database.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/db/database.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -191,22 +187,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1774099630151</updated>
-    </task>
-    <task id="LOCAL-00023" summary="add highlight and debugging">
-      <option name="closed" value="true" />
-      <created>1774607652758</created>
-      <option name="number" value="00023" />
-      <option name="presentableId" value="LOCAL-00023" />
-      <option name="project" value="LOCAL" />
-      <updated>1774607652758</updated>
-    </task>
-    <task id="LOCAL-00024" summary="debugging highlight">
-      <option name="closed" value="true" />
-      <created>1774608548056</created>
-      <option name="number" value="00024" />
-      <option name="presentableId" value="LOCAL-00024" />
-      <option name="project" value="LOCAL" />
-      <updated>1774608548056</updated>
     </task>
     <task id="LOCAL-00025" summary="debugging highlight">
       <option name="closed" value="true" />
@@ -584,7 +564,23 @@
       <option name="project" value="LOCAL" />
       <updated>1775389307367</updated>
     </task>
-    <option name="localTasksCounter" value="72" />
+    <task id="LOCAL-00072" summary="add gitignore">
+      <option name="closed" value="true" />
+      <created>1775389387485</created>
+      <option name="number" value="00072" />
+      <option name="presentableId" value="LOCAL-00072" />
+      <option name="project" value="LOCAL" />
+      <updated>1775389387485</updated>
+    </task>
+    <task id="LOCAL-00073" summary="add CI pipeline">
+      <option name="closed" value="true" />
+      <created>1775389614217</created>
+      <option name="number" value="00073" />
+      <option name="presentableId" value="LOCAL-00073" />
+      <option name="project" value="LOCAL" />
+      <updated>1775389614217</updated>
+    </task>
+    <option name="localTasksCounter" value="74" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -599,9 +595,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="adjust threshold to 0.3" />
-    <MESSAGE value="debugging answer_extraction.py" />
-    <MESSAGE value="debugging answer_extraction.py ann add new tests" />
     <MESSAGE value="debugging graph_builder.py and add tests" />
     <MESSAGE value="debugging graph_similarity.py node_similarity" />
     <MESSAGE value="debugging: what question" />
@@ -624,6 +617,9 @@
     <MESSAGE value="add pre commit hooks" />
     <MESSAGE value="apply black formatting" />
     <MESSAGE value="apply black formatting and fix lint issues" />
-    <option name="LAST_COMMIT_MESSAGE" value="apply black formatting and fix lint issues" />
+    <MESSAGE value="add gitignore" />
+    <MESSAGE value="add CI pipeline" />
+    <MESSAGE value="apply black" />
+    <option name="LAST_COMMIT_MESSAGE" value="apply black" />
   </component>
 </project>
