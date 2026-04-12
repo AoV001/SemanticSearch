@@ -37,7 +37,7 @@ def build_dependency_graph(sentence: str):
     for token in doc:
         if token.is_punct or token.is_stop:
             continue
-        if token.lemma_.lower() in META_WORDS:  # фильтруем мета-слова
+        if token.lemma_.lower() in META_WORDS:
             continue
         G.add_node(token.text, lemma=token.lemma_.lower(), pos=token.pos_)
 
