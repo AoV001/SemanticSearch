@@ -3,6 +3,7 @@ from app.api.models import SearchRequest
 from app.services.search_service import search
 from app.nlp.answer_extraction import format_triplets
 from app.services.file_service import read_file, file_exists
+from app.rag.generator import GenerationUnavailableError
 import os
 
 """
@@ -73,12 +74,18 @@ def search_endpoint(request: SearchRequest):
         )
 
     text = read_file(os.path.join("data/", request.filename))
-    all_results = search(
-        questions=request.questions,
-        text=text,
-        top_k=request.top_k,
-        filename=request.filename,
-    )
+    try:
+        all_results = search(
+            questions=request.questions,
+            text=text,
+            top_k=request.top_k,
+            filename=request.filename,
+            mode=request.mode,
+        )
+    except (GenerationUnavailableError, ImportError, OSError) as exc:
+        raise HTTPException(
+            status_code=503, detail=f"RAG model is unavailable: {exc}"
+        ) from exc
 
     results_data, resolved_text, coref_map = all_results
     response = []
@@ -101,4 +108,9 @@ def search_endpoint(request: SearchRequest):
 
         response.append(question_data)
 
-    return {"results": response, "resolved_text": resolved_text, "coref_map": coref_map}
+    return {
+        "mode": request.mode.value,
+        "results": response,
+        "resolved_text": resolved_text,
+        "coref_map": coref_map,
+    }
