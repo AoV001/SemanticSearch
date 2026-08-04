@@ -1,5 +1,6 @@
 from pydantic import BaseModel, field_validator
 from typing import List
+from enum import Enum
 
 """
 Search Request Schema
@@ -40,9 +41,15 @@ MAX_QUESTION_LENGTH = 200
 MAX_QUESTIONS_COUNT = 20
 
 
+class SearchMode(str, Enum):
+    GRAPH = "graph"
+    RAG = "rag"
+
+
 class SearchRequest(BaseModel):
     filename: str
     questions: List[str]
+    mode: SearchMode = SearchMode.GRAPH
     top_k: int = 3
 
     @field_validator("questions")
