@@ -69,6 +69,7 @@ def search(
     threshold=0.3,
     filename: str = "",
     mode: str = "graph",
+    include_metadata: bool = False,
 ):
     mode = getattr(mode, "value", mode)
     if mode not in {"graph", "rag", "graph_rag"}:
@@ -130,16 +131,18 @@ def search(
                 else extracted_answer
             )
             # Return source text so the UI can always highlight it exactly.
-            results.append((original_block, score, triplets, answer))
+            llm_used = mode == "rag" and result_number == 0 and bool(generated_answer)
+            source = "RAG LLM" if llm_used else "Graph extraction"
+            results.append((original_block, score, triplets, answer, source, llm_used))
 
         if mode == "graph_rag" and results:
-            best_block, best_score, best_triplets, best_answer = results[0]
+            best_block, best_score, best_triplets, best_answer, _, _ = results[0]
             if best_score < GRAPH_RAG_CONFIDENCE_THRESHOLD or not best_answer:
                 generated_answer = generate_answer(
                     question,
                     [
-                        resolved_block
-                        for _, resolved_block, _ in ranked_blocks[
+                        original_block
+                        for original_block, _, _ in ranked_blocks[
                             :GRAPH_RAG_CONTEXT_LIMIT
                         ]
                     ],
@@ -150,6 +153,8 @@ def search(
                         best_score,
                         best_triplets,
                         generated_answer,
+                        "GraphRAG LLM",
+                        True,
                     )
 
         results.sort(key=lambda x: x[1], reverse=True)
@@ -157,9 +162,14 @@ def search(
 
         best = all_results[question][0] if all_results[question] else None
         if best:
-            block, score, triplets, answer = best
+            block, score, triplets, answer, _, _ = best
             save_search(
                 filename=filename, question=question, answer=answer, confidence=score
             )
 
+    if not include_metadata:
+        all_results = {
+            question: [result[:4] for result in hits]
+            for question, hits in all_results.items()
+        }
     return all_results, resolved_text, coref_map
