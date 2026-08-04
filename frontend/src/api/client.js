@@ -19,7 +19,10 @@ export const uploadFile = async (file) => {
     method: 'POST',
     body: formData
   })
-  if (!res.ok) throw new Error(await res.text())
+  if (!res.ok) {
+    const error = await res.json().catch(() => null)
+    throw new Error(error?.detail || 'File upload failed')
+  }
   return res.json()
 }
 
@@ -37,11 +40,11 @@ export const deleteFile = async (filename) => {
   return res.json()
 }
 
-export const searchFile = async (filename, questions, top_k = 3) => {
+export const searchFile = async (filename, questions, mode = 'graph', top_k = 3) => {
   const res = await fetch(`${API_URL}/api/search`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ filename, questions, top_k })
+    body: JSON.stringify({ filename, questions, mode, top_k })
   })
   if (!res.ok) throw new Error(await res.text())
   return res.json()
