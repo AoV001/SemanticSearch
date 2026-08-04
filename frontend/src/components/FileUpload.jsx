@@ -38,7 +38,7 @@ export default function FileUpload({ onUploadSuccess }) {
       const result = await uploadFile(file)
       onUploadSuccess(result)
     } catch (e) {
-      setError('Only .txt and .pdf files are allowed.')
+      setError(e.message)
     } finally {
       setLoading(false)
     }
@@ -123,7 +123,6 @@ export default function FileUpload({ onUploadSuccess }) {
             className="w-full rounded-lg px-3 py-2 text-xs focus:outline-none resize-none"
             style={{background: '#0f1117', border: '1px solid #2a2d3a', color: '#e2e8f0'}}
         />
-// Счётчик под textarea:
         <p className="text-xs text-right" style={{color: pasteText.length > MAX_TEXT * 0.9 ? '#f472b6' : '#64748b'}}>
             {pasteText.length}/{MAX_TEXT}
         </p>
