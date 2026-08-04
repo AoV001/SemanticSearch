@@ -10,6 +10,8 @@ from app.nlp.coreference import simple_coreference, get_coreference_map
 from typing import List
 from app.db.history import save_search
 from app.cache.graph_cache import get_resolved
+from app.rag.retriever import retrieve
+from app.rag.generator import generate_answer
 
 """
 Search Service
@@ -46,6 +48,11 @@ TEMPORAL_QUESTION_WORDS = {"before", "after", "when", "while"}
 
 
 def split_blocks(sentences, window_size=WINDOW_SIZE):
+    if not sentences:
+        return []
+    if len(sentences) <= window_size:
+        return [" ".join(sentences)]
+
     blocks = []
     for i in range(len(sentences) - window_size + 1):
         block = " ".join(sentences[i : i + window_size])
@@ -54,7 +61,12 @@ def split_blocks(sentences, window_size=WINDOW_SIZE):
 
 
 def search(
-    questions: List[str], text: str, top_k: int = 3, threshold=0.3, filename: str = ""
+    questions: List[str],
+    text: str,
+    top_k: int = 3,
+    threshold=0.3,
+    filename: str = "",
+    mode: str = "graph",
 ):
     nlp_sent = English()
     nlp_sent.add_pipe("sentencizer")
@@ -81,24 +93,48 @@ def search(
     resolved_text = " ".join(resolved_sentences)
     all_results = {}
 
+    mode = getattr(mode, "value", mode)
+    if mode not in {"graph", "rag"}:
+        raise ValueError(f"Unsupported search mode: {mode}")
+
     for question in questions:
         question_graph = get_graph(question)
         results = []
 
-        for block in resolved_blocks:
+        if mode == "graph":
+            ranked_blocks = []
+            for block in resolved_blocks:
+                block_graph = get_graph(block)
+                score = graph_similarity(question_graph, block_graph)
+                if score >= threshold:
+                    ranked_blocks.append((block, score))
+        else:
+            ranked_blocks = [
+                (get_resolved(chunk.text), chunk.score)
+                for chunk in retrieve(filename, text, question, top_k)
+            ]
+
+        rag_answer = (
+            generate_answer(question, [block for block, _ in ranked_blocks])
+            if mode == "rag"
+            else None
+        )
+
+        for result_number, (block, score) in enumerate(ranked_blocks):
             block_graph = get_graph(block)
-            score = graph_similarity(question_graph, block_graph)
-            if score >= threshold:
-                triplets = extract_relevant_subgraph(question_graph, block_graph, hop=1)
-                answer = extract_answer(
-                    triplets, question_graph, block, original_question=question
-                )
-                is_temporal = any(m in question.lower() for m in ALL_TEMPORAL)
-                if is_temporal:
-                    temporal = extract_temporal_answer(block, question)
-                    if temporal:
-                        answer = temporal
-                results.append((block, score, triplets, answer))
+            triplets = extract_relevant_subgraph(question_graph, block_graph, hop=1)
+            extracted_answer = extract_answer(
+                triplets, question_graph, block, original_question=question
+            )
+            is_temporal = any(m in question.lower() for m in ALL_TEMPORAL)
+            if is_temporal:
+                temporal = extract_temporal_answer(block, question)
+                if temporal:
+                    extracted_answer = temporal
+            answer = (
+                rag_answer if mode == "rag" and result_number == 0 else extracted_answer
+            )
+            results.append((block, score, triplets, answer))
 
         results.sort(key=lambda x: x[1], reverse=True)
         all_results[question] = results[:top_k]
