@@ -1,6 +1,8 @@
 """Grounded answer generation with a locally running Ollama model."""
 
 import os
+from hashlib import sha256
+from threading import RLock
 from typing import Sequence
 
 import requests
@@ -11,6 +13,9 @@ OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "qwen3:4b-instruct")
 OLLAMA_TIMEOUT_SECONDS = 90
 OLLAMA_CONTEXT_WINDOW = int(os.getenv("OLLAMA_CONTEXT_WINDOW", "2048"))
 OLLAMA_MAX_TOKENS = 64
+_answer_cache: dict[str, str | None] = {}
+_answer_cache_lock = RLock()
+ANSWER_CACHE_LIMIT = 256
 
 
 class GenerationUnavailableError(RuntimeError):
@@ -21,6 +26,13 @@ def generate_answer(question: str, contexts: Sequence[str]) -> str | None:
     """Generate a concise answer grounded exclusively in retrieved contexts."""
     if not contexts:
         return None
+
+    cache_key = sha256(
+        "\n".join((OLLAMA_MODEL, question, *contexts)).encode("utf-8")
+    ).hexdigest()
+    with _answer_cache_lock:
+        if cache_key in _answer_cache:
+            return _answer_cache[cache_key]
 
     formatted_context = "\n\n".join(
         f"[Context {number}]\n{context}"
@@ -44,7 +56,8 @@ def generate_answer(question: str, contexts: Sequence[str]) -> str | None:
                     "If the contexts do not contain the answer, say exactly: "
                     "I don't know based on the provided text. Give a concise answer "
                     "in the language of the question. Copy the answer wording from "
-                    "the contexts whenever possible. Do not explain your reasoning."
+                    "the contexts whenever possible. Never add a detail that is not "
+                    "explicitly stated in a context. Do not explain your reasoning."
                 ),
             },
             {
@@ -67,4 +80,15 @@ def generate_answer(question: str, contexts: Sequence[str]) -> str | None:
             f"Ollama model '{OLLAMA_MODEL}' is unavailable at {OLLAMA_BASE_URL}"
         ) from exc
 
-    return answer or None
+    answer = answer or None
+    with _answer_cache_lock:
+        if len(_answer_cache) >= ANSWER_CACHE_LIMIT:
+            _answer_cache.pop(next(iter(_answer_cache)))
+        _answer_cache[cache_key] = answer
+    return answer
+
+
+def clear_answer_cache() -> None:
+    """Clear generated-answer cache; useful for tests and maintenance."""
+    with _answer_cache_lock:
+        _answer_cache.clear()
