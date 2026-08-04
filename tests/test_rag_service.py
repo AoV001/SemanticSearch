@@ -38,3 +38,18 @@ def test_rag_search_uses_vector_ranking():
 
     assert results["Who kicked the ball?"][0][1] == 0.9
     assert results["Who kicked the ball?"][0][3] == "The boy."
+
+
+def test_graph_rag_uses_graph_context_for_generation():
+    with patch(
+        "app.services.search_service.generate_answer", return_value="The boy."
+    ) as generate_answer:
+        results, _, _ = search(
+            questions=["Who kicked the ball?"],
+            text="The boy kicked the ball. The girl watched.",
+            mode="graph_rag",
+            threshold=0.3,
+        )
+
+    assert results["Who kicked the ball?"][0][3] == "The boy."
+    assert generate_answer.call_args.args[1][0].startswith("The boy kicked the ball.")
