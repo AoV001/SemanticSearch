@@ -22,7 +22,7 @@ import { useState } from 'react'
  *    - Responsive layout for text area and controls.
  */
 
-export default function SearchForm({ selectedFile, onSearch, loading }) {
+export default function SearchForm({ selectedFile, onSearch, loading, loadingStage }) {
   const [input, setInput] = useState('')
   const [mode, setMode] = useState('graph')
   const [collapsed, setCollapsed] = useState(false)
@@ -147,6 +147,10 @@ export default function SearchForm({ selectedFile, onSearch, loading }) {
             {loading ? '...' : 'Re-run'}
           </button>
         </div>
+      )}
+
+      {loading && (
+        <p className="px-4 pb-3 text-xs" style={{color: '#2dd4bf'}}>{loadingStage}</p>
       )}
     </div>
   )
