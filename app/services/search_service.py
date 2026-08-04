@@ -46,6 +46,7 @@ ALL_TEMPORAL = TEMPORAL_MARKERS | {
 
 TEMPORAL_QUESTION_WORDS = {"before", "after", "when", "while"}
 GRAPH_RAG_CONTEXT_LIMIT = 2
+GRAPH_RAG_CONFIDENCE_THRESHOLD = 0.9
 
 
 def split_blocks(sentences, window_size=WINDOW_SIZE):
@@ -121,11 +122,6 @@ def search(
             generated_answer = generate_answer(
                 question, [block for block, _ in ranked_blocks]
             )
-        elif mode == "graph_rag":
-            generated_answer = generate_answer(
-                question,
-                [block for block, _ in ranked_blocks[:GRAPH_RAG_CONTEXT_LIMIT]],
-            )
 
         for result_number, (block, score) in enumerate(ranked_blocks):
             block_graph = get_graph(block)
@@ -140,10 +136,25 @@ def search(
                     extracted_answer = temporal
             answer = (
                 generated_answer
-                if mode in {"rag", "graph_rag"} and result_number == 0
+                if mode == "rag" and generated_answer and result_number == 0
                 else extracted_answer
             )
             results.append((block, score, triplets, answer))
+
+        if mode == "graph_rag" and results:
+            best_block, best_score, best_triplets, best_answer = results[0]
+            if best_score < GRAPH_RAG_CONFIDENCE_THRESHOLD or not best_answer:
+                generated_answer = generate_answer(
+                    question,
+                    [block for block, _ in ranked_blocks[:GRAPH_RAG_CONTEXT_LIMIT]],
+                )
+                if generated_answer:
+                    results[0] = (
+                        best_block,
+                        best_score,
+                        best_triplets,
+                        generated_answer,
+                    )
 
         results.sort(key=lambda x: x[1], reverse=True)
         all_results[question] = results[:top_k]
