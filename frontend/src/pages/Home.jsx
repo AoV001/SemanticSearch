@@ -20,6 +20,7 @@ export default function Home() {
   const [resolvedText, setResolvedText] = useState(null)
   const [results, setResults] = useState([])
   const [loading, setLoading] = useState(false)
+  const [searchError, setSearchError] = useState(null)
   const [highlightData, setHighlightData] = useState(null)
   const [corefMap, setCorefMap] = useState({})
 
@@ -31,6 +32,7 @@ export default function Home() {
     setSelectedFile(filename)
     setResults([])
     setHighlightData(null)
+    setSearchError(null)
     try {
       const data = await getFileText(filename)
       setFileText(data.text)
@@ -53,16 +55,17 @@ export default function Home() {
     }
   }
 
-  const handleSearch = async (questions) => {
+  const handleSearch = async (questions, mode) => {
     setLoading(true)
     setResults([])
     setHighlightData(null)
     try {
-      const data = await searchFile(selectedFile, questions)
+      const data = await searchFile(selectedFile, questions, mode)
       setResults(data.results)
       setResolvedText(data.resolved_text)
       setCorefMap(data.coref_map || {})
     } catch (e) {
+      setSearchError('Search failed. Make sure the backend and Ollama are running, then try again.')
       console.error(e)
     } finally {
       setLoading(false)
@@ -165,6 +168,11 @@ export default function Home() {
             />
           </div>
           <div className="flex-1 overflow-y-auto p-4 space-y-3">
+            {searchError && (
+              <p className="rounded-lg p-3 text-xs" style={{background: 'rgba(244,114,182,0.1)', color: '#f472b6', border: '1px solid rgba(244,114,182,0.3)'}}>
+                {searchError}
+              </p>
+            )}
             {results.length === 0 && (
               <p className="text-xs text-center pt-8" style={{color: '#64748b'}}>
                 Results will appear here
