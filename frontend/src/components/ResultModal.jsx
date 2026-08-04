@@ -193,6 +193,10 @@ export default function ResultModal({ result, onClose }) {
             <p className="text-xs mt-1" style={{color: '#64748b'}}>
               Confidence: {Math.round(top.confidence * 100)}%
             </p>
+            <p className="text-xs mt-1" style={{color: top.llm_used ? '#fbbf24' : '#2dd4bf'}}>
+              Answer source: {top.answer_source || 'Graph extraction'}
+              {top.llm_used && ' · generated only from the context below'}
+            </p>
           </div>
 
           <div>
