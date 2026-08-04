@@ -21,7 +21,7 @@ import WordModal from './WordModal'
  * - Scrollable, responsive layout with dark-themed styling and proper spacing.
  */
 
-export default function TextViewer({ text, resolvedText, highlightData, corefMap }) {
+export default function TextViewer({ text, highlightData, corefMap }) {
   const [wordModal, setWordModal] = useState(null)
   const [definition, setDefinition] = useState(null)
   const [defLoading, setDefLoading] = useState(false)
@@ -94,18 +94,13 @@ export default function TextViewer({ text, resolvedText, highlightData, corefMap
   }
 
   const { answer, context } = highlightData
-  const base = resolvedText || text
 
   const origSents = normalize(text).split(/(?<=[.!?])\s+/)
-  const resolvedSents = normalize(base).split(/(?<=[.!?])\s+/)
   const normalizedContext = normalize(context)
-  const normalizedAnswer = normalize(answer).toLowerCase()
 
-  const matchedIndices = resolvedSents.reduce((acc, sent, i) => {
+  const matchedIndices = origSents.reduce((acc, sent, i) => {
     const sentInContext = normalizedContext.includes(normalize(sent))
-    const resolvedHasAnswer = normalize(sent).toLowerCase().includes(normalizedAnswer)
-    const origHasAnswer = normalize(origSents[i] || '').toLowerCase().includes(normalizedAnswer)
-    if (sentInContext && (resolvedHasAnswer || origHasAnswer)) acc.push(i)
+    if (sentInContext) acc.push(i)
     return acc
   }, [])
 
