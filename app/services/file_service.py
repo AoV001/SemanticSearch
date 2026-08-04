@@ -1,6 +1,7 @@
 import os
 import pdfplumber
 from app.db.history import delete_history_by_file
+from app.rag.retriever import remove_index
 
 """
 File Service Utilities
@@ -56,6 +57,7 @@ def delete_file(filename: str) -> bool:
         return False
     os.remove(path)
     delete_history_by_file(filename)
+    remove_index(filename)
     return True
 
 
