@@ -28,7 +28,8 @@ def get_connection():
 def init_db():
     os.makedirs("data", exist_ok=True)
     conn = get_connection()
-    conn.execute("""
+    conn.execute(
+        """
         CREATE TABLE IF NOT EXISTS search_history (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             filename TEXT,
@@ -37,6 +38,7 @@ def init_db():
             confidence REAL,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
-    """)
+    """
+    )
     conn.commit()
     conn.close()
