@@ -84,6 +84,7 @@ export default function SearchForm({ selectedFile, onSearch, loading }) {
               style={{background: '#1a1d27', border: '1px solid #2a2d3a', color: '#e2e8f0'}}
             >
               <option value="graph">Graph search</option>
+              <option value="graph_rag">Hybrid (GraphRAG)</option>
               <option value="rag">RAG (vector search)</option>
             </select>
           </label>
