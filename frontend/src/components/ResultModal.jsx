@@ -73,7 +73,8 @@ function DependencyGraph({ triplets, answer }) {
     }
   })
 
-  const isAnswer = (node) => node.toLowerCase() === answer?.toLowerCase()
+  const answerWords = new Set(answer?.toLowerCase().match(/[a-z]+/g) || [])
+  const isAnswer = (node) => answerWords.has(node.toLowerCase())
 
   return (
     <div className="relative">
@@ -195,7 +196,7 @@ export default function ResultModal({ result, onClose }) {
           </div>
 
           <div>
-            <p className="text-xs uppercase tracking-wide mb-3" style={{color: '#64748b'}}>Dependency Graph</p>
+            <p className="text-xs uppercase tracking-wide mb-3" style={{color: '#64748b'}}>Graph evidence</p>
             <div className="rounded-xl p-4" style={{background: '#0f1117', border: '1px solid #2a2d3a'}}>
               <DependencyGraph triplets={top.triplets} answer={top.answer} />
             </div>
