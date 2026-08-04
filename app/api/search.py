@@ -81,6 +81,7 @@ def search_endpoint(request: SearchRequest):
             top_k=request.top_k,
             filename=request.filename,
             mode=request.mode,
+            include_metadata=True,
         )
     except (GenerationUnavailableError, ImportError, OSError) as exc:
         raise HTTPException(
@@ -93,7 +94,7 @@ def search_endpoint(request: SearchRequest):
     for question, hits in results_data.items():
         question_data = {"question": question, "results": []}
 
-        for block, score, triplets, answer in hits:
+        for block, score, triplets, answer, answer_source, llm_used in hits:
             question_data["results"].append(
                 {
                     "answer": answer or "—",
@@ -103,6 +104,8 @@ def search_endpoint(request: SearchRequest):
                     "triplets": [
                         {"from": u, "rel": rel, "to": v} for u, rel, v in triplets
                     ],
+                    "answer_source": answer_source,
+                    "llm_used": llm_used,
                 }
             )
 
