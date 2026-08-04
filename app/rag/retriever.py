@@ -28,6 +28,7 @@ class DocumentIndex:
 
 _indexes: dict[tuple[str, str], DocumentIndex] = {}
 _index_lock = RLock()
+_query_embeddings: dict[str, np.ndarray] = {}
 
 
 def _cache_key(filename: str, text: str) -> tuple[str, str]:
@@ -65,7 +66,12 @@ def retrieve(
     if not index.chunks:
         return []
 
-    query_embedding = encode([question])[0]
+    with _index_lock:
+        query_embedding = _query_embeddings.get(question)
+    if query_embedding is None:
+        query_embedding = encode([question])[0]
+        with _index_lock:
+            _query_embeddings[question] = query_embedding
     cosine_scores = index.embeddings @ query_embedding
     best_indexes = np.argsort(cosine_scores)[::-1][:top_k]
     return [
@@ -82,6 +88,7 @@ def clear_indexes() -> None:
     """Clear cached document embeddings; useful for tests and maintenance."""
     with _index_lock:
         _indexes.clear()
+        _query_embeddings.clear()
 
 
 def remove_index(filename: str) -> None:
