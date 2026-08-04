@@ -46,12 +46,13 @@ def test_graph_rag_uses_graph_context_for_generation():
     ) as generate_answer:
         results, _, _ = search(
             questions=["Who kicked the ball?"],
-            text="The boy kicked the ball. The girl watched.",
+            text="The boy kicked the ball. He watched.",
             mode="graph_rag",
             threshold=0.3,
         )
 
     assert results["Who kicked the ball?"][0][3] == "The boy."
+    assert "He watched." in results["Who kicked the ball?"][0][0]
     assert generate_answer.call_args.args[1][0].startswith("The boy kicked the ball.")
 
 
