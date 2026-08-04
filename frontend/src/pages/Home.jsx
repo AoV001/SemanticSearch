@@ -20,6 +20,7 @@ export default function Home() {
   const [resolvedText, setResolvedText] = useState(null)
   const [results, setResults] = useState([])
   const [loading, setLoading] = useState(false)
+  const [loadingStage, setLoadingStage] = useState('')
   const [searchError, setSearchError] = useState(null)
   const [highlightData, setHighlightData] = useState(null)
   const [corefMap, setCorefMap] = useState({})
@@ -57,6 +58,12 @@ export default function Home() {
 
   const handleSearch = async (questions, mode) => {
     setLoading(true)
+    const stages = {
+      graph: 'Building graph and matching evidence…',
+      rag: 'Searching vector index and preparing an answer…',
+      graph_rag: 'Building graph, selecting evidence, then using LLM only if needed…',
+    }
+    setLoadingStage(stages[mode])
     setResults([])
     setHighlightData(null)
     try {
@@ -73,6 +80,7 @@ export default function Home() {
       console.error(e)
     } finally {
       setLoading(false)
+      setLoadingStage('')
     }
   }
 
@@ -169,6 +177,7 @@ export default function Home() {
               selectedFile={selectedFile}
               onSearch={handleSearch}
               loading={loading}
+              loadingStage={loadingStage}
             />
           </div>
           <div className="flex-1 overflow-y-auto p-4 space-y-3">
