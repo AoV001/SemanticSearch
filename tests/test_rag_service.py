@@ -2,6 +2,7 @@ from unittest.mock import Mock, patch
 
 import numpy as np
 
+from app.rag.generator import clear_answer_cache, generate_answer
 from app.rag.retriever import clear_indexes, retrieve
 from app.services.search_service import search
 
@@ -25,6 +26,17 @@ def test_retrieve_returns_normalized_scores():
     assert [item.score for item in ranked] == [1.0, 0.5]
 
 
+def test_generated_answer_is_cached():
+    clear_answer_cache()
+    response = Mock()
+    response.json.return_value = {"message": {"content": "The boy."}}
+    with patch("app.rag.generator.requests.post", return_value=response) as post:
+        assert generate_answer("Who?", ["The boy kicked the ball."]) == "The boy."
+        assert generate_answer("Who?", ["The boy kicked the ball."]) == "The boy."
+
+    post.assert_called_once()
+
+
 def test_rag_search_uses_vector_ranking():
     with patch(
         "app.services.search_service.retrieve",
@@ -34,10 +46,12 @@ def test_rag_search_uses_vector_ranking():
             questions=["Who kicked the ball?"],
             text="The boy kicked the ball.",
             mode="rag",
+            include_metadata=True,
         )
 
     assert results["Who kicked the ball?"][0][1] == 0.9
     assert results["Who kicked the ball?"][0][3] == "The boy."
+    assert results["Who kicked the ball?"][0][4] == "RAG LLM"
 
 
 def test_graph_rag_uses_graph_context_for_generation():
@@ -49,11 +63,14 @@ def test_graph_rag_uses_graph_context_for_generation():
             text="The boy kicked the ball. He watched.",
             mode="graph_rag",
             threshold=0.3,
+            include_metadata=True,
         )
 
     assert results["Who kicked the ball?"][0][3] == "The boy."
     assert "He watched." in results["Who kicked the ball?"][0][0]
     assert generate_answer.call_args.args[1][0].startswith("The boy kicked the ball.")
+    assert results["Who kicked the ball?"][0][4] == "GraphRAG LLM"
+    assert results["Who kicked the ball?"][0][5] is True
 
 
 def test_graph_rag_skips_llm_for_confident_graph_hit():
