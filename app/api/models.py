@@ -44,6 +44,7 @@ MAX_QUESTIONS_COUNT = 20
 class SearchMode(str, Enum):
     GRAPH = "graph"
     RAG = "rag"
+    GRAPH_RAG = "graph_rag"
 
 
 class SearchRequest(BaseModel):
