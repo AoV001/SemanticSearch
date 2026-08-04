@@ -62,6 +62,10 @@ export default function Home() {
     try {
       const data = await searchFile(selectedFile, questions, mode)
       setResults(data.results)
+      const firstHit = data.results.find((result) => result.results.length > 0)?.results[0]
+      setHighlightData(
+        firstHit ? { answer: firstHit.answer, context: firstHit.context } : null
+      )
       setResolvedText(data.resolved_text)
       setCorefMap(data.coref_map || {})
     } catch (e) {
