@@ -45,6 +45,7 @@ ALL_TEMPORAL = TEMPORAL_MARKERS | {
 }
 
 TEMPORAL_QUESTION_WORDS = {"before", "after", "when", "while"}
+GRAPH_RAG_CONTEXT_LIMIT = 2
 
 
 def split_blocks(sentences, window_size=WINDOW_SIZE):
@@ -94,14 +95,14 @@ def search(
     all_results = {}
 
     mode = getattr(mode, "value", mode)
-    if mode not in {"graph", "rag"}:
+    if mode not in {"graph", "rag", "graph_rag"}:
         raise ValueError(f"Unsupported search mode: {mode}")
 
     for question in questions:
         question_graph = get_graph(question)
         results = []
 
-        if mode == "graph":
+        if mode in {"graph", "graph_rag"}:
             ranked_blocks = []
             for block in resolved_blocks:
                 block_graph = get_graph(block)
@@ -114,11 +115,17 @@ def search(
                 for chunk in retrieve(filename, text, question, top_k)
             ]
 
-        rag_answer = (
-            generate_answer(question, [block for block, _ in ranked_blocks])
-            if mode == "rag"
-            else None
-        )
+        ranked_blocks.sort(key=lambda item: item[1], reverse=True)
+        generated_answer = None
+        if mode == "rag":
+            generated_answer = generate_answer(
+                question, [block for block, _ in ranked_blocks]
+            )
+        elif mode == "graph_rag":
+            generated_answer = generate_answer(
+                question,
+                [block for block, _ in ranked_blocks[:GRAPH_RAG_CONTEXT_LIMIT]],
+            )
 
         for result_number, (block, score) in enumerate(ranked_blocks):
             block_graph = get_graph(block)
@@ -132,7 +139,9 @@ def search(
                 if temporal:
                     extracted_answer = temporal
             answer = (
-                rag_answer if mode == "rag" and result_number == 0 else extracted_answer
+                generated_answer
+                if mode in {"rag", "graph_rag"} and result_number == 0
+                else extracted_answer
             )
             results.append((block, score, triplets, answer))
 
