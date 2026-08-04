@@ -24,6 +24,7 @@ import { useState } from 'react'
 
 export default function SearchForm({ selectedFile, onSearch, loading }) {
   const [input, setInput] = useState('')
+  const [mode, setMode] = useState('graph')
   const [collapsed, setCollapsed] = useState(false)
 
   const MAX_Q = 200
@@ -34,7 +35,7 @@ export default function SearchForm({ selectedFile, onSearch, loading }) {
   const handleSubmit = () => {
     const questions = parseQuestions(input)
     if (!questions.length || !selectedFile) return
-    onSearch(questions)
+    onSearch(questions, mode)
     setCollapsed(true)
   }
 
@@ -73,6 +74,19 @@ export default function SearchForm({ selectedFile, onSearch, loading }) {
           <p className="text-xs pt-3" style={{color: '#64748b'}}>
             One question per line, or separate with semicolons
           </p>
+          <label className="block text-xs" style={{color: '#64748b'}}>
+            Search method
+            <select
+              value={mode}
+              onChange={(e) => setMode(e.target.value)}
+              disabled={loading}
+              className="mt-1 w-full rounded-lg px-3 py-2 text-sm focus:outline-none"
+              style={{background: '#1a1d27', border: '1px solid #2a2d3a', color: '#e2e8f0'}}
+            >
+              <option value="graph">Graph search</option>
+              <option value="rag">RAG (vector search)</option>
+            </select>
+          </label>
           <textarea
             value={input}
             onChange={(e) => {
