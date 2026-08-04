@@ -41,7 +41,7 @@ def test_rag_search_uses_vector_ranking():
 
 
 def test_graph_rag_uses_graph_context_for_generation():
-    with patch(
+    with patch("app.services.search_service.graph_similarity", return_value=0.5), patch(
         "app.services.search_service.generate_answer", return_value="The boy."
     ) as generate_answer:
         results, _, _ = search(
@@ -53,3 +53,18 @@ def test_graph_rag_uses_graph_context_for_generation():
 
     assert results["Who kicked the ball?"][0][3] == "The boy."
     assert generate_answer.call_args.args[1][0].startswith("The boy kicked the ball.")
+
+
+def test_graph_rag_skips_llm_for_confident_graph_hit():
+    with patch(
+        "app.services.search_service.extract_answer", return_value="The boy."
+    ), patch("app.services.search_service.generate_answer") as generate_answer:
+        results, _, _ = search(
+            questions=["Who kicked the ball?"],
+            text="The boy kicked the ball.",
+            mode="graph_rag",
+            threshold=0.3,
+        )
+
+    generate_answer.assert_not_called()
+    assert "boy" in results["Who kicked the ball?"][0][3].lower()
